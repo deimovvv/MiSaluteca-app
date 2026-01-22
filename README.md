@@ -1,36 +1,197 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SALUTECA
 
-## Getting Started
+**Tu historial médico, siempre contigo**
 
-First, run the development server:
+Sistema de gestión de estudios médicos personales y familiares. Organiza, comparte y accede a tus estudios médicos de forma segura desde cualquier lugar.
+
+---
+
+## 🚀 Quick Start
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📚 Documentación
 
-## Learn More
+### Para Empezar
+- **[ENTREGA.md](ENTREGA.md)** - **EMPIEZA AQUÍ** - Resumen ejecutivo y estado del proyecto
+- **[TESTING-GUIDE.md](TESTING-GUIDE.md)** - Guía paso a paso para testear todas las features
 
-To learn more about Next.js, take a look at the following resources:
+### Para Desarrollar
+- **[README-DEV.md](README-DEV.md)** - Guía completa de desarrollo y próximos pasos
+- **[CLAUDE.md](CLAUDE.md)** - Documentación técnica para Claude Code
+- **[RESUMEN-PROYECTO.md](RESUMEN-PROYECTO.md)** - Overview completo del proyecto
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ✨ Features
 
-## Deploy on Vercel
+### ✅ Implementado (Frontend 100%)
+- 🔐 Login con Google (UI ready)
+- 📁 Gestión de estudios médicos
+- 👨‍👩‍👧‍👦 Grupo familiar
+- 🔍 Búsqueda y filtros
+- 💚 **Compartir por WhatsApp** (funcional)
+- 📊 KPIs y métricas
+- 🎨 7 categorías de estudios con colores
+- 📱 Responsive design
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 🔄 Pendiente (Backend)
+- 🗄️ Base de datos (MySQL + Prisma)
+- 🔑 Autenticación real (NextAuth v5)
+- ☁️ File upload (S3/R2)
+- 🔗 API endpoints
+- 🔒 Share links con tokens reales
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🎨 Stack Tecnológico
+
+**Frontend (Implementado):**
+- Next.js 16.1.1 (App Router)
+- React 19 + TypeScript
+- Bootstrap 5.3.8 + React Bootstrap
+- Tailwind CSS v4
+
+**Backend (Recomendado):**
+- MySQL + Prisma ORM
+- NextAuth v5 (Google OAuth)
+- Cloudflare R2 o AWS S3
+- Next.js Route Handlers
+
+---
+
+## 📁 Estructura del Proyecto
+
+```
+saluteca-web/
+├── app/                    # Next.js App Router
+│   ├── login/             # Login screen
+│   ├── app/               # Protected routes
+│   │   ├── page.tsx      # Home
+│   │   ├── studies/      # Mis Estudios
+│   │   ├── family/       # Grupo Familiar
+│   │   └── settings/     # Configuración
+│   └── s/[token]/        # Vista compartida pública
+├── components/
+│   ├── layout/           # AppShell, Sidebar, Topbar
+│   └── modals/           # Upload, Share, AddFamily
+├── types/                # TypeScript definitions
+├── lib/                  # Mock data + helpers
+└── docs/                 # Documentación (*.md)
+```
+
+---
+
+## 🧪 Testing
+
+Ver [TESTING-GUIDE.md](TESTING-GUIDE.md) para testing completo.
+
+**Quick test:**
+```bash
+npm run dev
+```
+
+**Rutas disponibles:**
+- `/login` - Pantalla de login
+- `/app` - Home con estudios recientes
+- `/app/studies` - Todos los estudios (prueba búsqueda)
+- `/app/family` - Lista de familiares
+- `/app/family/fam-1` - Detalle de Juan (8 años)
+- `/s/abc123xyz789` - Estudio compartido público
+
+---
+
+## 🎯 Próximos Pasos
+
+1. **Testing** - Revisar todas las pantallas (ver [TESTING-GUIDE.md](TESTING-GUIDE.md))
+2. **Backend Setup** - Seguir [README-DEV.md](README-DEV.md) sección "Próximos Pasos"
+3. **Database** - MySQL + Prisma + modelos
+4. **Auth** - NextAuth v5 con Google OAuth
+5. **Storage** - Cloudflare R2 o AWS S3
+6. **Integration** - Conectar frontend con APIs
+
+---
+
+## 📖 Guía de Archivos de Documentación
+
+| Archivo | Propósito | Para Quién |
+|---------|-----------|------------|
+| [ENTREGA.md](ENTREGA.md) | Resumen ejecutivo + estado | **Empieza aquí** |
+| [TESTING-GUIDE.md](TESTING-GUIDE.md) | Cómo testear todo | QA / Testing |
+| [README-DEV.md](README-DEV.md) | Guía de desarrollo | Developers |
+| [CLAUDE.md](CLAUDE.md) | Docs técnicas | Claude Code |
+| [RESUMEN-PROYECTO.md](RESUMEN-PROYECTO.md) | Overview completo | Product / Leads |
+
+---
+
+## 🛠️ Comandos Útiles
+
+```bash
+# Desarrollo
+npm run dev          # Dev server
+
+# Build
+npm run build        # Production build
+npm start            # Production server
+
+# Linting
+npm run lint         # ESLint
+
+# Fresh install
+rm -rf node_modules package-lock.json
+npm install
+```
+
+---
+
+## 🎨 Branding
+
+**Colores:**
+- Primary: `#016390` (azul)
+- Secondary: `#7ABB85` (verde)
+- Black: `#000000` (botones)
+
+**Tipografía:**
+- Inter (400, 500, 600, 700)
+
+**Logo:**
+- Carpeta/documento con lupa
+- "SALUTECA" en caps
+
+---
+
+## 📞 Soporte
+
+Para preguntas o issues:
+1. Revisar la documentación correspondiente arriba
+2. Ver código en `lib/mockData.ts` para ejemplos
+3. Todos los tipos en `types/index.ts`
+
+---
+
+## 🏆 Status
+
+| Component | Status |
+|-----------|--------|
+| Frontend | ✅ 100% |
+| Backend | ⏳ 0% |
+| Design | ✅ 100% |
+| Testing | ✅ Ready |
+| Docs | ✅ Complete |
+
+---
+
+## 📄 Licencia
+
+Private project - SALUTECA
+
+---
+
+**Built with ❤️ using Next.js 16 + React 19 + TypeScript**
