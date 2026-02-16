@@ -1,9 +1,3 @@
-// Study Categories (MVP Simplified)
-export type StudyCategory =
-  | "images"         // Imágenes (RX, Tomografía, Resonancia, Ecografía, etc.)
-  | "laboratory"     // Laboratorio (Análisis de sangre, orina, etc.)
-  | "uncategorized"; // Sin clasificar
-
 // Family Relations
 export type FamilyRelation =
   | "self"
@@ -19,36 +13,42 @@ export interface User {
   name: string;
   email: string;
   avatar?: string;
-  createdAt: Date;
+  createdAt: string; // Formato: DD-MM-YYYY
 }
 
 // Family Member interface
 export interface FamilyMember {
   id: string;
+  uuid: string;
   userId: string;
   name: string;
   relation: FamilyRelation;
-  dateOfBirth?: Date;
+  dateOfBirth?: string; // Formato: DD-MM-YYYY
   age?: number;
   notes?: string;
   allergies?: string;
-  createdAt: Date;
+  studyCount?: number;
+  lastStudyDate?: string; // Formato: DD-MM-YYYY
+  createdAt: string; // Formato: DD-MM-YYYY
 }
 
 // Study interface
 export interface Study {
   id: string;
+  uuid: string;
   userId: string;
   familyMemberId?: string; // null = estudio del usuario principal
-  category: StudyCategory;
   title?: string;
-  date: Date;
+  date: string; // Formato: DD-MM-YYYY
+  institution?: string;
+  medico: string;
+  conclusion?: string;
   description?: string;
   fileKey: string;
   fileName: string;
   mimeType: string;
   size: number;
-  createdAt: Date;
+  createdAt: string; // Formato: DD-MM-YYYY
 }
 
 // Share Link interface
@@ -56,10 +56,10 @@ export interface StudyShareLink {
   id: string;
   studyId: string;
   token: string;
-  expiresAt: Date;
-  revokedAt?: Date;
+  expiresAt: string; // Formato: DD-MM-YYYY HH:mm
+  revokedAt?: string; // Formato: DD-MM-YYYY HH:mm
   viewsCount: number;
-  createdAt: Date;
+  createdAt: string; // Formato: DD-MM-YYYY HH:mm
 }
 
 // Helper type for study with owner info
@@ -67,35 +67,6 @@ export interface StudyWithOwner extends Study {
   ownerName: string;
   ownerRelation?: FamilyRelation;
 }
-
-// Category metadata
-export interface CategoryInfo {
-  id: StudyCategory;
-  label: string;
-  icon: string;
-  className: string;
-}
-
-export const CATEGORY_INFO: Record<StudyCategory, CategoryInfo> = {
-  images: {
-    id: "images",
-    label: "Imágenes",
-    icon: "scan",
-    className: "category-images",
-  },
-  laboratory: {
-    id: "laboratory",
-    label: "Laboratorio",
-    icon: "droplet",
-    className: "category-laboratory",
-  },
-  uncategorized: {
-    id: "uncategorized",
-    label: "Sin clasificar",
-    icon: "file-text",
-    className: "category-uncategorized",
-  },
-};
 
 export const RELATION_LABELS: Record<FamilyRelation, string> = {
   self: "Yo",

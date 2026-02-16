@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Modal, Button, Form, InputGroup } from "react-bootstrap";
+import { Modal, Button, Form, InputGroup, Spinner } from "react-bootstrap";
+import toast from "react-hot-toast";
 import type { Study } from "@/types";
+import { generateShareLink } from "@/user-dashboard/server-actions/generate-share-link";
+import { VINCULO_OPTIONS } from "@/config/constants";
 
 interface ShareModalProps {
   show: boolean;
@@ -14,13 +17,36 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
   const [shareLink, setShareLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [doctorName, setDoctorName] = useState("");
-  const expiryDays = 1; // Fixed to 24 hours
+  const [vinculo, setVinculo] = useState<string>("medico");
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  const generateLink = () => {
-    // TODO: Call API to generate share link with doctorName
-    const token = Math.random().toString(36).substring(2, 15);
-    const link = `${window.location.origin}/s/${token}`;
-    setShareLink(link);
+  // Verificar si Web Share API está disponible
+  const canUseNativeShare = typeof navigator !== 'undefined' && 'share' in navigator;
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsGenerating(true);
+    try {
+      const response = await generateShareLink({
+        studyId: study.id,
+        doctorName: doctorName.trim(),
+        vinculo: vinculo,
+      });
+      console.log("response", response);
+
+      if (response.success && response.data) {
+        const baseUrl = process.env.NEXT_PUBLIC_URL_LINK_SHARE || window.location.origin;
+        const link = `${baseUrl}/s/${response.data.uuid}`;
+        setShareLink(link);
+      } else {
+        toast.error(response.message || "Error al generar el link");
+      }
+    } catch (error) {
+      console.error("Error al generar link:", error);
+      toast.error("Error al generar el link. Por favor, intenta nuevamente.");
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const copyToClipboard = () => {
@@ -31,13 +57,29 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
     }
   };
 
-  const shareViaWhatsApp = () => {
+  const shareViaWhatsApp = async () => {
     if (shareLink) {
       const doctorText = doctorName ? `Dr/a. ${doctorName}, te` : "Te";
-      const text = encodeURIComponent(
-        `${doctorText} comparto mi estudio médico en SALUTECA (acceso temporal): ${shareLink}`
-      );
-      window.open(`https://wa.me/?text=${text}`, "_blank");
+      const text = `${doctorText} comparto mi estudio médico en SALUTECA (acceso temporal): ${shareLink}`;
+      // const encodedText = encodeURIComponent(text);
+      // window.open(`https://wa.me/?text=${encodedText}`, "_blank");
+      // Usar Web Share API si está disponible (móviles principalmente)
+      if (canUseNativeShare) {
+        try {
+          await navigator.share({
+            title: "Compartir estudio médico - SALUTECA",
+            text: text,
+            // url: shareLink,
+          });
+        } catch (error) {
+          // Si el usuario cancela o hay un error, no hacer nada
+          console.log("Share cancelled or failed:", error);
+        }
+      } else {
+        // Fallback: abrir WhatsApp Web en escritorio
+        const encodedText = encodeURIComponent(text);
+        window.open(`https://wa.me/?text=${encodedText}`, "_blank");
+      }
     }
   };
 
@@ -45,11 +87,12 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
     setShareLink(null);
     setCopied(false);
     setDoctorName("");
+    setVinculo("medico");
     onHide();
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered fullscreen="sm-down">
+    <Modal show={show} onHide={handleClose} centered fullscreen="sm-down" backdrop="static">
       <Modal.Header closeButton className="border-0 pb-0">
         <Modal.Title className="h5 fw-semibold">Compartir estudio</Modal.Title>
       </Modal.Header>
@@ -98,25 +141,57 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
               </div>
             </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label className="fw-medium">Nombre del médico (opcional)</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Ej: Juan Pérez"
-                value={doctorName}
-                onChange={(e) => setDoctorName(e.target.value)}
-              />
-              <Form.Text className="text-muted">
-                Este nombre aparecerá en el mensaje de WhatsApp
-              </Form.Text>
-            </Form.Group>
+            <Form onSubmit={handleSubmit}>
+              <Form.Group className="mb-3">
+                <Form.Label className="fw-medium">¿Con quien compartis este estudio? (obligatorio)</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Ej: Juan Pérez"
+                  required
+                  value={doctorName}
+                  onChange={(e) => setDoctorName(e.target.value)}
+                />
+                <Form.Text className="text-muted">
+                  Este nombre aparecerá en el mensaje de WhatsApp
+                </Form.Text>
+              </Form.Group>
 
-            <Button
-              className="btn-primary-saluteca w-100"
-              onClick={generateLink}
-            >
-              Generar link de compartir
-            </Button>
+              <Form.Group className="mb-3">
+                <Form.Label className="fw-medium">Vínculo</Form.Label>
+                <Form.Select
+                  value={vinculo}
+                  onChange={(e) => setVinculo(e.target.value)}
+                >
+                  {VINCULO_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+
+              <Button
+                type="submit"
+                className="btn-primary-saluteca w-100"
+                disabled={isGenerating}
+              >
+                {isGenerating ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      className="me-2"
+                    />
+                    Generando...
+                  </>
+                ) : (
+                  "Generar link de compartir"
+                )}
+              </Button>
+            </Form>
           </>
         ) : (
           <>
@@ -184,8 +259,8 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
                       <span className="d-none d-sm-inline">Copiar</span>
                       <span className="d-sm-none">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M5 4H11C11.5 4 12 4.5 12 5V11" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                          <rect x="4" y="5" width="7" height="7" stroke="currentColor" strokeWidth="2" rx="1"/>
+                          <path d="M5 4H11C11.5 4 12 4.5 12 5V11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                          <rect x="4" y="5" width="7" height="7" stroke="currentColor" strokeWidth="2" rx="1" />
                         </svg>
                       </span>
                     </>
@@ -214,7 +289,7 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
                     fill="white"
                   />
                 </svg>
-                Compartir por WhatsApp
+                {canUseNativeShare ? "Compartir" : "Compartir por WhatsApp"}
               </Button>
             </div>
 

@@ -1,40 +1,85 @@
 "use client";
 
-import { Modal, Button, ListGroup } from "react-bootstrap";
-import { mockShareLinks, mockStudies, formatDate } from "@/lib/mockData";
-import { CATEGORY_INFO } from "@/types";
-import type { StudyShareLink } from "@/types";
+import { useState } from "react";
+import { Modal, Button, ListGroup, Spinner, Toast, ToastContainer } from "react-bootstrap";
+import { revokeShareLink } from "@/src/features/sharing/api";
+import { SHARE_LINK_EXPIRATION_HOURS } from "@/config/constants";
+import type { ShareLink } from "@/src/features/sharing/api";
+import moment from "moment";
 
 interface SharedLinksModalProps {
   show: boolean;
   onHide: () => void;
+  links: ShareLink[];
+  onLinkRevoked: (linkId: string, newOpenedAt: string) => void;
 }
 
 export default function SharedLinksModal({
   show,
   onHide,
+  links,
+  onLinkRevoked,
 }: SharedLinksModalProps) {
-  const now = new Date();
-  const allLinks = mockShareLinks;
 
-  const getStudyTitle = (studyId: string) => {
-    const study = mockStudies.find((s) => s.id === studyId);
-    if (!study) return "Estudio médico";
-    return study.title || CATEGORY_INFO[study.category].label;
-  };
+  const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
+  const [revokingLinkId, setRevokingLinkId] = useState<string | null>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
-  const handleCopyLink = (token: string) => {
-    const url = `${window.location.origin}/s/${token}`;
+  const handleCopyLink = (linkId: string, uuid: string) => {
+    const baseUrl = process.env.NEXT_PUBLIC_URL_LINK_SHARE || window.location.origin;
+    const url = `${baseUrl}/s/${uuid}`;
     navigator.clipboard.writeText(url);
-    // TODO: Show toast notification
+
+    setCopiedLinkId(linkId);
+    setTimeout(() => {
+      setCopiedLinkId(null);
+    }, 2000);
   };
 
-  const handleRevokeLink = (linkId: string) => {
-    // TODO: Implement revoke functionality
-    console.log("Revoking link:", linkId);
+  const handleRevokeLink = async (linkId: string) => {
+    setRevokingLinkId(linkId);
+
+    try {
+      const response = await revokeShareLink(linkId);
+
+      if (response.success) {
+        setToastMessage("Link revocado exitosamente");
+        setShowToast(true);
+
+        // Calcular la nueva fecha (1 mes antes)
+        const oneMonthAgo = moment().subtract(1, "month").format("DD-MM-YYYY HH:mm");
+        onLinkRevoked(linkId, oneMonthAgo);
+      } else {
+        setToastMessage(response.message || "Error al revocar el link");
+        setShowToast(true);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setToastMessage("Error al revocar el link");
+      setShowToast(true);
+    } finally {
+      setRevokingLinkId(null);
+    }
   };
 
-  const renderLinksList = (links: StudyShareLink[]) => {
+  const isLinkExpired = (fechaAbierto: string): boolean => {
+    if (!fechaAbierto) return false;
+
+    const fechaAbertoMoment = moment(fechaAbierto, "DD-MM-YYYY HH:mm");
+    const expirationDate = fechaAbertoMoment.clone().add(SHARE_LINK_EXPIRATION_HOURS, "hours");
+    const now = moment();
+
+    return now.isAfter(expirationDate);
+  };
+
+  const formatDate = (dateString: string): string => {
+    return moment(dateString, "DD-MM-YYYY HH:mm").format("DD/MM/YYYY HH:mm");
+  };
+
+  const renderLinksList = (links: ShareLink[]) => {
+    console.log(links);
+
     if (links.length === 0) {
       return (
         <div className="text-center py-5">
@@ -82,10 +127,9 @@ export default function SharedLinksModal({
     return (
       <ListGroup variant="flush">
         {links.map((link) => {
-          const study = mockStudies.find((s) => s.id === link.studyId);
-          const studyTitle = study?.title || (study ? CATEGORY_INFO[study.category].label : "Estudio médico");
-          const isRevoked = !!link.revokedAt;
-          const isExpired = link.expiresAt <= now;
+          const isExpired = isLinkExpired(link.openedAt || "");
+          const isCopied = copiedLinkId === link.id;
+          const isRevoking = revokingLinkId === link.id;
 
           return (
             <ListGroup.Item
@@ -96,39 +140,40 @@ export default function SharedLinksModal({
               <div className="d-flex flex-column gap-2">
                 <div className="d-flex align-items-start justify-content-between">
                   <div className="flex-grow-1">
-                    <div className="d-flex align-items-center gap-2 mb-1">
-                      <div className="fw-medium">{studyTitle}</div>
-                      {(isRevoked || isExpired) && (
+                    <div className="d-flex align-items-center gap-2 mb-2">
+                      <div className="fw-medium">{link.studyTitle || "Estudio médico"}</div>
+                      {isExpired && (
                         <span
                           className="badge"
                           style={{
-                            backgroundColor: isRevoked ? "#fef3f2" : "#fef9f0",
-                            color: isRevoked ? "#dc3545" : "#f59e0b",
+                            backgroundColor: "#fef9f0",
+                            color: "#f59e0b",
                             fontSize: "0.7rem",
                             fontWeight: 600,
                             padding: "0.25rem 0.5rem",
                           }}
                         >
-                          {isRevoked ? "Revocado" : "Expirado"}
+                          Expirado
                         </span>
                       )}
                     </div>
-                    {study && (
-                      <div className="mb-2">
-                        <span className={`category-pill ${CATEGORY_INFO[study.category].className}`}>
-                          {CATEGORY_INFO[study.category].label}
-                        </span>
-                      </div>
-                    )}
                     <div className="d-flex align-items-center gap-2 flex-wrap">
                       <span className="text-muted" style={{ fontSize: "0.75rem" }}>
-                        Creado: {formatDate(link.createdAt)}
+                        Creado: {link.createdAt}
                       </span>
-                      {isRevoked && (
+                      {link.openedAt && (
                         <>
                           <span className="text-muted" style={{ fontSize: "0.75rem" }}>•</span>
                           <span className="text-muted" style={{ fontSize: "0.75rem" }}>
-                            Revocado: {formatDate(link.revokedAt!)}
+                            Abierto: {formatDate(link.openedAt)}
+                          </span>
+                        </>
+                      )}
+                      {link.doctorName && (
+                        <>
+                          <span className="text-muted" style={{ fontSize: "0.75rem" }}>•</span>
+                          <span className="text-muted" style={{ fontSize: "0.75rem" }}>
+                            Dr/a. {link.doctorName}
                           </span>
                         </>
                       )}
@@ -136,14 +181,15 @@ export default function SharedLinksModal({
                   </div>
                 </div>
 
-                {!isRevoked && !isExpired && (
+                {!isExpired && (
                   <div className="d-flex gap-2">
                     <Button
                       variant="outline-secondary"
                       size="sm"
                       className="btn-outline-saluteca"
-                      onClick={() => handleCopyLink(link.token)}
+                      onClick={() => handleCopyLink(link.id, link.uuid)}
                       style={{ fontSize: "0.75rem" }}
+                      disabled={isRevoking}
                     >
                       <svg
                         width="14"
@@ -168,15 +214,31 @@ export default function SharedLinksModal({
                           strokeLinejoin="round"
                         />
                       </svg>
-                      Copiar enlace
+                      {isCopied ? "Copiado" : "Copiar enlace"}
                     </Button>
                     <Button
                       variant="outline-danger"
                       size="sm"
                       onClick={() => handleRevokeLink(link.id)}
                       style={{ fontSize: "0.75rem" }}
+                      disabled={isRevoking}
                     >
-                      Revocar
+                      {isRevoking ? (
+                        <>
+                          <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                            className="me-1"
+                            style={{ width: "12px", height: "12px", borderWidth: "1.5px" }}
+                          />
+                          Revocando...
+                        </>
+                      ) : (
+                        "Revocar"
+                      )}
                     </Button>
                   </div>
                 )}
@@ -189,23 +251,41 @@ export default function SharedLinksModal({
   };
 
   return (
-    <Modal show={show} onHide={onHide} size="lg" centered>
-      <Modal.Header closeButton className="border-0 pb-0">
-        <Modal.Title className="h5 fw-semibold">Enlaces compartidos</Modal.Title>
-      </Modal.Header>
-      <Modal.Body className="px-0">
-        <div className="px-4">
-          <p className="text-muted mb-3" style={{ fontSize: "0.875rem" }}>
-            Todos los enlaces generados para compartir estudios. Los enlaces expiran 24 horas después del primer acceso.
-          </p>
-          {renderLinksList(allLinks)}
-        </div>
-      </Modal.Body>
-      <Modal.Footer className="border-0 pt-0">
-        <Button className="btn-secondary-saluteca" onClick={onHide}>
-          Cerrar
-        </Button>
-      </Modal.Footer>
-    </Modal>
+    <>
+      <Modal show={show} onHide={onHide} size="lg" centered>
+        <Modal.Header closeButton className="border-0 pb-0">
+          <Modal.Title className="h5 fw-semibold">Enlaces compartidos</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="px-0">
+          <div className="px-4">
+            <p className="text-muted mb-3" style={{ fontSize: "0.875rem" }}>
+              Todos los enlaces generados para compartir estudios. Los enlaces expiran {SHARE_LINK_EXPIRATION_HOURS} horas después del primer acceso.
+            </p>
+            {renderLinksList(links)}
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="border-0 pt-0">
+          <Button className="btn-secondary-saluteca" onClick={onHide}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Toast de éxito */}
+      <ToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}>
+        <Toast
+          show={showToast}
+          onClose={() => setShowToast(false)}
+          delay={3000}
+          autohide
+          bg="success"
+        >
+          <Toast.Header closeButton={false}>
+            <strong className="me-auto">Éxito</strong>
+          </Toast.Header>
+          <Toast.Body className="text-white">{toastMessage}</Toast.Body>
+        </Toast>
+      </ToastContainer>
+    </>
   );
 }

@@ -1,0 +1,28 @@
+/* Utility Classes - Global utilities used across the app */
+
+/* Text utilities */
+.text-primary-saluteca {
+  color: var(--saluteca-primary);
+}
+
+.text-secondary-saluteca {
+  color: var(--saluteca-secondary);
+}
+
+.text-muted-saluteca {
+  color: var(--saluteca-gray);
+}
+
+.bg-primary-saluteca {
+  background-color: var(--saluteca-primary);
+}
+
+.bg-secondary-saluteca {
+  background-color: var(--saluteca-secondary);
+}
+
+/* Hover utilities */
+.hover-bg-light:hover {
+  background-color: rgba(1, 99, 144, 0.04);
+  border-radius: 12px;
+}

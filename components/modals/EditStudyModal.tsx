@@ -1,14 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
-import { Study, CATEGORY_INFO, StudyCategory } from "@/types";
-import { mockFamilyMembers } from "@/lib/mockData";
-
+import { Study, FamilyMember } from "@/types";
+import { updateStudy } from "@/user-dashboard/server-actions/update-study";
+import { deleteStudy } from "@/user-dashboard/server-actions/delete-study";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import moment from "moment";
+import { STUDY_FIELD_LIMITS } from "@/config/constants";
 interface EditStudyModalProps {
   show: boolean;
   onHide: () => void;
   study: Study;
+  familyMembers?: FamilyMember[];
   onDelete?: () => void;
   onUpdate?: (updatedStudy: Study) => void;
 }
@@ -17,67 +22,129 @@ export default function EditStudyModal({
   show,
   onHide,
   study,
+  familyMembers = [],
   onDelete,
   onUpdate,
 }: EditStudyModalProps) {
-  const [category, setCategory] = useState<StudyCategory>(study.category);
+  const router = useRouter();
   const [title, setTitle] = useState(study.title || "");
-  const [date, setDate] = useState(new Date(study.date).toISOString().split("T")[0]);
+  // Convertir de DD-MM-YYYY a YYYY-MM-DD para el input type="date"
+  const [date, setDate] = useState(moment(study.date, "DD-MM-YYYY").format("YYYY-MM-DD"));
+  const [institution, setInstitution] = useState(study.institution || "");
+  const [medico, setMedico] = useState(study.medico || "");
+  const [conclusion, setConclusion] = useState(study.conclusion || "");
   const [description, setDescription] = useState(study.description || "");
   const [owner, setOwner] = useState<string>(study.familyMemberId || "self");
   const [saving, setSaving] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
+  // Resetear estados cuando el modal se abre o cambia el estudio
+  useEffect(() => {
+    if (show) {
+      setTitle(study.title || "");
+      // Convertir de DD-MM-YYYY a YYYY-MM-DD para el input type="date"
+      setDate(moment(study.date, "DD-MM-YYYY").format("YYYY-MM-DD"));
+      setInstitution(study.institution || "");
+      setMedico(study.medico || "");
+      setConclusion(study.conclusion || "");
+      setDescription(study.description || "");
+      setOwner(study.familyMemberId || "self");
+      setSaving(false);
+      setShowDeleteConfirm(false);
+      setDeleting(false);
+    }
+  }, [show, study]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
 
-    // TODO: Implement update to backend
-    const updatedStudy: Study = {
-      ...study,
-      category,
-      title: title.trim() || undefined,
-      date: new Date(date),
-      description: description.trim() || undefined,
-      familyMemberId: owner === "self" ? undefined : owner,
-    };
+    try {
+      const dateMoment = moment(date).format("DD-MM-YYYY");
+      const result = await updateStudy({
+        studyId: study.id,
+        title: title.trim() || undefined,
+        date: dateMoment,
+        institution: institution.trim() || undefined,
+        medico: medico.trim() || "",
+        conclusion: conclusion.trim() || undefined,
+        description: description.trim() || undefined,
+        familyMemberId: owner === "self" ? undefined : owner,
+      });
 
-    console.log("Updating study:", updatedStudy);
+      if (result.success) {
+        toast.success(result.message);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+        // Actualizar el estudio localmente para reflejar los cambios
+        const updatedStudy: Study = {
+          ...study,
+          title: title.trim() || undefined,
+          date: dateMoment, // Ya está en formato DD-MM-YYYY
+          institution: institution.trim() || undefined,
+          medico: medico.trim() || "",
+          conclusion: conclusion.trim() || undefined,
+          description: description.trim() || undefined,
+          familyMemberId: owner === "self" ? undefined : owner,
+        };
 
-    setSaving(false);
-    if (onUpdate) {
-      onUpdate(updatedStudy);
+        if (onUpdate) {
+          onUpdate(updatedStudy);
+        }
+
+        // Refrescar los datos de la página
+        router.refresh();
+        handleClose();
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.error("Error al actualizar estudio:", error);
+      toast.error("Ocurrió un error inesperado. Por favor, intentá nuevamente.");
+    } finally {
+      setSaving(false);
     }
-    handleClose();
   };
 
   const handleDelete = async () => {
     setDeleting(true);
 
-    // TODO: Implement delete to backend
-    console.log("Deleting study:", study.id);
+    try {
+      const result = await deleteStudy(study.id);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (result.success) {
+        toast.success(result.message);
 
-    setDeleting(false);
-    if (onDelete) {
-      onDelete();
+        // Llamar al callback onDelete si existe
+        if (onDelete) {
+          onDelete();
+        }
+
+        // Refrescar los datos de la página
+        router.refresh();
+        handleClose();
+      } else {
+        toast.error(result.message);
+        setDeleting(false);
+      }
+    } catch (error) {
+      console.error("Error al eliminar estudio:", error);
+      toast.error("Ocurrió un error inesperado. Por favor, intentá nuevamente.");
+      setDeleting(false);
     }
-    handleClose();
   };
 
   const handleClose = () => {
-    setShowDeleteConfirm(false);
-    onHide();
+    setTimeout(() => {
+      setShowDeleteConfirm(false);
+      onHide();
+    }, 750)
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered size="lg" fullscreen="sm-down">
+    <Modal show={show} onHide={handleClose} centered size="lg"
+    // fullscreen="sm-down"
+    >
       <Modal.Header closeButton className="border-0 pb-0">
         <Modal.Title className="h5 fw-semibold">Editar estudio</Modal.Title>
       </Modal.Header>
@@ -115,7 +182,7 @@ export default function EditStudyModal({
                   />
                 </svg>
                 <div className="flex-grow-1">
-                  <div className="fw-medium text-dark">{study.fileName}</div>
+                  <div className="fw-medium text-dark">Estudio seleccionado</div>
                   <div className="text-muted" style={{ fontSize: "0.875rem" }}>
                     {(study.size / 1024 / 1024).toFixed(2)} MB
                   </div>
@@ -123,37 +190,17 @@ export default function EditStudyModal({
               </div>
             </div>
 
-            <div className="row g-3 mb-3">
-              {/* Category */}
-              <div className="col-md-6">
-                <Form.Group>
-                  <Form.Label className="fw-medium">Tipo de estudio</Form.Label>
-                  <Form.Select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value as StudyCategory)}
-                  >
-                    {Object.values(CATEGORY_INFO).map((cat) => (
-                      <option key={cat.id} value={cat.id}>
-                        {cat.label}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-              </div>
-
-              {/* Date */}
-              <div className="col-md-6">
-                <Form.Group>
-                  <Form.Label className="fw-medium">Fecha</Form.Label>
-                  <Form.Control
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    max={new Date().toISOString().split("T")[0]}
-                  />
-                </Form.Group>
-              </div>
-            </div>
+            {/* Date */}
+            <Form.Group className="mb-3">
+              <Form.Label className="fw-medium">Fecha</Form.Label>
+              <Form.Control
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                max={new Date().toISOString().split("T")[0]}
+                maxLength={STUDY_FIELD_LIMITS.date}
+              />
+            </Form.Group>
 
             {/* Title */}
             <Form.Group className="mb-3">
@@ -165,15 +212,65 @@ export default function EditStudyModal({
                 placeholder="Ej: Hemograma completo"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+                maxLength={STUDY_FIELD_LIMITS.title}
               />
+            </Form.Group>
+
+            {/* Institution */}
+            <Form.Group className="mb-3">
+              <Form.Label className="fw-medium">
+                Institución <span className="text-muted">(opcional)</span>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Ej: Hospital Italiano"
+                value={institution}
+                onChange={(e) => setInstitution(e.target.value)}
+                maxLength={STUDY_FIELD_LIMITS.institution}
+              />
+            </Form.Group>
+
+            {/* Doctor */}
+            <Form.Group className="mb-3">
+              <Form.Label className="fw-medium">
+                Médico <span className="text-muted">(opcional)</span>
+              </Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Ej: Dr. Juan Pérez"
+                value={medico}
+                onChange={(e) => setMedico(e.target.value)}
+                maxLength={STUDY_FIELD_LIMITS.doctor}
+              />
+            </Form.Group>
+
+            {/* Conclusion */}
+            <Form.Group className="mb-3">
+              <Form.Label className="fw-medium">
+                Conclusión <span className="text-muted">(opcional)</span>
+              </Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Conclusión o diagnóstico del estudio..."
+                value={conclusion}
+                onChange={(e) => setConclusion(e.target.value)}
+                maxLength={STUDY_FIELD_LIMITS.conclusion}
+                disabled
+              />
+              <div className="d-flex justify-content-end">
+                <Form.Text className="text-muted" style={{ fontSize: "0.8rem" }}>
+                  {conclusion.length}/{STUDY_FIELD_LIMITS.conclusion}
+                </Form.Text>
+              </div>
             </Form.Group>
 
             {/* Owner */}
             <Form.Group className="mb-3">
-              <Form.Label className="fw-medium">Para quién es este estudio</Form.Label>
+              <Form.Label className="fw-medium">De quién es este estudio</Form.Label>
               <Form.Select value={owner} onChange={(e) => setOwner(e.target.value)}>
                 <option value="self">Para mí</option>
-                {mockFamilyMembers.map((member) => (
+                {familyMembers.map((member) => (
                   <option key={member.id} value={member.id}>
                     {member.name}
                   </option>
@@ -192,7 +289,13 @@ export default function EditStudyModal({
                 placeholder="Agregá cualquier detalle relevante sobre el estudio..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                maxLength={STUDY_FIELD_LIMITS.description}
               />
+              <div className="d-flex justify-content-end">
+                <Form.Text className="text-muted" style={{ fontSize: "0.8rem" }}>
+                  {description.length}/{STUDY_FIELD_LIMITS.description}
+                </Form.Text>
+              </div>
             </Form.Group>
           </Modal.Body>
 

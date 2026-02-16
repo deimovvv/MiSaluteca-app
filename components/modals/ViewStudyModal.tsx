@@ -1,38 +1,77 @@
 "use client";
 
-import { Modal, Button } from "react-bootstrap";
-import { Study, CATEGORY_INFO } from "@/types";
-import { formatDate, getFamilyMemberById } from "@/lib/mockData";
+import { useState } from "react";
+import { Modal, Button, Spinner } from "react-bootstrap";
+import { Study, FamilyMember } from "@/types";
+import { formatDate } from "@/lib/formatters";
+import toast from "react-hot-toast";
 
 interface ViewStudyModalProps {
   show: boolean;
   onHide: () => void;
   study: Study;
+  familyMembers?: FamilyMember[];
 }
 
 export default function ViewStudyModal({
   show,
   onHide,
   study,
+  familyMembers = [],
 }: ViewStudyModalProps) {
-  const categoryInfo = CATEGORY_INFO[study.category];
+  const [downloading, setDownloading] = useState(false);
+
   const familyMember = study.familyMemberId
-    ? getFamilyMemberById(study.familyMemberId)
+    ? familyMembers.find(fm => fm.id === study.familyMemberId)
     : null;
+
+  const handleDownload = async () => {
+    setDownloading(true);
+
+    try {
+      const response = await fetch(`/api/download-study/${study.uuid}`);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        toast.error(errorData.error || "Error al descargar el archivo.");
+        setDownloading(false);
+        return;
+      }
+
+      // Obtener el blob del archivo
+      const blob = await response.blob();
+
+      // Crear un link temporal para descargar el archivo
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = study.fileName;
+      document.body.appendChild(a);
+      a.click();
+
+      // Limpiar
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+
+      toast.success("Archivo descargado exitosamente");
+    } catch (error) {
+      console.error("Error al descargar archivo:", error);
+      toast.error("Error inesperado al descargar el archivo. Por favor, intentá nuevamente.");
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   return (
     <Modal show={show} onHide={onHide} size="lg" centered>
       <Modal.Header closeButton className="border-0 pb-0">
         <Modal.Title className="fw-semibold">
-          {study.title || categoryInfo.label}
+          {study.title || "Estudio médico"}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="px-4 pb-4">
-        {/* Category & Date */}
+        {/* Date */}
         <div className="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
-          <span className={`category-pill ${categoryInfo.className}`}>
-            {categoryInfo.label}
-          </span>
           <span className="text-muted" style={{ fontSize: "0.875rem" }}>
             {formatDate(study.date)}
           </span>
@@ -146,7 +185,8 @@ export default function ViewStudyModal({
             </div>
             <div className="flex-grow-1" style={{ minWidth: 0 }}>
               <div className="fw-medium text-truncate" style={{ fontSize: "0.9375rem" }}>
-                {study.fileName}
+                {/* {study.fileName} */}
+                Estudio
               </div>
               <div className="text-muted" style={{ fontSize: "0.8125rem" }}>
                 {(study.size / 1024 / 1024).toFixed(2)} MB
@@ -155,12 +195,23 @@ export default function ViewStudyModal({
             <Button
               className="btn-outline-saluteca"
               size="sm"
-              onClick={() => {
-                // TODO: Implement file download/view from backend
-                console.log("Open/download file:", study.fileKey);
-              }}
+              onClick={handleDownload}
+              disabled={downloading}
             >
-              Abrir
+              {downloading ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                    variant="secondary"
+                  />
+                </>
+              ) : (
+                "Abrir"
+              )}
             </Button>
           </div>
         </div>

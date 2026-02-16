@@ -1,0 +1,171 @@
+/* Privacy Section */
+.privacySection {
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.privacySection::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(
+    circle,
+    rgba(1, 99, 144, 0.08) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  animation: float 20s ease-in-out infinite;
+}
+
+.privacySection::after {
+  content: "";
+  position: absolute;
+  bottom: -30%;
+  left: -15%;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(
+    circle,
+    rgba(140, 198, 63, 0.05) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  animation: float 25s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(30px, 30px);
+  }
+}
+
+.title {
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 4rem;
+}
+
+.privacyCard {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 2rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+}
+
+.privacyCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(1, 99, 144, 0.3),
+    rgba(140, 198, 63, 0.2)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.privacyCard:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(1, 99, 144, 0.3);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(1, 99, 144, 0.15);
+}
+
+.privacyCard:hover::before {
+  opacity: 1;
+}
+
+.privacyIconWrapper {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(
+    135deg,
+    rgba(1, 99, 144, 0.15),
+    rgba(1, 99, 144, 0.25)
+  );
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.privacyCard:hover .privacyIconWrapper {
+  background: linear-gradient(
+    135deg,
+    rgba(1, 99, 144, 0.25),
+    rgba(1, 99, 144, 0.35)
+  );
+  transform: scale(1.05);
+}
+
+.privacyIcon {
+  font-size: 1.85rem;
+  color: #4da7d4;
+  transition: transform 0.3s ease;
+}
+
+.privacyCard:hover .privacyIcon {
+  transform: scale(1.1);
+}
+
+.privacyText {
+  margin: 0;
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.privacyDisclaimer {
+  max-width: 750px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 1.5rem 2rem;
+  background: rgba(140, 198, 63, 0.1);
+  border: 1px solid rgba(140, 198, 63, 0.2);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+}
+
+.privacyDisclaimer strong {
+  color: #016390;
+}
+
+.rowContainer {
+  max-width: 1000px;
+  margin: 0 auto 3rem;
+}

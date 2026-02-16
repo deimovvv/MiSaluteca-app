@@ -2,40 +2,53 @@
 
 import { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
-
+import toast from "react-hot-toast";
+import { addFamilyMember } from "@/user-dashboard/server-actions/new-member-family";
+import { useRouter } from "next/navigation";
 interface AddFamilyMemberModalProps {
   show: boolean;
   onHide: () => void;
+  onSuccess?: () => void;
 }
 
 export default function AddFamilyMemberModal({
   show,
   onHide,
+  onSuccess,
 }: AddFamilyMemberModalProps) {
+  const router = useRouter();
   const [name, setName] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
   const [saving, setSaving] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
 
-    // TODO: Implement API call to add family member
-    console.log({
-      name,
-      dateOfBirth,
-    });
+    try {
+      const result = await addFamilyMember({
+        name,
+      });
 
-    // Simulate save
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    setSaving(false);
-    handleClose();
+      if (result.success) {
+        router.refresh();
+        // Llamar callback de éxito si existe (para actualizar la lista)
+        if (onSuccess) {
+          onSuccess();
+        }
+        handleClose();
+      } else {
+        toast.error(result.message);
+      }
+    } catch (err) {
+      toast.error("Error inesperado. Por favor, intenta nuevamente.");
+      console.error("Error al agregar familiar:", err);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleClose = () => {
     setName("");
-    setDateOfBirth("");
     onHide();
   };
 
@@ -53,7 +66,7 @@ export default function AddFamilyMemberModal({
           </p>
 
           {/* Name - OBLIGATORIO */}
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-4">
             <Form.Label className="fw-medium">
               Nombre <span className="text-danger">*</span>
             </Form.Label>
@@ -62,26 +75,10 @@ export default function AddFamilyMemberModal({
               placeholder="Ej: Juan"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              maxLength={200}
               required
               autoFocus
             />
-          </Form.Group>
-
-          {/* Date of Birth - OPCIONAL */}
-          <Form.Group className="mb-4">
-            <Form.Label className="fw-medium">
-              Fecha de nacimiento{" "}
-              <span className="text-muted">(opcional)</span>
-            </Form.Label>
-            <Form.Control
-              type="date"
-              value={dateOfBirth}
-              onChange={(e) => setDateOfBirth(e.target.value)}
-              max={new Date().toISOString().split("T")[0]}
-            />
-            <Form.Text className="text-muted">
-              Ayuda a calcular la edad automáticamente
-            </Form.Text>
           </Form.Group>
 
           <div

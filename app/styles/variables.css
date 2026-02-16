@@ -1,0 +1,31 @@
+/* SALUTECA Design System Variables */
+:root {
+  /* SALUTECA Brand Colors */
+  --saluteca-primary: #016390;
+  --saluteca-primary-light: #0284c7;
+  --saluteca-primary-dark: #014a6e;
+  --saluteca-secondary: #7abb85;
+  --saluteca-gray: #64748b;
+  --saluteca-black: #000000;
+  --saluteca-white: #ffffff;
+  --saluteca-bg: #fafbfc;
+
+  /* Semantic colors */
+  --background: linear-gradient(135deg, #fafbfc 0%, #f0f4f8 100%);
+  --foreground: #0f172a;
+  --border-color: #e2e8f0;
+  --text-muted: #64748b;
+
+  /* Bootstrap override */
+  --bs-primary: #016390;
+  --bs-primary-rgb: 1, 99, 144;
+  --bs-secondary: #7abb85;
+  --bs-secondary-rgb: 122, 187, 133;
+  --bs-dark: #0f172a;
+  --bs-dark-rgb: 15, 23, 42;
+  --bs-body-font-family:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --bs-border-radius: 16px;
+  --bs-border-radius-sm: 12px;
+  --bs-border-radius-lg: 20px;
+}

@@ -1,0 +1,31 @@
+/* HowItWorks Section */
+.howItWorksSection {
+  background-color: #1a1a1a;
+}
+
+.title {
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin-bottom: 4rem;
+}
+
+.stepNumber {
+  width: 70px;
+  height: 70px;
+  background-color: #016390;
+  color: #fff;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.stepTitle {
+  font-size: 1.4rem;
+  color: #fff;
+}
+
+.stepDescription {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}

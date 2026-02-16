@@ -1,6 +1,7 @@
 # Mejoras Opcionales para el Dashboard
 
 ## ✅ Ya Implementado
+
 - Stats cards (Total, Míos, Familia)
 - Estudios recientes (últimos 6)
 - Botones de acción (Subir, Compartir)
@@ -8,10 +9,13 @@
 ## 💡 Mejoras Opcionales
 
 ### 1. Widget de Accesos Rápidos
+
 Agregar después de los stats:
 
 ```tsx
-{/* Quick Actions */}
+{
+  /* Quick Actions */
+}
 <div className="bg-white rounded-3 p-4 border mb-4">
   <h3 className="h6 fw-semibold mb-3">Accesos rápidos</h3>
   <div className="row g-2">
@@ -40,14 +44,17 @@ Agregar después de los stats:
       </Link>
     </div>
   </div>
-</div>
+</div>;
 ```
 
 ### 2. Widget de Actividad Reciente
+
 Mostrar últimas acciones:
 
 ```tsx
-{/* Recent Activity */}
+{
+  /* Recent Activity */
+}
 <div className="bg-white rounded-3 p-4 border mb-4">
   <h3 className="h6 fw-semibold mb-3">Actividad reciente</h3>
   <ul className="list-unstyled mb-0">
@@ -70,30 +77,34 @@ Mostrar últimas acciones:
       </div>
     </li>
   </ul>
-</div>
+</div>;
 ```
 
 ### 3. Widget de Próximos Estudios
+
 Si tenés estudios programados:
 
 ```tsx
-{/* Upcoming */}
+{
+  /* Upcoming */
+}
 <div className="bg-light rounded-3 p-4 mb-4">
   <div className="d-flex align-items-center gap-2 mb-3">
     <span>📅</span>
     <h3 className="h6 fw-semibold mb-0">Próximos estudios</h3>
   </div>
-  <p className="text-muted mb-0">
-    No tenés estudios programados
-  </p>
-</div>
+  <p className="text-muted mb-0">No tenés estudios programados</p>
+</div>;
 ```
 
 ### 4. Widget de Alertas/Recordatorios
+
 Para alergias o notas importantes:
 
 ```tsx
-{/* Important Notes */}
+{
+  /* Important Notes */
+}
 <div className="bg-warning bg-opacity-10 border border-warning rounded-3 p-3 mb-4">
   <div className="d-flex align-items-start gap-2">
     <span>⚠️</span>
@@ -101,40 +112,23 @@ Para alergias o notas importantes:
       <div className="fw-semibold mb-1">Recordatorio</div>
       <small>
         Juan tiene alergia a la Penicilina.
-        <a href="/app/family/fam-1" className="ms-1">Ver perfil →</a>
+        <a href="/app/family/fam-1" className="ms-1">
+          Ver perfil →
+        </a>
       </small>
     </div>
   </div>
-</div>
-```
-
-### 5. Widget de Categorías Populares
-Mostrar distribución de estudios:
-
-```tsx
-{/* Study Categories */}
-<div className="bg-white rounded-3 p-4 border mb-4">
-  <h3 className="h6 fw-semibold mb-3">Tus estudios por categoría</h3>
-  <div className="d-flex flex-wrap gap-2">
-    <span className="category-pill category-blood">
-      Sangre (3)
-    </span>
-    <span className="category-pill category-xray">
-      Radiografía (2)
-    </span>
-    <span className="category-pill category-ultrasound">
-      Ecografía (1)
-    </span>
-    {/* etc */}
-  </div>
-</div>
+</div>;
 ```
 
 ### 6. Timeline Visual
+
 Para ver evolución:
 
 ```tsx
-{/* Timeline */}
+{
+  /* Timeline */
+}
 <div className="bg-white rounded-3 p-4 border">
   <h3 className="h6 fw-semibold mb-3">Línea de tiempo</h3>
 
@@ -160,22 +154,27 @@ Para ver evolución:
 
     {/* Más items... */}
   </div>
-</div>
+</div>;
 ```
 
 ### 7. Widget de Salud de Familia
+
 Resumen por familiar:
 
 ```tsx
-{/* Family Health */}
+{
+  /* Family Health */
+}
 <div className="bg-white rounded-3 p-4 border">
   <h3 className="h6 fw-semibold mb-3">Estado de familia</h3>
 
   <div className="d-flex flex-column gap-2">
     <div className="d-flex align-items-center justify-content-between p-2 rounded hover-bg-light">
       <div className="d-flex align-items-center gap-2">
-        <div className="bg-secondary-saluteca rounded-circle text-white"
-             style={{ width: "32px", height: "32px" }}>
+        <div
+          className="bg-secondary-saluteca rounded-circle text-white"
+          style={{ width: "32px", height: "32px" }}
+        >
           JG
         </div>
         <div>
@@ -189,7 +188,7 @@ Resumen por familiar:
     </div>
     {/* Más familiares... */}
   </div>
-</div>
+</div>;
 ```
 
 ## 🎯 Prioridad Recomendada
@@ -197,12 +196,13 @@ Resumen por familiar:
 Si querés agregar más:
 
 1. **Alta prioridad:**
+
    - ✅ Stats cards (ya hecho)
    - Accesos rápidos
    - Widget de alertas (alergias importantes)
 
 2. **Media prioridad:**
-   - Categorías populares
+
    - Salud de familia
 
 3. **Baja prioridad (nice to have):**
@@ -213,6 +213,7 @@ Si querés agregar más:
 ## 📱 Consideraciones Mobile
 
 Todos los widgets deben:
+
 - Apilar verticalmente en mobile
 - Mantener padding adecuado
 - Ser táctiles (botones grandes)
@@ -221,6 +222,7 @@ Todos los widgets deben:
 ## 🎨 Diseño Consistente
 
 Mantener:
+
 - Border radius 12px para cards
 - Padding 1rem (p-4)
 - Gap de 0.75rem-1rem entre elementos

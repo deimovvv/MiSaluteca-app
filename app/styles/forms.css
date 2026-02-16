@@ -1,0 +1,71 @@
+/* Form Styles - Global form input overrides */
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--saluteca-primary);
+  box-shadow: 0 0 0 3px rgba(1, 99, 144, 0.08);
+}
+
+.form-control,
+.form-select {
+  border-radius: 12px;
+  border: 1.5px solid var(--border-color);
+  padding: 0.75rem 1rem;
+  transition: none !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: white;
+}
+
+/* InputGroup focus sync - when input has focus, sync the icon container */
+.input-group-text {
+  transition: none !important;
+}
+
+.input-group:focus-within .input-group-text {
+  border-color: var(--saluteca-primary);
+}
+
+/* Dropdown styles */
+.dropdown-item.active,
+.dropdown-item:active {
+  background: linear-gradient(135deg, var(--saluteca-primary) 0%, #014a6e 100%);
+  color: white;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(1, 99, 144, 0.08);
+  color: var(--saluteca-primary);
+}
+
+.dropdown-menu {
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile responsive */
+@media (max-width: 767.98px) {
+  .form-control,
+  .form-select {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.8125rem !important;
+    border-radius: 10px !important;
+  }
+
+  .input-group-text {
+    padding: 0.5rem 0.65rem !important;
+    border-radius: 10px 0 0 10px !important;
+  }
+
+  .input-group .form-control {
+    border-radius: 0 10px 10px 0 !important;
+  }
+
+  .dropdown-toggle {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.8125rem !important;
+  }
+}

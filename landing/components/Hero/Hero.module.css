@@ -1,0 +1,238 @@
+/* Hero Image Section */
+.heroImageSection {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: #000;
+}
+
+.heroImageWrapperBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.heroImageBg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.heroImageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.3) 50%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  z-index: 1;
+}
+
+.heroVideoCard {
+  position: relative;
+  width: 100%;
+  max-width: 95%;
+  margin: 0 auto;
+  background: var(--primary-blue);
+  border-radius: 32px;
+  padding: 6rem 15rem;
+  box-shadow: 0 24px 72px rgba(1, 99, 144, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+@media (min-width: 1600px) {
+  .heroVideoCard {
+    max-width: 1500px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .heroVideoCard {
+    padding: 5rem 8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroVideoCard {
+    padding: 3rem 2rem;
+  }
+}
+
+.heroVideoWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 350px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.heroVideo {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  aspect-ratio: 3/4;
+}
+
+@media (max-width: 768px) {
+  .heroVideoWrapper {
+    max-width: 100%;
+  }
+}
+
+.heroContent {
+  position: relative;
+  z-index: 10;
+}
+
+.heroTitle {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  margin-bottom: 1.5rem !important;
+  max-width: 950px;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+.heroSubtitle {
+  font-size: clamp(1rem, 1.85vw, 1.25rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.6;
+  max-width: 650px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+  .heroTitle {
+    line-height: 1.3;
+  }
+
+  .heroSubtitle {
+    line-height: 1.6;
+  }
+}
+
+.heroSubtitleBold {
+  font-size: clamp(1rem, 1.75vw, 1.15rem);
+  font-weight: 700;
+  color: #000;
+  line-height: 1.5;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.btnHeroPrimary {
+  background: var(--primary-blue);
+  border: none;
+  color: #fff;
+  border-radius: 50px;
+  font-size: 1rem;
+  padding: 0.85rem 2.5rem !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(1, 99, 144, 0.4);
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+}
+
+.btnHeroPrimary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.btnHeroPrimary:hover::before {
+  left: 100%;
+}
+
+.btnHeroPrimary:hover {
+  background: #014a6d;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(1, 99, 144, 0.5);
+}
+
+.btnHeroSecondary {
+  background: transparent !important;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.6) !important;
+  color: #fff !important;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  padding: 0.75rem 2rem !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+}
+
+.btnHeroSecondary:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.9) !important;
+  color: #fff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
+}
+
+@media (max-width: 768px) {
+  .btnHeroPrimary,
+  .btnHeroSecondary {
+    font-size: 0.9rem;
+    padding: 0.6rem 1.5rem !important;
+  }
+}
+
+/* Old hero gradient (keep for other sections if needed) */
+.heroGradient {
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1400px;
+  height: 600px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(1, 99, 144, 0.08) 0%,
+    rgba(140, 198, 63, 0.05) 50%,
+    transparent 70%
+  );
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.heroSection {
+  position: relative;
+}

@@ -1,6 +1,10 @@
+import "bootstrap/dist/css/bootstrap.min.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "./buttons.css";
+import './../landing/landing-style.css'
+import Provider from "@/user-dashboard/utils/Provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -12,7 +16,7 @@ export const metadata: Metadata = {
   title: "Mi Saluteca - Tu historial médico, siempre contigo",
   description: "Gestiona tu salud y la de tu familia de forma segura y privada",
   icons: {
-    icon: "https://res.cloudinary.com/dfoh7ntxq/image/upload/v1766024851/saludchiquito_ojbsip.png",
+    icon: "/saludchiquito_ojbsip.png",
   },
 };
 
@@ -23,8 +27,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={inter.className}>
-        {children}
+      <body className={inter.className} suppressHydrationWarning>
+        <Provider>{children}</Provider>
       </body>
     </html>
   );

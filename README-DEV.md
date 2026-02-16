@@ -3,12 +3,14 @@
 ## Estado Actual
 
 ✅ **Frontend completo con datos mock**
+
 - Todas las pantallas implementadas
 - Diseño responsive con Bootstrap 5
 - Modales funcionales
 - Integración WhatsApp lista
 
 🔄 **Pendiente: Backend**
+
 - Base de datos (MySQL + Prisma)
 - Autenticación (NextAuth v5 + Google)
 - File upload (S3/R2)
@@ -26,11 +28,13 @@ Abrí http://localhost:3000
 ## Rutas Disponibles
 
 **Públicas:**
+
 - `/` → Redirige a `/login`
 - `/login` → Pantalla de login (Google OAuth mock)
 - `/s/abc123xyz789` → Vista compartida de estudio (ejemplo con mock)
 
 **App (requieren login en producción):**
+
 - `/app` → Inicio con estudios recientes
 - `/app/studies` → Todos los estudios (búsqueda + filtros)
 - `/app/family` → Lista de familiares
@@ -42,19 +46,23 @@ Abrí http://localhost:3000
 Los datos mock están en `lib/mockData.ts`:
 
 **Usuarios:**
+
 - María González (mockUser)
 
 **Familiares:**
+
 - Juan González (8 años, hijo) - ID: `fam-1`
 - Ana González (5 años, hija) - ID: `fam-2`
 - Roberto González (39 años, esposo) - ID: `fam-3`
 - Elena Martínez (65 años, madre) - ID: `fam-4`
 
 **Estudios:**
+
 - 8 estudios de ejemplo distribuidos entre usuario y familiares
-- Diferentes categorías y fechas
+- Diferentes fechas y descripciones
 
 **Share Links:**
+
 - Token `abc123xyz789` → estudio ID `study-1`
 - Token `def456uvw012` → estudio ID `study-2`
 
@@ -63,17 +71,14 @@ Los datos mock están en `lib/mockData.ts`:
 Los 3 modales están implementados pero **no conectados** a las páginas aún:
 
 ```tsx
-import UploadStudyModal from '@/components/modals/UploadStudyModal';
-import AddFamilyMemberModal from '@/components/modals/AddFamilyMemberModal';
-import ShareModal from '@/components/modals/ShareModal';
+import UploadStudyModal from "@/components/modals/UploadStudyModal";
+import AddFamilyMemberModal from "@/components/modals/AddFamilyMemberModal";
+import ShareModal from "@/components/modals/ShareModal";
 
 // Usar con estado local:
 const [showModal, setShowModal] = useState(false);
 
-<UploadStudyModal
-  show={showModal}
-  onHide={() => setShowModal(false)}
-/>
+<UploadStudyModal show={showModal} onHide={() => setShowModal(false)} />;
 ```
 
 **Para conectarlos:** Reemplazar los `console.log` en cada modal con llamadas a API.
@@ -87,7 +92,7 @@ const shareViaWhatsApp = () => {
   const text = encodeURIComponent(
     `Te comparto mi estudio médico en SALUTECA: ${shareLink}`
   );
-  window.open(`https://wa.me/?text=${text}`, '_blank');
+  window.open(`https://wa.me/?text=${text}`, "_blank");
 };
 ```
 
@@ -108,6 +113,7 @@ npx prisma init
 ```
 
 Modelos sugeridos:
+
 - User
 - FamilyMember
 - Study
@@ -124,15 +130,18 @@ Crear `app/api/auth/[...nextauth]/route.ts` con Google Provider.
 ### 3. File Upload
 
 **Opción recomendada: Cloudflare R2**
+
 - Compatible con S3
 - Más barato que AWS S3
 - Generar signed URLs para acceso temporal
 
 **Opción alternativa: AWS S3**
+
 - Usar AWS SDK v3
 - Bucket privado + signed URLs
 
 En la DB solo guardar:
+
 - `fileKey` (path en S3/R2)
 - `fileName` (nombre original)
 - `mimeType`
@@ -160,6 +169,7 @@ api/
 ### 5. Conectar Frontend
 
 Reemplazar imports de `mockData.ts` con:
+
 - `fetch('/api/studies')`
 - React Query o SWR para caching
 - Loading states
@@ -170,6 +180,7 @@ Reemplazar imports de `mockData.ts` con:
 Todo el branding SALUTECA está en `app/globals.css`:
 
 **Variables CSS:**
+
 ```css
 --saluteca-primary: #016390
 --saluteca-secondary: #7ABB85
@@ -177,15 +188,10 @@ Todo el branding SALUTECA está en `app/globals.css`:
 ```
 
 **Botones:**
+
 ```tsx
 <Button className="btn-primary-saluteca">Primary</Button>
 <Button className="btn-outline-saluteca">Outline</Button>
-```
-
-**Category Pills:**
-```tsx
-<span className="category-pill category-blood">Sangre</span>
-<span className="category-pill category-xray">Radiografía</span>
 ```
 
 ## TypeScript Types
@@ -193,8 +199,9 @@ Todo el branding SALUTECA está en `app/globals.css`:
 Ver `types/index.ts` para todos los tipos e interfaces.
 
 Ejemplo:
+
 ```ts
-import type { Study, FamilyMember, StudyCategory } from '@/types';
+import type { Study, FamilyMember } from "@/types";
 ```
 
 ## Notas Importantes
