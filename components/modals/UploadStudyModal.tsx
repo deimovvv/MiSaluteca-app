@@ -56,28 +56,62 @@ export default function UploadStudyModal({
   const [uploading, setUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const processFile = async (file: File) => {
+    const validation = await quickValidateFileType(file);
+    if (!validation.isValid) {
+      setErrorMessage(validation.error || "Archivo no válido");
+      setSelectedFile(null);
+      return;
+    }
+
+    setSelectedFile(file);
+    setErrorMessage(null);
+    setAnalyzed(false);
+    setOcrText("");
+    setTitle("");
+    setDate(moment().format("DD-MM-YYYY"));
+    setInstitution("");
+    setDoctor("");
+    setConclusion("");
+  };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
+      await processFile(e.target.files[0]);
+    }
+  };
 
-      // Validación rápida del tipo de archivo
-      const validation = await quickValidateFileType(file);
-      if (!validation.isValid) {
-        setErrorMessage(validation.error || "Archivo no válido");
-        setSelectedFile(null);
-        return;
-      }
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
-      setSelectedFile(file);
-      setErrorMessage(null);
-      setAnalyzed(false); // Reset analyzed state when new file is selected
-      setOcrText("");
-      setTitle("");
-      setDate(moment().format("DD-MM-YYYY")); // Reset to today
-      setInstitution("");
-      setDoctor("");
-      setConclusion("");
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!(uploading || analyzing)) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setIsDragging(false);
+    }
+  };
+
+  const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    if (uploading || analyzing) return;
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      await processFile(file);
     }
   };
 
@@ -512,12 +546,25 @@ export default function UploadStudyModal({
                 <div
                   className="border border-2 border-dashed rounded p-4 text-center"
                   style={{
-                    borderColor: selectedFile ? "var(--saluteca-secondary)" : "#dee2e6",
-                    backgroundColor: selectedFile ? "#f0f9f4" : "#f8f9fa",
+                    borderColor: isDragging
+                      ? "var(--saluteca-primary)"
+                      : selectedFile
+                        ? "var(--saluteca-secondary)"
+                        : "#dee2e6",
+                    backgroundColor: isDragging
+                      ? "#e8f4fd"
+                      : selectedFile
+                        ? "#f0f9f4"
+                        : "#f8f9fa",
                     cursor: (uploading || analyzing) ? "not-allowed" : "pointer",
                     opacity: (uploading || analyzing) ? 0.6 : 1,
+                    transition: "border-color 0.2s ease, background-color 0.2s ease",
                   }}
                   onClick={() => !(uploading || analyzing) && document.getElementById("fileInput")?.click()}
+                  onDragOver={handleDragOver}
+                  onDragEnter={handleDragEnter}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
                 >
                   {selectedFile ? (
                     <div className="d-flex align-items-center justify-content-center gap-3">
@@ -602,7 +649,9 @@ export default function UploadStudyModal({
                           strokeDasharray="4 4"
                         />
                       </svg>
-                      <div className="fw-medium mb-1">Hacé clic para seleccionar un archivo</div>
+                      <div className="fw-medium mb-1">
+                        {isDragging ? "Soltá el archivo aquí" : "Arrastrá un archivo o hacé clic para seleccionar"}
+                      </div>
                       <div className="text-muted" style={{ fontSize: "0.875rem" }}>
                         PDF, JPG, PNG, DOCX (máx. 10MB)
                       </div>
@@ -694,7 +743,7 @@ export default function UploadStudyModal({
               {/* Conclusion */}
               <Form.Group className="mb-3">
                 <Form.Label className="fw-medium">
-                  Conclusión <span className="text-muted">(opcional)</span>
+                  Observaciones <span className="text-muted">(opcional)</span>
                 </Form.Label>
                 <Form.Control
                   as="textarea"

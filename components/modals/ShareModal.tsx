@@ -61,24 +61,15 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
     if (shareLink) {
       const doctorText = doctorName ? `Dr/a. ${doctorName}, te` : "Te";
       const text = `${doctorText} comparto mi estudio médico en SALUTECA (acceso temporal): ${shareLink}`;
-      // const encodedText = encodeURIComponent(text);
-      // window.open(`https://wa.me/?text=${encodedText}`, "_blank");
-      // Usar Web Share API si está disponible (móviles principalmente)
+
       if (canUseNativeShare) {
-        try {
-          await navigator.share({
-            title: "Compartir estudio médico - SALUTECA",
-            text: text,
-            // url: shareLink,
-          });
-        } catch (error) {
-          // Si el usuario cancela o hay un error, no hacer nada
-          console.log("Share cancelled or failed:", error);
-        }
-      } else {
-        // Fallback: abrir WhatsApp Web en escritorio
         const encodedText = encodeURIComponent(text);
         window.open(`https://wa.me/?text=${encodedText}`, "_blank");
+        // await navigator.share({
+        //   title: "Compartir estudio médico - SALUTECA",
+        //   text: text,
+        // });
+
       }
     }
   };

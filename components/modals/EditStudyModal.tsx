@@ -247,7 +247,7 @@ export default function EditStudyModal({
             {/* Conclusion */}
             <Form.Group className="mb-3">
               <Form.Label className="fw-medium">
-                Conclusión <span className="text-muted">(opcional)</span>
+                Observaciones <span className="text-muted">(opcional)</span>
               </Form.Label>
               <Form.Control
                 as="textarea"

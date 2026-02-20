@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "react-bootstrap";
+import { useSession } from "next-auth/react";
 import { Study, FamilyMember } from "@/types";
 import { formatDate } from "@/lib/formatters";
 import styles from "./StudyRow.module.css";
@@ -14,9 +15,15 @@ interface StudyRowProps {
 }
 
 export default function StudyRow({ study, familyMembers, onEdit, onView, onShare }: StudyRowProps) {
+  const { data: session } = useSession();
+
   const familyMember = study.familyMemberId && familyMembers
     ? familyMembers.find(fm => fm.id === study.familyMemberId)
     : null;
+
+  const ownerName = familyMember
+    ? familyMember.name
+    : session?.user?.name ?? null;
 
   return (
     <div className={styles.studyRowCard}>
@@ -29,7 +36,7 @@ export default function StudyRow({ study, familyMembers, onEdit, onView, onShare
           {study.description && (
             <p className={styles.studyRowDescription}>{study.description}</p>
           )}
-          {familyMember && (
+          {ownerName && (
             <div className="d-flex align-items-center gap-1 mt-1">
               <svg
                 width="11"
@@ -56,7 +63,7 @@ export default function StudyRow({ study, familyMembers, onEdit, onView, onShare
                 className="text-muted-saluteca"
                 style={{ fontSize: "0.7rem" }}
               >
-                {familyMember.name}
+                {ownerName}
               </span>
             </div>
           )}

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import { signOut } from "next-auth/react";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -160,6 +161,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
           top: 0,
           transition: "transform 0.3s ease",
           zIndex: 1000,
+          overflow: "hidden",
         }}
       >
         {/* Logo */}
@@ -202,7 +204,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-grow-1 p-3">
+        <nav className="flex-grow-1 p-3" style={{ overflowY: "auto", minHeight: 0 }}>
           <ul className="list-unstyled">
             {navItems.map((item) => (
               <li key={item.href} className="mb-2">
@@ -233,6 +235,49 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
             ))}
           </ul>
         </nav>
+
+        {/* Sign out */}
+        <div className="p-3 border-top">
+          <button
+            onClick={() => signOut({ callbackUrl: "/" })}
+            className="d-flex align-items-center gap-3 px-3 py-3 w-100 text-dark hover-bg-light"
+            style={{
+              transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              fontWeight: 500,
+              borderRadius: "12px",
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            <span className="text-muted-saluteca">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M16 17L21 12L16 7"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M21 12H9"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+            <span>Cerrar sesión</span>
+          </button>
+        </div>
       </aside>
     </>
   );
