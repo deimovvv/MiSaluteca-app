@@ -13,6 +13,11 @@ interface SharedStudyCardProps {
 export default function SharedStudyCard({ study, linkUuid }: SharedStudyCardProps) {
   const [isDownloading, setIsDownloading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [imageError, setImageError] = useState(false);
+
+  const previewUrl = `/api/preview-shared-study/${linkUuid}`;
+  const isImage = study.mimeType.startsWith("image/");
+  const isPdf = study.mimeType === "application/pdf";
 
   const handleDownload = async () => {
     try {
@@ -62,7 +67,7 @@ export default function SharedStudyCard({ study, linkUuid }: SharedStudyCardProp
           <div
             className="mb-3 position-relative"
             style={{
-              background: "linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)",
+              background: "linear-gradient(135deg, var(--saluteca-danger-wash) 0%, #fecaca 100%)",
               border: "1px solid #fca5a5",
               borderRadius: "12px",
               padding: "16px 48px 16px 16px",
@@ -75,7 +80,7 @@ export default function SharedStudyCard({ study, linkUuid }: SharedStudyCardProp
                   width: "40px",
                   height: "40px",
                   borderRadius: "50%",
-                  background: "#dc2626",
+                  background: "var(--saluteca-danger)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -103,7 +108,7 @@ export default function SharedStudyCard({ study, linkUuid }: SharedStudyCardProp
                   style={{
                     fontSize: "0.9375rem",
                     fontWeight: 600,
-                    color: "#991b1b",
+                    color: "var(--saluteca-danger-text)",
                     marginBottom: "4px",
                   }}
                 >
@@ -112,7 +117,7 @@ export default function SharedStudyCard({ study, linkUuid }: SharedStudyCardProp
                 <div
                   style={{
                     fontSize: "0.875rem",
-                    color: "#7f1d1d",
+                    color: "var(--saluteca-danger-text)",
                     lineHeight: "1.5",
                   }}
                 >
@@ -153,7 +158,7 @@ export default function SharedStudyCard({ study, linkUuid }: SharedStudyCardProp
               >
                 <path
                   d="M12 4L4 12M4 4L12 12"
-                  stroke="#7f1d1d"
+                  stroke="var(--saluteca-danger-text)"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -203,6 +208,74 @@ export default function SharedStudyCard({ study, linkUuid }: SharedStudyCardProp
               </div>
               <div className="fw-medium">{formatFileSize(study.size)}</div>
             </div>
+          </div>
+        </div>
+
+        {/* Vista previa del archivo */}
+        <div className="mb-4">
+          <h2 className="h6 fw-semibold mb-3">Vista previa</h2>
+          <div
+            className="bg-light rounded d-flex align-items-center justify-content-center overflow-hidden"
+            style={{
+              minHeight: isImage ? "200px" : "500px",
+              maxHeight: isPdf ? "700px" : "600px",
+              border: "1px solid #e5e7eb",
+              borderRadius: "12px",
+            }}
+          >
+            {isImage && !imageError ? (
+              <img
+                src={previewUrl}
+                alt={study.title || "Estudio médico"}
+                onError={() => setImageError(true)}
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "600px",
+                  objectFit: "contain",
+                  display: "block",
+                }}
+              />
+            ) : isPdf ? (
+              <iframe
+                src={previewUrl}
+                title={study.title || "Estudio médico"}
+                style={{
+                  width: "100%",
+                  height: "700px",
+                  border: "none",
+                }}
+              />
+            ) : (
+              <div className="text-center p-5">
+                <svg
+                  width="64"
+                  height="64"
+                  viewBox="0 0 64 64"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="mb-3"
+                >
+                  <path
+                    d="M40 8H16C14.9391 8 13.9217 8.42143 13.1716 9.17157C12.4214 9.92172 12 10.9391 12 12V52C12 53.0609 12.4214 54.0783 13.1716 54.8284C13.9217 55.5786 14.9391 56 16 56H48C49.0609 56 50.0783 55.5786 50.8284 54.8284C51.5786 54.0783 52 53.0609 52 52V20L40 8Z"
+                    stroke="#6b7280"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M40 8V20H52"
+                    stroke="#6b7280"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <p className="text-muted mb-2">{study.mimeType.split("/")[1].toUpperCase()}</p>
+                <p className="text-muted small mb-0">
+                  Descargá el archivo para visualizarlo
+                </p>
+              </div>
+            )}
           </div>
         </div>
 

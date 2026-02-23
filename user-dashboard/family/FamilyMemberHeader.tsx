@@ -43,7 +43,7 @@ export default function FamilyMemberHeader({ member, studyCount, lastStudyDate }
 
         <div className="col-md-9">
           <div className="row g-3 mb-3">
-            <div className="col-sm-6">
+            <div className="col-12">
               <Card className="border">
                 <Card.Body className="p-3">
                   <div className="d-flex align-items-center gap-3">
@@ -52,28 +52,28 @@ export default function FamilyMemberHeader({ member, studyCount, lastStudyDate }
                       style={{
                         width: "48px",
                         height: "48px",
-                        borderRadius: "12px",
-                        backgroundColor: "#E3F2FD",
+                        borderRadius: "var(--radius-md)",
+                        backgroundColor: "var(--saluteca-sky-faint)",
                       }}
                     >
                       <svg
-                        width="24"
-                        height="24"
+                        width="22"
+                        height="22"
                         viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
                           d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V9L13 2Z"
-                          stroke="#1565C0"
-                          strokeWidth="2"
+                          stroke="var(--saluteca-ocean)"
+                          strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         />
                         <path
                           d="M13 2V9H20"
-                          stroke="#1565C0"
-                          strokeWidth="2"
+                          stroke="var(--saluteca-ocean)"
+                          strokeWidth="1.5"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         />
@@ -89,58 +89,10 @@ export default function FamilyMemberHeader({ member, studyCount, lastStudyDate }
                 </Card.Body>
               </Card>
             </div>
-
-            <div className="col-sm-6">
-              <Card className="border">
-                <Card.Body className="p-3">
-                  <div className="d-flex align-items-center gap-3">
-                    <div
-                      className="d-flex align-items-center justify-content-center"
-                      style={{
-                        width: "48px",
-                        height: "48px",
-                        borderRadius: "12px",
-                        backgroundColor: "#E8F5E9",
-                      }}
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <circle
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="#2E7D32"
-                          strokeWidth="2"
-                        />
-                        <path
-                          d="M12 6V12L16 14"
-                          stroke="#2E7D32"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </div>
-                    <div>
-                      <div className="text-muted-saluteca" style={{ fontSize: "0.875rem" }}>
-                        Último estudio
-                      </div>
-                      <div className="fw-semibold" style={{ fontSize: "1.125rem" }}>
-                        {lastStudyDate ? formatDate(lastStudyDate) : "—"}
-                      </div>
-                    </div>
-                  </div>
-                </Card.Body>
-              </Card>
-            </div>
           </div>
 
           {member.notes && (
-            <div className="p-3 rounded" style={{ backgroundColor: "#F8F9FA" }}>
+            <div className="p-3 rounded" style={{ backgroundColor: "var(--surface-inset)" }}>
               <div className="fw-medium mb-1" style={{ fontSize: "0.875rem" }}>
                 Notas
               </div>

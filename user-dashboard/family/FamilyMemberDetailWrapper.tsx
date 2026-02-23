@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "react-bootstrap";
+
 import Link from "next/link";
 import UploadStudyModal from "@/components/modals/UploadStudyModal";
 import FamilyMemberDetail from "./FamilyMemberDetail";
@@ -28,16 +28,36 @@ export default function FamilyMemberDetailWrapper({
     <>
       {/* Header Actions */}
       <div className="d-flex gap-2 align-items-center mb-4">
-        <Link href="/app/family" className="btn btn-secondary-saluteca d-flex align-items-center"
-          style={{
-            backgroundColor: "var(--saluteca-primary-dark)",
-            color: "var(--saluteca-white)",
-          }}
-        >
+        <Link href="/app/family" className="btn btn-outline-saluteca rounded-pill d-flex align-items-center">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="me-1"
+            style={{ display: "inline" }}
+          >
+            <path
+              d="M12.6667 8H3.33337"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M8.00004 12.6667L3.33337 8.00004L8.00004 3.33337"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
           Volver
         </Link>
-        <Button
-          className="btn-primary-saluteca d-flex align-items-center"
+        <button
+          type="button"
+          className="btn btn-primary-saluteca rounded-pill d-flex align-items-center"
           onClick={() => setShowUploadModal(true)}
         >
           <svg
@@ -65,7 +85,7 @@ export default function FamilyMemberDetailWrapper({
             />
           </svg>
           Subir Estudio
-        </Button>
+        </button>
       </div>
 
       <FamilyMemberDetail

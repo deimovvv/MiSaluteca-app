@@ -1,79 +1,135 @@
-/* Button Styles - Global button utilities */
+/* ============================================
+   MI SALUTECA — Button System
+   ============================================
+   
+   Depth strategy: Layered shadows for primary,
+   clean borders for secondary/outline.
+   ============================================ */
 
+/* ─── Primary Button ─── */
 .btn-primary-saluteca {
-  background: linear-gradient(135deg, #0284c7 0%, #016390 100%);
+  background: linear-gradient(135deg, var(--saluteca-ocean-light) 0%, var(--saluteca-ocean) 100%);
   border: none;
-  /* color: var(--saluteca-white); */
+  color: var(--saluteca-white);
   font-weight: 500;
-  padding: 0.75rem 1.5rem;
-  border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow:
-    0 4px 12px rgba(1, 99, 144, 0.15),
-    0 2px 4px rgba(1, 99, 144, 0.1);
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-btn);
+  transition: all var(--duration-normal) var(--ease-default);
+  box-shadow: var(--shadow-brand);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-normal);
+  line-height: var(--leading-normal);
 }
 
 .btn-primary-saluteca:hover {
-  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  background: linear-gradient(135deg, #0ea5e9 0%, var(--saluteca-ocean-light) 100%);
   color: var(--saluteca-white);
-  transform: translateY(-2px);
-  box-shadow:
-    0 8px 20px rgba(1, 99, 144, 0.25),
-    0 4px 8px rgba(1, 99, 144, 0.15);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-brand-hover);
 }
 
 .btn-primary-saluteca:active {
   transform: translateY(0);
+  box-shadow: var(--shadow-brand);
 }
 
+.btn-primary-saluteca:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-brand), 0 0 0 3px var(--focus-ring);
+}
+
+.btn-primary-saluteca:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ─── Outline Button ─── */
 .btn-outline-saluteca {
-  background: white;
-  border: 1.5px solid transparent;
-  background-image:
-    linear-gradient(white, white),
-    linear-gradient(135deg, #0284c7 0%, #016390 100%);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  color: #016390;
+  background: var(--surface-0);
+  border: 1px solid var(--border-strong);
+  color: var(--saluteca-ocean);
   font-weight: 500;
-  padding: 0.75rem 1.5rem;
-  border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-btn);
+  transition: all var(--duration-normal) var(--ease-default);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  box-shadow: var(--shadow-xs);
 }
 
 .btn-outline-saluteca:hover {
-  background: linear-gradient(135deg, #0284c7 0%, #016390 100%);
-  background-clip: padding-box;
-  color: var(--saluteca-white);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(1, 99, 144, 0.2);
+  background: var(--saluteca-sky-faint);
+  border-color: var(--saluteca-ocean);
+  color: var(--saluteca-ocean);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-outline-saluteca:active {
   transform: translateY(0);
+  background: var(--saluteca-sky-wash);
 }
 
+.btn-outline-saluteca:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-xs), 0 0 0 3px var(--focus-ring);
+}
+
+.btn-outline-saluteca:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ─── Secondary / Ghost Button ─── */
 .btn-secondary-saluteca {
   background-color: transparent;
-  border: 1.5px solid var(--border-color);
-  color: var(--saluteca-white);
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
   font-weight: 500;
-  padding: 0.75rem 1.5rem;
-  border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-btn);
+  transition: all var(--duration-normal) var(--ease-default);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
 }
 
 .btn-secondary-saluteca:hover {
-  background-color: var(--saluteca-bg);
-  border-color: var(--saluteca-gray);
-  color: var(--foreground);
+  background-color: var(--surface-inset);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
 }
 
 .btn-secondary-saluteca:active {
-  transform: translateY(0);
+  background-color: var(--border-default);
 }
 
-/* Shared links modal buttons */
+.btn-secondary-saluteca:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.btn-secondary-saluteca:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Size Variants: Ensure correct shape is preserved ─── */
+.btn-primary-saluteca.btn-sm,
+.btn-outline-saluteca.btn-sm,
+.btn-secondary-saluteca.btn-sm {
+  border-radius: var(--radius-sm) !important;
+}
+
+.btn-primary-saluteca.btn-lg,
+.btn-outline-saluteca.btn-lg,
+.btn-secondary-saluteca.btn-lg {
+  border-radius: var(--radius-btn) !important;
+}
+
+/* ─── Shared Links Modal Buttons ─── */
 .list-group-item .btn,
 .list-group-item button {
   display: inline-flex !important;
@@ -94,8 +150,9 @@
   height: 14px !important;
 }
 
-/* Touch device optimizations */
+/* ─── Touch Device Optimizations ─── */
 @media (hover: none) and (pointer: coarse) {
+
   .btn-primary-saluteca:hover,
   .btn-outline-saluteca:hover {
     transform: none;

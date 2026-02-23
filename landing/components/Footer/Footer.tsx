@@ -26,7 +26,7 @@ export default function Footer() {
             <a href="#" className={`text-decoration-none me-4 hover-link ${styles.link}`}>
               Privacidad
             </a>
-            <a href="#" className={`text-decoration-none me-4 hover-link ${styles.link}`}>
+            <a href="/terminos" className={`text-decoration-none me-4 hover-link ${styles.link}`}>
               Términos
             </a>
             <a href="#" className={`text-decoration-none hover-link ${styles.link}`}>

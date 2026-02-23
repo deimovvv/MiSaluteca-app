@@ -2,14 +2,14 @@
 
 import { Container, Row, Col } from "react-bootstrap";
 import Reveal from "../Reveal/Reveal";
-import { HiFolder, HiLink, HiLockClosed, HiUserGroup } from "react-icons/hi2";
+import { HiSparkles, HiLink, HiLockClosed, HiUserGroup } from "react-icons/hi2";
 import styles from "./Benefits.module.css";
 
 const benefits = [
   {
-    title: "Todo en un solo lugar",
-    description: "Guardá tus estudios organizados por fecha.",
-    icon: HiFolder,
+    title: "IA que organiza por vos",
+    description: "Subí tu estudio y nuestra IA completa título, fecha, institución y una observación automáticamente.",
+    icon: HiSparkles,
   },
   {
     title: "Compartir en segundos",
@@ -22,8 +22,8 @@ const benefits = [
     icon: HiLockClosed,
   },
   {
-    title: "Pensado para adultos mayores",
-    description: "Interfaz clara, letras grandes, sin pasos complicados.",
+    title: "Grupo familiar",
+    description: "Cargá estudios para tus familiares y tené todo en un solo lugar.",
     icon: HiUserGroup,
   },
 ];

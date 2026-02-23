@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Button, Spinner } from "react-bootstrap";
 import { Study, FamilyMember } from "@/types";
 import { formatDate } from "@/lib/formatters";
 import toast from "react-hot-toast";
+import ImageMagnifier from "@/components/ui/ImageMagnifier";
 
 interface ViewStudyModalProps {
   show: boolean;
@@ -20,10 +21,50 @@ export default function ViewStudyModal({
   familyMembers = [],
 }: ViewStudyModalProps) {
   const [downloading, setDownloading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [loadingPreview, setLoadingPreview] = useState(false);
 
   const familyMember = study.familyMemberId
     ? familyMembers.find(fm => fm.id === study.familyMemberId)
     : null;
+
+  // React hook to fetch the file for inline previewing without triggering download
+  useEffect(() => {
+    let activeUrl = "";
+
+    if (show && study.uuid) {
+      setLoadingPreview(true);
+      fetch(`/api/download-study/${study.uuid}`)
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to load");
+          return res.blob();
+        })
+        .then((blob) => {
+          let properBlob = blob;
+          // Fix generic octet-stream to match known extension if missing mimeType
+          if (blob.type === "application/octet-stream" || !blob.type) {
+            if (study.fileName.toLowerCase().endsWith(".pdf")) {
+              properBlob = new Blob([blob], { type: "application/pdf" });
+            } else if (study.fileName.toLowerCase().endsWith(".jpg") || study.fileName.toLowerCase().endsWith(".jpeg")) {
+              properBlob = new Blob([blob], { type: "image/jpeg" });
+            } else if (study.fileName.toLowerCase().endsWith(".png")) {
+              properBlob = new Blob([blob], { type: "image/png" });
+            }
+          }
+          activeUrl = window.URL.createObjectURL(properBlob);
+          setPreviewUrl(activeUrl);
+        })
+        .catch((err) => console.error("Error loading preview:", err))
+        .finally(() => setLoadingPreview(false));
+    }
+
+    return () => {
+      if (activeUrl) {
+        window.URL.revokeObjectURL(activeUrl);
+      }
+      setPreviewUrl(null);
+    };
+  }, [show, study.uuid, study.fileName]);
 
   const handleDownload = async () => {
     setDownloading(true);
@@ -70,151 +111,131 @@ export default function ViewStudyModal({
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="px-4 pb-4">
-        {/* Date */}
-        <div className="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
-          <span className="text-muted" style={{ fontSize: "0.875rem" }}>
-            {formatDate(study.date)}
-          </span>
+        {/* Header Grid: Date and For Whom */}
+        <div className="row mb-4 pb-3 border-bottom">
+          <div className="col-sm-6 mb-3 mb-sm-0">
+            <div className="text-muted mb-1" style={{ fontSize: "0.8125rem" }}>Fecha del estudio</div>
+            <div className="fw-medium">
+              {formatDate(study.date)}
+            </div>
+          </div>
+          <div className="col-sm-6">
+            <div className="text-muted mb-1" style={{ fontSize: "0.8125rem" }}>Paciente</div>
+            {familyMember ? (
+              <div className="d-flex align-items-center gap-2">
+                <div
+                  className="bg-secondary-saluteca d-flex align-items-center justify-content-center text-white fw-semibold"
+                  style={{ width: "24px", height: "24px", borderRadius: "50%", fontSize: "0.7rem" }}
+                >
+                  {familyMember.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)}
+                </div>
+                <span className="fw-medium">{familyMember.name}</span>
+              </div>
+            ) : (
+              <span className="fw-medium">Para mí</span>
+            )}
+          </div>
         </div>
 
-        {/* For whom */}
-        <div className="mb-4">
-          <div className="fw-semibold mb-2" style={{ fontSize: "0.875rem", color: "#6c757d" }}>
-            Para:
-          </div>
-          {familyMember ? (
-            <div className="d-flex align-items-center gap-2">
-              <div
-                className="bg-secondary-saluteca d-flex align-items-center justify-content-center text-white fw-semibold"
-                style={{
-                  width: "32px",
-                  height: "32px",
-                  borderRadius: "50%",
-                  fontSize: "0.75rem",
-                }}
-              >
-                {familyMember.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")
-                  .toUpperCase()
-                  .slice(0, 2)}
+        {/* Details Grid: Extracted Metadata */}
+        <div className="row g-4 mb-4">
+          {study.institution && (
+            <div className="col-12 col-md-6">
+              <div className="text-muted mb-1" style={{ fontSize: "0.8125rem" }}>Institución</div>
+              <div className="fw-medium p-2 bg-light rounded" style={{ fontSize: "0.9375rem" }}>
+                {study.institution}
               </div>
-              <span className="fw-medium">{familyMember.name}</span>
             </div>
-          ) : (
-            <div className="d-flex align-items-center gap-2">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle
-                  cx="10"
-                  cy="7"
-                  r="3"
-                  stroke="var(--saluteca-gray)"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M4 17C4 13.6863 6.68629 11 10 11C13.3137 11 16 13.6863 16 17"
-                  stroke="var(--saluteca-gray)"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <span className="fw-medium">Mi estudio</span>
+          )}
+          {study.medico && (
+            <div className="col-12 col-md-6">
+              <div className="text-muted mb-1" style={{ fontSize: "0.8125rem" }}>Médico</div>
+              <div className="fw-medium p-2 bg-light rounded" style={{ fontSize: "0.9375rem" }}>
+                {study.medico}
+              </div>
             </div>
           )}
         </div>
 
-        {/* Description */}
+        {study.conclusion && (
+          <div className="mb-4">
+            <div className="text-muted mb-1" style={{ fontSize: "0.8125rem" }}>Observaciones / Informe</div>
+            <div className="p-3 bg-light rounded border" style={{ fontSize: "0.9375rem", lineHeight: 1.6 }}>
+              {study.conclusion}
+            </div>
+          </div>
+        )}
+
         {study.description && (
           <div className="mb-4">
-            <div className="fw-semibold mb-2" style={{ fontSize: "0.875rem", color: "#6c757d" }}>
-              Descripción:
-            </div>
-            <p className="mb-0" style={{ fontSize: "0.9375rem", lineHeight: 1.6 }}>
+            <div className="text-muted mb-1" style={{ fontSize: "0.8125rem" }}>Notas adicionales</div>
+            <p className="mb-0 text-dark" style={{ fontSize: "0.9375rem", lineHeight: 1.6 }}>
               {study.description}
             </p>
           </div>
         )}
 
-        {/* File */}
-        <div className="mb-4">
-          <div className="fw-semibold mb-2" style={{ fontSize: "0.875rem", color: "#6c757d" }}>
-            Archivo:
-          </div>
-          <div
-            className="d-flex align-items-center gap-3 p-3 rounded border"
-            style={{ backgroundColor: "#f8f9fa" }}
-          >
-            <div
-              className="d-flex align-items-center justify-content-center"
-              style={{
-                width: "48px",
-                height: "48px",
-                borderRadius: "8px",
-                backgroundColor: "#e9ecef",
-              }}
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V9L13 2Z"
-                  stroke="#495057"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M13 2V9H20"
-                  stroke="#495057"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+        {/* File Preview */}
+        <div className="mb-3">
+          <div className="d-flex justify-content-between align-items-center mb-2">
+            <div className="fw-semibold text-muted" style={{ fontSize: "0.875rem" }}>
+              Visualización del Documento
             </div>
-            <div className="flex-grow-1" style={{ minWidth: 0 }}>
-              <div className="fw-medium text-truncate" style={{ fontSize: "0.9375rem" }}>
-                {/* {study.fileName} */}
-                Estudio
-              </div>
-              <div className="text-muted" style={{ fontSize: "0.8125rem" }}>
-                {(study.size / 1024 / 1024).toFixed(2)} MB
-              </div>
-            </div>
-            <Button
-              className="btn-outline-saluteca"
-              size="sm"
+            <button
+              type="button"
+              className="btn btn-outline-saluteca btn-sm d-flex align-items-center gap-2"
               onClick={handleDownload}
               disabled={downloading}
             >
               {downloading ? (
-                <>
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                    variant="secondary"
-                  />
-                </>
+                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
               ) : (
-                "Abrir"
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 15L12 3M12 15L8 11M12 15L16 11M2 17L2 20C2 20.5523 2.44772 21 3 21L21 21C21.5523 21 22 20.5523 22 20L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               )}
-            </Button>
+              Descargar original
+            </button>
+          </div>
+
+          <div
+            className="w-100 border rounded overflow-hidden position-relative d-flex justify-content-center align-items-center"
+            style={{ minHeight: "200px", maxHeight: "600px", backgroundColor: "var(--surface-canvas)" }}
+          >
+            {loadingPreview ? (
+              <div className="text-center text-muted p-5">
+                <Spinner animation="border" className="mb-3" style={{ color: "var(--saluteca-ocean)" }} />
+                <div>Cargando vista previa...</div>
+              </div>
+            ) : previewUrl ? (
+              study.fileName.toLowerCase().endsWith(".pdf") || study.mimeType?.includes("pdf") ? (
+                <iframe
+                  src={previewUrl}
+                  className="w-100 border-0"
+                  style={{ height: "600px" }}
+                  title="PDF Preview"
+                />
+              ) : (
+                <ImageMagnifier
+                  src={previewUrl}
+                  alt="Vista previa del estudio"
+                  zoomLevel={2.5}
+                  lensSize={120}
+                  style={{ width: "100%", maxHeight: "600px" }}
+                />
+              )
+            ) : (
+              <div className="text-center text-muted p-5">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="mb-3 opacity-50">
+                  <path d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V9L13 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <div>No se pudo cargar la vista previa. Por favor, descargá el archivo.</div>
+              </div>
+            )}
           </div>
         </div>
+
+
 
         {/* Uploaded info */}
         <div className="text-muted" style={{ fontSize: "0.8125rem" }}>
@@ -222,9 +243,9 @@ export default function ViewStudyModal({
         </div>
       </Modal.Body>
       <Modal.Footer className="border-0 pt-0">
-        <Button variant="secondary" onClick={onHide}>
+        <button type="button" className="btn btn-secondary-saluteca" onClick={onHide}>
           Cerrar
-        </Button>
+        </button>
       </Modal.Footer>
     </Modal>
   );

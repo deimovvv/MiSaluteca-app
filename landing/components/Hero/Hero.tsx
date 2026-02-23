@@ -20,9 +20,15 @@ export default function Hero() {
       {/* Image Background with Parallax */}
       <motion.div className={styles.heroImageWrapperBg} style={{ y: videoY }}>
         <div
-          className={styles.heroImageBg}
+          className={`${styles.heroImageBg} ${styles.heroImageDesktop}`}
           style={{
-            backgroundImage: "url('/images/freepik__a-photorealistic-lifestyle-scene-inside-a-warm-mod__44432_rn8dar.png')"
+            backgroundImage: "url('/images/hero-nuevo.png')"
+          }}
+        ></div>
+        <div
+          className={`${styles.heroImageBg} ${styles.heroImageMobile}`}
+          style={{
+            backgroundImage: "url('/images/mobiletest.png')"
           }}
         ></div>
         <div className={styles.heroImageOverlay}></div>
@@ -51,7 +57,7 @@ export default function Hero() {
                     href="/app"
                     className={styles.btnHeroPrimary}
                   >
-                    Crear cuenta
+                    Acceder
                   </Button>
                   <Button
                     onClick={scrollToHowItWorks}

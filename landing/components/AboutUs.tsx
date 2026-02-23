@@ -32,7 +32,7 @@ export default function AboutUs() {
                 <div className="p-4" style={{
                   backgroundColor: "#f8f9fa",
                   borderRadius: "12px",
-                  borderLeft: "4px solid #8CC63F"
+                  borderLeft: "4px solid #0d9488"
                 }}>
                   <p className="mb-2" style={{ fontSize: "1.1rem", fontWeight: 600, color: "#016390" }}>
                     Nuestra misión

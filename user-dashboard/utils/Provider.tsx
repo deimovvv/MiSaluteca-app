@@ -16,8 +16,8 @@ const Provider = ({ children }: ProviderProps) => {
                 toastOptions={{
                     duration: 3000,
                     style: {
-                        background: "#fff",
-                        color: "#333",
+                        background: "var(--surface-0, #fff)",
+                        color: "var(--text-primary, #333)",
                         borderRadius: "12px",
                         padding: "16px",
                         fontSize: "14px",
@@ -26,13 +26,13 @@ const Provider = ({ children }: ProviderProps) => {
                     success: {
                         iconTheme: {
                             primary: "var(--saluteca-primary, #0066CC)",
-                            secondary: "#fff",
+                            secondary: "var(--saluteca-white, #fff)",
                         },
                     },
                     error: {
                         iconTheme: {
-                            primary: "#dc3545",
-                            secondary: "#fff",
+                            primary: "var(--saluteca-danger, #dc3545)",
+                            secondary: "var(--saluteca-white, #fff)",
                         },
                     },
                 }}

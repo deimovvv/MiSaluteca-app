@@ -55,8 +55,9 @@ export default function StudyDetailClient({ study, familyMember }: StudyDetailCl
       title={study.title || "Estudio médico"}
       action={
         <div className="d-flex gap-2">
-          <Button
-            className="btn-outline-saluteca"
+          <button
+            type="button"
+            className="btn btn-outline-saluteca"
             onClick={() => setShowShareModal(true)}
           >
             <svg
@@ -75,7 +76,7 @@ export default function StudyDetailClient({ study, familyMember }: StudyDetailCl
               <path d="M6 7L10 5" stroke="currentColor" strokeWidth="1.5" />
             </svg>
             Compartir
-          </Button>
+          </button>
           <Button
             className="btn-primary-saluteca"
             onClick={handleDownload}
@@ -305,7 +306,7 @@ export default function StudyDetailClient({ study, familyMember }: StudyDetailCl
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       />
-                      <circle cx="50" cy="18" r="4" fill="var(--saluteca-secondary)" />
+                      <circle cx="50" cy="18" r="4" fill="var(--saluteca-teal)" />
                     </svg>
                     <p className="text-muted mb-0">Archivo de imagen (mock)</p>
                   </div>
@@ -322,8 +323,9 @@ export default function StudyDetailClient({ study, familyMember }: StudyDetailCl
             <div className="card-body">
               <h2 className="h6 fw-semibold mb-3">Acciones</h2>
               <div className="d-grid gap-2">
-                <Button
-                  className="btn-outline-saluteca"
+                <button
+                  type="button"
+                  className="btn btn-outline-saluteca"
                   onClick={() => setShowShareModal(true)}
                 >
                   <svg
@@ -342,9 +344,10 @@ export default function StudyDetailClient({ study, familyMember }: StudyDetailCl
                     <path d="M6 7L10 5" stroke="currentColor" strokeWidth="1.5" />
                   </svg>
                   Compartir estudio
-                </Button>
-                <Button
-                  className="btn-outline-saluteca"
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-outline-saluteca"
                   onClick={handleDownload}
                   disabled={isDownloading}
                 >
@@ -396,7 +399,7 @@ export default function StudyDetailClient({ study, familyMember }: StudyDetailCl
                       Descargar archivo
                     </>
                   )}
-                </Button>
+                </button>
               </div>
             </div>
           </div>

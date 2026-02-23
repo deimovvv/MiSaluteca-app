@@ -29,7 +29,7 @@ export default function AppShell({ children, title, action }: AppShellProps) {
         className="flex-grow-1 app-shell-content"
         style={{
           transition: "margin-left 0.3s ease",
-          backgroundColor: "#F8F9FA",
+          backgroundColor: "var(--surface-canvas)",
           width: "100%",
         }}
       >

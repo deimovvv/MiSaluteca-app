@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { authOptions } from "@/src/lib/auth/config";
-import AppShell from "@/src/shared/components/layout/AppShell";
+import AppShell from "@/components/layout/AppShell";
 import { getFamilyMemberByUuid, getFamilyMembers } from "@/src/features/family/api";
 import { getStudiesByFamilyMember, getStudyCountByFamilyMember, getLastStudyDateByFamilyMember } from "@/src/features/studies/api";
 import FamilyMemberDetailWrapper from "@/user-dashboard/family/FamilyMemberDetailWrapper";

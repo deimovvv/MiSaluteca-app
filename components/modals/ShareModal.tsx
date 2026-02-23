@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Modal, Button, Form, InputGroup, Spinner } from "react-bootstrap";
+import { Modal, Form, InputGroup, Spinner } from "react-bootstrap";
 import toast from "react-hot-toast";
 import type { Study } from "@/types";
 import { generateShareLink } from "@/user-dashboard/server-actions/generate-share-link";
@@ -96,7 +96,7 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
 
             <div
               className="bg-light rounded p-3 mb-4"
-              style={{ border: "1px solid #E5E5E5" }}
+              style={{ border: "1px solid var(--border-default)" }}
             >
               <div className="d-flex align-items-start gap-2">
                 <svg
@@ -161,9 +161,9 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
                 </Form.Select>
               </Form.Group>
 
-              <Button
+              <button
                 type="submit"
-                className="btn-primary-saluteca w-100"
+                className="btn btn-primary-saluteca w-100"
                 disabled={isGenerating}
               >
                 {isGenerating ? (
@@ -181,7 +181,7 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
                 ) : (
                   "Generar link de compartir"
                 )}
-              </Button>
+              </button>
             </Form>
           </>
         ) : (
@@ -218,8 +218,9 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
                   readOnly
                   style={{ fontSize: "0.875rem" }}
                 />
-                <Button
-                  className="btn-secondary-saluteca"
+                <button
+                  type="button"
+                  className="btn btn-primary-saluteca"
                   onClick={copyToClipboard}
                   style={{ minWidth: "80px", padding: "0.5rem 1rem", whiteSpace: "nowrap" }}
                 >
@@ -256,16 +257,12 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
                       </span>
                     </>
                   )}
-                </Button>
+                </button>
               </InputGroup>
             </Form.Group>
 
             <div className="d-grid gap-2 mb-3">
-              <Button
-                variant="success"
-                onClick={shareViaWhatsApp}
-                className="d-flex align-items-center justify-content-center gap-2"
-              >
+              <button type="button" className="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2" onClick={shareViaWhatsApp}>
                 <svg
                   width="20"
                   height="20"
@@ -281,7 +278,7 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
                   />
                 </svg>
                 {canUseNativeShare ? "Compartir" : "Compartir por WhatsApp"}
-              </Button>
+              </button>
             </div>
 
             <div
@@ -294,9 +291,9 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
               </div>
             </div>
 
-            <Button className="btn-secondary-saluteca w-100" onClick={handleClose}>
+            <button type="button" className="btn btn-primary-saluteca w-100" onClick={handleClose}>
               Cerrar
-            </Button>
+            </button>
           </>
         )}
       </Modal.Body>

@@ -2,11 +2,13 @@
 
 :root {
   --primary-blue: #016390;
-  --accent-green: #8cc63f;
-  --gray-text: #919191;
-  --gray-text-dark: #8a8a8a;
+  --primary-blue-light: #0284c7;
+  --accent-teal: #0d9488;
+  --accent-teal-light: #5eead4;
+  --gray-text: #64748b;
+  --gray-text-dark: #475569;
   --background: #ffffff;
-  --foreground: #000000;
+  --foreground: #0f172a;
 }
 
 @theme inline {
@@ -81,7 +83,7 @@ h6 {
 
 .hover-lift:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
 }
 
 .hover-card {
@@ -90,7 +92,7 @@ h6 {
 
 .hover-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
 }
 
 .hover-link {
@@ -128,6 +130,7 @@ html {
 
 /* Accessibility improvements */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {

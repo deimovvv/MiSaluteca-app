@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "react-bootstrap";
 import { useSession } from "next-auth/react";
 import { Study, FamilyMember } from "@/types";
 import { formatDate } from "@/lib/formatters";
@@ -12,9 +11,10 @@ interface StudyRowProps {
   onEdit?: (study: Study) => void;
   onView: (study: Study) => void;
   onShare: (study: Study) => void;
+  hideOwner?: boolean;
 }
 
-export default function StudyRow({ study, familyMembers, onEdit, onView, onShare }: StudyRowProps) {
+export default function StudyRow({ study, familyMembers, onEdit, onView, onShare, hideOwner = false }: StudyRowProps) {
   const { data: session } = useSession();
 
   const familyMember = study.familyMemberId && familyMembers
@@ -25,9 +25,36 @@ export default function StudyRow({ study, familyMembers, onEdit, onView, onShare
     ? familyMember.name
     : session?.user?.name ?? null;
 
+  const isPdf = study.fileName?.toLowerCase().endsWith(".pdf");
+
   return (
     <div className={styles.studyRowCard}>
       <div className="d-flex align-items-center gap-3 flex-wrap">
+        {/* File type icon */}
+        <div
+          className="d-none d-md-flex align-items-center justify-content-center flex-shrink-0"
+          style={{
+            width: "36px",
+            height: "36px",
+            borderRadius: "var(--radius-sm)",
+            backgroundColor: isPdf ? "rgba(220, 38, 38, 0.08)" : "rgba(1, 99, 144, 0.08)",
+          }}
+        >
+          {isPdf ? (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="var(--saluteca-danger)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M14 2V8H20" stroke="var(--saluteca-danger)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <text x="12" y="17" textAnchor="middle" fill="var(--saluteca-danger)" fontSize="6" fontWeight="700">PDF</text>
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="3" stroke="var(--saluteca-ocean)" strokeWidth="1.5" />
+              <circle cx="8.5" cy="8.5" r="1.5" fill="var(--saluteca-ocean)" />
+              <path d="M21 15L16 10L5 21" stroke="var(--saluteca-ocean)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )}
+        </div>
+
         {/* Title and description */}
         <div className={`${styles.studyRowContent} flex-grow-1`}>
           <h3 className={styles.studyRowTitle}>
@@ -36,7 +63,7 @@ export default function StudyRow({ study, familyMembers, onEdit, onView, onShare
           {study.description && (
             <p className={styles.studyRowDescription}>{study.description}</p>
           )}
-          {ownerName && (
+          {!hideOwner && ownerName && (
             <div className="d-flex align-items-center gap-1 mt-1">
               <svg
                 width="11"
@@ -61,7 +88,7 @@ export default function StudyRow({ study, familyMembers, onEdit, onView, onShare
               </svg>
               <span
                 className="text-muted-saluteca"
-                style={{ fontSize: "0.7rem" }}
+                style={{ fontSize: "0.825rem" }}
               >
                 {ownerName}
               </span>
@@ -71,7 +98,7 @@ export default function StudyRow({ study, familyMembers, onEdit, onView, onShare
 
         {/* Date */}
         <div className={styles.studyRowDate}>
-          <span className="text-muted-saluteca" style={{ fontSize: "0.75rem" }}>
+          <span className="text-muted-saluteca" style={{ fontSize: "0.875rem" }}>
             {formatDate(study.date)}
           </span>
         </div>
@@ -79,9 +106,9 @@ export default function StudyRow({ study, familyMembers, onEdit, onView, onShare
         {/* Actions */}
         <div className={styles.studyRowActions}>
           {onEdit && (
-            <Button
-              // className="btn-outline-saluteca btn-sm"
-              className="btn-sm"
+            <button
+              type="button"
+              className="btn btn-primary-saluteca btn-sm"
               onClick={() => onEdit(study)}
             >
               <svg
@@ -109,22 +136,22 @@ export default function StudyRow({ study, familyMembers, onEdit, onView, onShare
                 />
               </svg>
               <span className={styles.btnText}>Editar</span>
-            </Button>
+            </button>
           )}
-          <Button
-            // className="btn-outline-saluteca btn-sm"
-            className="btn-sm"
+          <button
+            type="button"
+            className="btn btn-primary-saluteca btn-sm"
             onClick={() => onView(study)}
           >
             <span className={styles.btnText}>Ver</span>
-          </Button>
-          <Button
-            // className="btn-outline-saluteca btn-sm"
-            className="btn-sm"
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary-saluteca btn-sm"
             onClick={() => onShare(study)}
           >
             <span className={styles.btnText}>Compartir</span>
-          </Button>
+          </button>
         </div>
       </div>
     </div>

@@ -34,7 +34,7 @@ const LoginPanel = () => {
         <Container
             fluid
             className="d-flex justify-content-center align-items-center min-vh-100"
-            style={{ backgroundColor: "#f8f9fa" }}
+            style={{ backgroundColor: "var(--surface-inset)" }}
         >
             <Card style={{ width: "100%", maxWidth: "400px" }} className="shadow-sm">
                 <Card.Body className="p-4">

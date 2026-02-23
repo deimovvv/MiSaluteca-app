@@ -26,7 +26,7 @@ export default function HomeRecentStudies({
         <Link
           href="/app/studies"
           className="text-primary-saluteca text-decoration-none fw-medium"
-          style={{ fontSize: "0.875rem" }}
+          style={{ fontSize: "1rem" }}
         >
           Ver todos →
         </Link>

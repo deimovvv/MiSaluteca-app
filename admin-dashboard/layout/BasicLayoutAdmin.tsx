@@ -1,5 +1,4 @@
 "use client";
-import { Container } from "react-bootstrap";
 import React, { useEffect, useState, useCallback } from "react";
 import MenuAdmin from "../components/MenuAdmin";
 
@@ -17,24 +16,14 @@ const BasicLayoutAdmin = ({
   data = {},
 }: BasicLayoutAdminProps) => {
   const [show, setShow] = useState(true);
-  const [paddingContainer, setPaddingContainer] = useState(true);
 
   const handleShowBasic = useCallback((showValue: boolean) => {
     setShow(showValue);
   }, []);
 
-  // useEffect(() => {
-  //   if (show) {
-  //     setPaddingContainer(true);
-  //   } else {
-  //     setPaddingContainer(false);
-  //   }
-  // }, [show]);
-
   const logout = async () => {
     try {
       const resp = await fetch(`/api/comision/panel/logout`);
-
       if (resp.status === 200) {
         window.location.href = "/";
       }
@@ -50,30 +39,22 @@ const BasicLayoutAdmin = ({
   }, [data]);
 
   if (comision) return <>{children}</>;
+
   return (
-    <Container fluid className="p-0" style={{ background: "#FAFAFA" }}>
+    <div style={{ background: "var(--surface-inset)", minHeight: "100vh" }}>
       <MenuAdmin showBasic={handleShowBasic} />
-      <Container
-        fluid
+      <main
         style={{
-          paddingLeft: paddingContainer ? "400px" : "0px",
-          paddingRight: "0px",
-          transition: "all 0.5s",
-          background: "#FAFAFA",
+          marginLeft: show ? "260px" : "0",
+          padding: "1.5rem",
+          paddingTop: show ? "1.5rem" : "4rem",
+          transition: "margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+          minHeight: "100vh",
         }}
       >
-        <div
-          style={{
-            background: "#FAFAFA",
-            padding: "10px",
-            transition: "all 1s",
-            minHeight: "100vh",
-          }}
-        >
-          {children}
-        </div>
-      </Container>
-    </Container>
+        {children}
+      </main>
+    </div>
   );
 };
 

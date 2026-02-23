@@ -15,17 +15,16 @@ const UsersTableWrapper = ({
 }: UsersTableWrapperProps) => {
   return (
     <BasicLayoutAdmin>
-      <div className="container-fluid">
-        <div className="row mb-4">
-          <div className="col-12">
-            <h1 className="display-6 mb-3">Gestión de Usuarios</h1>
-          </div>
+      <div className="container-fluid py-4">
+        <div className="mb-4">
+          <h1 className="fw-semibold mb-1" style={{ fontSize: "1.5rem", color: "var(--text-primary)" }}>
+            Gestión de Usuarios
+          </h1>
+          <p className="text-muted mb-0" style={{ fontSize: "0.875rem" }}>
+            Administra los usuarios registrados en la plataforma
+          </p>
         </div>
-        <div className="row">
-          <div className="col-12">
-            <UsersTable initialData={initialData} usersPerPage={usersPerPage} />
-          </div>
-        </div>
+        <UsersTable initialData={initialData} usersPerPage={usersPerPage} />
       </div>
     </BasicLayoutAdmin>
   );

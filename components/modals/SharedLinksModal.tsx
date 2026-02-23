@@ -89,7 +89,7 @@ export default function SharedLinksModal({
               width: "64px",
               height: "64px",
               borderRadius: "50%",
-              backgroundColor: "#F5F5F5",
+              backgroundColor: "var(--surface-inset)",
               margin: "0 auto",
             }}
           >
@@ -135,7 +135,7 @@ export default function SharedLinksModal({
             <ListGroup.Item
               key={link.id}
               className="px-0 py-3"
-              style={{ borderColor: "#E5E5E5" }}
+              style={{ borderColor: "var(--border-default)" }}
             >
               <div className="d-flex flex-column gap-2">
                 <div className="d-flex align-items-start justify-content-between">
@@ -146,8 +146,8 @@ export default function SharedLinksModal({
                         <span
                           className="badge"
                           style={{
-                            backgroundColor: "#fef9f0",
-                            color: "#f59e0b",
+                            backgroundColor: "var(--saluteca-warning-wash)",
+                            color: "var(--saluteca-warning-text)",
                             fontSize: "0.7rem",
                             fontWeight: 600,
                             padding: "0.25rem 0.5rem",
@@ -182,18 +182,17 @@ export default function SharedLinksModal({
                 </div>
 
                 {!isExpired && (
-                  <div className="d-flex gap-2">
-                    <Button
-                      variant="outline-secondary"
-                      size="sm"
-                      className="btn-outline-saluteca"
+                  <div className="d-flex gap-4 mt-2">
+                    <button
+                      type="button"
+                      className="btn btn-link text-decoration-none p-0 d-flex align-items-center hover-opacity"
                       onClick={() => handleCopyLink(link.id, link.uuid)}
-                      style={{ fontSize: "0.75rem" }}
+                      style={{ fontSize: "0.875rem", color: "var(--saluteca-ocean)", transition: "opacity 0.2s" }}
                       disabled={isRevoking}
                     >
                       <svg
-                        width="14"
-                        height="14"
+                        width="16"
+                        height="16"
                         viewBox="0 0 14 14"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -215,12 +214,12 @@ export default function SharedLinksModal({
                         />
                       </svg>
                       {isCopied ? "Copiado" : "Copiar enlace"}
-                    </Button>
-                    <Button
-                      variant="outline-danger"
-                      size="sm"
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-link text-decoration-none p-0 d-flex align-items-center hover-opacity"
                       onClick={() => handleRevokeLink(link.id)}
-                      style={{ fontSize: "0.75rem" }}
+                      style={{ fontSize: "0.875rem", color: "var(--saluteca-danger)", transition: "opacity 0.2s" }}
                       disabled={isRevoking}
                     >
                       {isRevoking ? (
@@ -232,14 +231,14 @@ export default function SharedLinksModal({
                             role="status"
                             aria-hidden="true"
                             className="me-1"
-                            style={{ width: "12px", height: "12px", borderWidth: "1.5px" }}
+                            style={{ width: "14px", height: "14px", borderWidth: "1.5px" }}
                           />
-                          Revocando...
+                          Cancelando...
                         </>
                       ) : (
-                        "Revocar"
+                        "Cancelar"
                       )}
-                    </Button>
+                    </button>
                   </div>
                 )}
               </div>
@@ -265,9 +264,9 @@ export default function SharedLinksModal({
           </div>
         </Modal.Body>
         <Modal.Footer className="border-0 pt-0">
-          <Button className="btn-secondary-saluteca" onClick={onHide}>
+          <button type="button" className="btn btn-primary-saluteca" onClick={onHide}>
             Cerrar
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
 

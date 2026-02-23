@@ -73,6 +73,7 @@ export default function FamilyStudiesList({
           study={study}
           onView={onView}
           onShare={onShare}
+          hideOwner
         />
       ))}
     </div>

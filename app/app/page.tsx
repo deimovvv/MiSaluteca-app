@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/src/lib/auth/config";
-import AppShell from "@/src/shared/components/layout/AppShell";
+import AppShell from "@/components/layout/AppShell";
 import HomeDashboard from "@/user-dashboard/home/HomeDashboard";
 import HomeHeader from "@/user-dashboard/home/HomeHeader";
 import { getRecentStudies, getStudiesStats } from "@/src/features/studies/api";

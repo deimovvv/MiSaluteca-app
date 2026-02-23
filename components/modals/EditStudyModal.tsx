@@ -155,7 +155,7 @@ export default function EditStudyModal({
             {/* File info (read-only) */}
             <div
               className="border rounded p-3 mb-4"
-              style={{ backgroundColor: "#f8f9fa" }}
+              style={{ backgroundColor: "var(--surface-inset)" }}
             >
               <div className="d-flex align-items-center gap-3">
                 <svg
@@ -190,59 +190,68 @@ export default function EditStudyModal({
               </div>
             </div>
 
-            {/* Date */}
-            <Form.Group className="mb-3">
-              <Form.Label className="fw-medium">Fecha</Form.Label>
-              <Form.Control
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                max={new Date().toISOString().split("T")[0]}
-                maxLength={STUDY_FIELD_LIMITS.date}
-              />
-            </Form.Group>
+            <div className="row g-3 mb-3">
+              {/* Date */}
+              <div className="col-md-6">
+                <Form.Group>
+                  <Form.Label className="fw-medium">Fecha</Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    max={new Date().toISOString().split("T")[0]}
+                    maxLength={STUDY_FIELD_LIMITS.date}
+                  />
+                </Form.Group>
+              </div>
 
-            {/* Title */}
-            <Form.Group className="mb-3">
-              <Form.Label className="fw-medium">
-                Nombre del estudio <span className="text-muted">(opcional)</span>
-              </Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Ej: Hemograma completo"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                maxLength={STUDY_FIELD_LIMITS.title}
-              />
-            </Form.Group>
+              {/* Title */}
+              <div className="col-md-6">
+                <Form.Group>
+                  <Form.Label className="fw-medium">
+                    Nombre del estudio <span className="text-muted">(opcional)</span>
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    maxLength={STUDY_FIELD_LIMITS.title}
+                  />
+                </Form.Group>
+              </div>
+            </div>
 
-            {/* Institution */}
-            <Form.Group className="mb-3">
-              <Form.Label className="fw-medium">
-                Institución <span className="text-muted">(opcional)</span>
-              </Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Ej: Hospital Italiano"
-                value={institution}
-                onChange={(e) => setInstitution(e.target.value)}
-                maxLength={STUDY_FIELD_LIMITS.institution}
-              />
-            </Form.Group>
+            <div className="row g-3 mb-3">
+              {/* Institution */}
+              <div className="col-md-6">
+                <Form.Group>
+                  <Form.Label className="fw-medium">
+                    Institución <span className="text-muted">(opcional)</span>
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={institution}
+                    onChange={(e) => setInstitution(e.target.value)}
+                    maxLength={STUDY_FIELD_LIMITS.institution}
+                  />
+                </Form.Group>
+              </div>
 
-            {/* Doctor */}
-            <Form.Group className="mb-3">
-              <Form.Label className="fw-medium">
-                Médico <span className="text-muted">(opcional)</span>
-              </Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Ej: Dr. Juan Pérez"
-                value={medico}
-                onChange={(e) => setMedico(e.target.value)}
-                maxLength={STUDY_FIELD_LIMITS.doctor}
-              />
-            </Form.Group>
+              {/* Doctor */}
+              <div className="col-md-6">
+                <Form.Group>
+                  <Form.Label className="fw-medium">
+                    Médico <span className="text-muted">(opcional)</span>
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={medico}
+                    onChange={(e) => setMedico(e.target.value)}
+                    maxLength={STUDY_FIELD_LIMITS.doctor}
+                  />
+                </Form.Group>
+              </div>
+            </div>
 
             {/* Conclusion */}
             <Form.Group className="mb-3">
@@ -251,15 +260,13 @@ export default function EditStudyModal({
               </Form.Label>
               <Form.Control
                 as="textarea"
-                rows={3}
-                placeholder="Conclusión o diagnóstico del estudio..."
+                rows={2}
                 value={conclusion}
                 onChange={(e) => setConclusion(e.target.value)}
                 maxLength={STUDY_FIELD_LIMITS.conclusion}
-                disabled
               />
               <div className="d-flex justify-content-end">
-                <Form.Text className="text-muted" style={{ fontSize: "0.8rem" }}>
+                <Form.Text className="text-muted" style={{ fontSize: "0.8rem", marginTop: "2px" }}>
                   {conclusion.length}/{STUDY_FIELD_LIMITS.conclusion}
                 </Form.Text>
               </div>
@@ -285,14 +292,13 @@ export default function EditStudyModal({
               </Form.Label>
               <Form.Control
                 as="textarea"
-                rows={3}
-                placeholder="Agregá cualquier detalle relevante sobre el estudio..."
+                rows={2}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 maxLength={STUDY_FIELD_LIMITS.description}
               />
               <div className="d-flex justify-content-end">
-                <Form.Text className="text-muted" style={{ fontSize: "0.8rem" }}>
+                <Form.Text className="text-muted" style={{ fontSize: "0.8rem", marginTop: "2px" }}>
                   {description.length}/{STUDY_FIELD_LIMITS.description}
                 </Form.Text>
               </div>
@@ -300,25 +306,26 @@ export default function EditStudyModal({
           </Modal.Body>
 
           <Modal.Footer className="border-0 pt-0 d-flex justify-content-between">
-            <Button
-              variant="link"
-              className="text-danger fw-medium p-0"
+            <button
+              type="button"
+              className="btn btn-link text-decoration-none text-danger fw-medium p-0 hover-opacity"
               onClick={() => setShowDeleteConfirm(true)}
               disabled={saving}
             >
               Eliminar estudio
-            </Button>
+            </button>
             <div className="d-flex gap-2">
-              <Button
-                className="btn-secondary-saluteca"
+              <button
+                type="button"
+                className="btn btn-secondary-saluteca"
                 onClick={handleClose}
                 disabled={saving}
               >
                 Cancelar
-              </Button>
-              <Button
+              </button>
+              <button
                 type="submit"
-                className="btn-primary-saluteca"
+                className="btn btn-primary-saluteca"
                 disabled={saving}
               >
                 {saving ? (
@@ -333,7 +340,7 @@ export default function EditStudyModal({
                 ) : (
                   "Guardar cambios"
                 )}
-              </Button>
+              </button>
             </div>
           </Modal.Footer>
         </Form>
@@ -347,7 +354,7 @@ export default function EditStudyModal({
                   width: "80px",
                   height: "80px",
                   borderRadius: "50%",
-                  backgroundColor: "#fee",
+                  backgroundColor: "var(--saluteca-danger-wash)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -362,7 +369,7 @@ export default function EditStudyModal({
                 >
                   <path
                     d="M12 9V13M12 17H12.01M5.07 19H18.93C20.14 19 21 17.93 20.43 16.87L13.5 5.12C12.93 4.06 11.07 4.06 10.5 5.12L3.57 16.87C3 17.93 3.86 19 5.07 19Z"
-                    stroke="#dc3545"
+                    stroke="var(--saluteca-danger)"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -376,17 +383,19 @@ export default function EditStudyModal({
             </div>
           </Modal.Body>
           <Modal.Footer className="border-0 pt-0 gap-2">
-            <Button
-              className="btn-secondary-saluteca flex-fill flex-md-grow-0"
+            <button
+              type="button"
+              className="btn btn-secondary-saluteca flex-fill flex-md-grow-0"
               onClick={() => setShowDeleteConfirm(false)}
               disabled={deleting}
             >
               Cancelar
-            </Button>
-            <Button
-              className="flex-fill flex-md-grow-0"
+            </button>
+            <button
+              type="button"
+              className="btn flex-fill flex-md-grow-0"
               style={{
-                background: "#dc3545",
+                background: "var(--saluteca-danger)",
                 border: "none",
                 color: "white",
                 fontWeight: 500,
@@ -408,7 +417,7 @@ export default function EditStudyModal({
               ) : (
                 "Sí, eliminar"
               )}
-            </Button>
+            </button>
           </Modal.Footer>
         </>
       )}

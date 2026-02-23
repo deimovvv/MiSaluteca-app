@@ -50,7 +50,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
       ),
     },
     {
-      label: "Mis Estudios",
+      label: "Estudios",
       href: "/app/studies",
       icon: (
         <svg

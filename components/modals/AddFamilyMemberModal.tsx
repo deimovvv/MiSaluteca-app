@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Form } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { addFamilyMember } from "@/user-dashboard/server-actions/new-member-family";
 import { useRouter } from "next/navigation";
@@ -120,12 +120,12 @@ export default function AddFamilyMemberModal({
           </div>
         </Modal.Body>
         <Modal.Footer className="border-0 pt-0 gap-2">
-          <Button className="btn-secondary-saluteca flex-fill flex-md-grow-0" onClick={handleClose} disabled={saving}>
+          <button type="button" className="btn btn-secondary-saluteca flex-fill flex-md-grow-0" onClick={handleClose} disabled={saving}>
             Cancelar
-          </Button>
-          <Button
+          </button>
+          <button
             type="submit"
-            className="btn-primary-saluteca flex-fill flex-md-grow-0"
+            className="btn btn-primary-saluteca flex-fill flex-md-grow-0"
             disabled={!isValid || saving}
           >
             {saving ? (
@@ -140,7 +140,7 @@ export default function AddFamilyMemberModal({
             ) : (
               "Agregar familiar"
             )}
-          </Button>
+          </button>
         </Modal.Footer>
       </Form>
     </Modal>

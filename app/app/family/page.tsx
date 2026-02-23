@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/src/lib/auth/config";
-import AppShell from "@/src/shared/components/layout/AppShell";
+import AppShell from "@/components/layout/AppShell";
 import FamilyDashboard from "@/user-dashboard/family/FamilyDashboard";
 import FamilyHeader from "@/user-dashboard/family/FamilyHeader";
 import { getFamilyMembers } from "@/user-dashboard/server-actions/get-family-members";

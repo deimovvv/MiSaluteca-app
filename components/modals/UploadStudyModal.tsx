@@ -8,6 +8,7 @@ import { analyzeStudyWithAI } from "@/user-dashboard/server-actions/analyze-stud
 import { extractTextFromFile } from "@/lib/ocr-utils";
 import { quickValidateFileType } from "@/lib/file-validator";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import moment from "moment";
 import { STUDY_FIELD_LIMITS } from "@/config/constants";
 
@@ -266,6 +267,7 @@ export default function UploadStudyModal({
       if (result.success) {
         setUploadSuccess(true);
         setUploading(false);
+        toast.success("Estudio subido con éxito");
         // Refrescar la página para mostrar el nuevo estudio
         router.refresh();
       } else {
@@ -322,15 +324,15 @@ export default function UploadStudyModal({
 
   return (
     <Modal show={show} onHide={handleClose} centered size="lg"
-      // fullscreen="sm-down"
+      fullscreen="sm-down"
       backdrop="static">
       <Modal.Header closeButton={!uploading && !analyzing} className="border-0 pb-0" ref={modalTopRef}>
         <Modal.Title className="h5 fw-semibold">
           {uploadSuccess ? "Estudio subido" : "Subir estudio médico"}
         </Modal.Title>
       </Modal.Header>
-      <Form onSubmit={analyzed ? handleConfirm : handleAnalyze}>
-        <Modal.Body>
+      <Form onSubmit={handleConfirm}>
+        <Modal.Body style={{ overflowY: "auto", flex: "1 1 auto" }}>
           {uploadSuccess ? (
             // Success State
             <div className="text-center py-4">
@@ -340,7 +342,7 @@ export default function UploadStudyModal({
                   width: "80px",
                   height: "80px",
                   borderRadius: "50%",
-                  backgroundColor: "#E8F5E9",
+                  backgroundColor: "var(--saluteca-sky-wash)",
                 }}
               >
                 <svg
@@ -352,25 +354,26 @@ export default function UploadStudyModal({
                 >
                   <path
                     d="M33.3333 10L15 28.3333L6.66667 20"
-                    stroke="#2E7D32"
+                    stroke="var(--saluteca-ocean)"
                     strokeWidth="3"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
                 </svg>
               </div>
-              <h4 className="fw-semibold mb-3" style={{ color: "#1B5E20" }}>
+              <h4 className="fw-semibold mb-3" style={{ color: "var(--saluteca-ocean-deep)" }}>
                 Estudio subido con éxito
               </h4>
               <p className="text-muted mb-4">
                 Tu estudio médico ha sido guardado de forma segura y ya está disponible en tu historial.
               </p>
-              <Button
-                className="btn-primary-saluteca"
+              <button
+                type="button"
+                className="btn btn-primary-saluteca"
                 onClick={handleClose}
               >
                 Aceptar
-              </Button>
+              </button>
             </div>
           ) : (
             // Form State
@@ -451,7 +454,7 @@ export default function UploadStudyModal({
                       >
                         <path
                           d="M12 4L4 12M4 4L12 12"
-                          stroke="#B71C1C"
+                          stroke="var(--saluteca-danger-text)"
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -495,8 +498,8 @@ export default function UploadStudyModal({
                 <div
                   className="mb-3 p-3 rounded-3"
                   style={{
-                    backgroundColor: '#E8F5E9',
-                    border: '1px solid #A5D6A7'
+                    backgroundColor: 'var(--saluteca-sky-faint)',
+                    border: '1px solid var(--saluteca-sky)'
                   }}
                 >
                   <div className="d-flex align-items-center">
@@ -505,7 +508,7 @@ export default function UploadStudyModal({
                       style={{
                         width: '32px',
                         height: '32px',
-                        backgroundColor: '#7ABB85',
+                        backgroundColor: 'var(--saluteca-ocean)',
                         borderRadius: '50%',
                         flexShrink: 0
                       }}
@@ -527,35 +530,33 @@ export default function UploadStudyModal({
                       </svg>
                     </div>
                     <span style={{
-                      color: '#2D5F3F',
+                      color: 'var(--saluteca-ocean-deep)',
                       fontSize: '0.9375rem',
                       fontWeight: 500,
                       lineHeight: 1.5
                     }}>
-                      Documento analizado correctamente. Revisá los datos y confirmá para guardar.
+                      Análisis completado. Por favor, verificá y completá la información del estudio antes de guardarlo.
                     </span>
                   </div>
                 </div>
               )}
 
               {/* File Upload */}
-              <Form.Group className="mb-4">
-                <Form.Label className="fw-medium">
+              <Form.Group className="mb-3">
+                <Form.Label className="fw-medium mb-1">
                   Archivo <span className="text-danger">*</span>
                 </Form.Label>
                 <div
-                  className="border border-2 border-dashed rounded p-4 text-center"
+                  className="border border-2 border-dashed rounded p-3 text-center"
                   style={{
                     borderColor: isDragging
-                      ? "var(--saluteca-primary)"
-                      : selectedFile
-                        ? "var(--saluteca-secondary)"
-                        : "#dee2e6",
+                      ? "var(--saluteca-ocean)"
+                      : "var(--border-stronger)",
                     backgroundColor: isDragging
-                      ? "#e8f4fd"
+                      ? "var(--saluteca-sky-faint)"
                       : selectedFile
-                        ? "#f0f9f4"
-                        : "#f8f9fa",
+                        ? "var(--saluteca-sky-faint)"
+                        : "var(--surface-inset)",
                     cursor: (uploading || analyzing) ? "not-allowed" : "pointer",
                     opacity: (uploading || analyzing) ? 0.6 : 1,
                     transition: "border-color 0.2s ease, background-color 0.2s ease",
@@ -569,23 +570,23 @@ export default function UploadStudyModal({
                   {selectedFile ? (
                     <div className="d-flex align-items-center justify-content-center gap-3">
                       <svg
-                        width="40"
-                        height="40"
+                        width="32"
+                        height="32"
                         viewBox="0 0 40 40"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                       >
-                        <circle cx="20" cy="20" r="20" fill="var(--saluteca-secondary)" fillOpacity="0.2" />
+                        <circle cx="20" cy="20" r="20" fill="var(--saluteca-ocean)" fillOpacity="0.1" />
                         <path
                           d="M21.6667 13.3333H15C14.558 13.3333 14.1341 13.5089 13.8215 13.8215C13.5089 14.1341 13.3333 14.558 13.3333 15V25C13.3333 25.442 13.5089 25.8659 13.8215 26.1785C14.1341 26.4911 14.558 26.6667 15 26.6667H25C25.442 26.6667 25.8659 26.4911 26.1785 26.1785C26.4911 25.8659 26.6667 25.442 26.6667 25V18.3333L21.6667 13.3333Z"
-                          stroke="var(--saluteca-secondary)"
+                          stroke="var(--saluteca-ocean)"
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         />
                         <path
                           d="M21.6667 13.3333V18.3333H26.6667"
-                          stroke="var(--saluteca-secondary)"
+                          stroke="var(--saluteca-ocean)"
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -597,9 +598,9 @@ export default function UploadStudyModal({
                           {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                         </div>
                       </div>
-                      <Button
-                        variant="link"
-                        className="text-danger ms-auto"
+                      <button
+                        type="button"
+                        className="btn btn-link text-decoration-none text-danger ms-auto p-0 border-0 bg-transparent hover-opacity"
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedFile(null);
@@ -614,17 +615,17 @@ export default function UploadStudyModal({
                         disabled={uploading || analyzing}
                       >
                         Eliminar
-                      </Button>
+                      </button>
                     </div>
                   ) : (
                     <>
                       <svg
-                        width="48"
-                        height="48"
+                        width="36"
+                        height="36"
                         viewBox="0 0 48 48"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        className="mb-3"
+                        className="mb-2"
                       >
                         <path
                           d="M24 16V32"
@@ -668,77 +669,106 @@ export default function UploadStudyModal({
                 </div>
               </Form.Group>
 
-              {/* Date - OPCIONAL */}
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-medium">
-                  Fecha <span className="text-muted">(opcional)</span>
-                </Form.Label>
-                <Form.Control
-                  type="date"
-                  value={formatDateForInput(date)}
-                  onChange={(e) => setDate(formatDateFromInput(e.target.value))}
-                  max={new Date().toISOString().split("T")[0]}
-                  maxLength={STUDY_FIELD_LIMITS.date}
-                  disabled={!analyzed || uploading || analyzing}
-                />
-                <Form.Text className="text-muted" style={{ fontSize: "0.8rem" }}>
-                  {analyzed ? "Modificá si es necesario" : "Se completará automáticamente al analizar"}
-                </Form.Text>
-              </Form.Group>
+              {/* Optional AI Analysis Button */}
+              {selectedFile && !analyzed && !analyzing && !uploading && (
+                <div className="mb-3">
+                  <button
+                    type="button"
+                    className="btn w-100 d-flex align-items-center justify-content-center py-2 border-0"
+                    onClick={handleAnalyze}
+                    style={{
+                      background: "var(--saluteca-sky-faint)",
+                      border: "1px solid var(--saluteca-sky)",
+                      borderRadius: "var(--radius-md)",
+                      color: "var(--saluteca-ocean-deep)",
+                      boxShadow: "0 1px 2px rgba(1, 99, 144, 0.05)",
+                      transition: "all 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = "var(--saluteca-sky-wash)";
+                      e.currentTarget.style.borderColor = "var(--saluteca-ocean-light)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = "var(--saluteca-sky-faint)";
+                      e.currentTarget.style.borderColor = "var(--saluteca-sky)";
+                    }}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="me-2" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M21 11L19.85 8.65L17.5 7.5L19.85 6.35L21 4L22.15 6.35L24.5 7.5L22.15 8.65L21 11ZM6.5 24L4.35 19.15L0 17L4.35 14.85L6.5 10L8.65 14.85L13 17L8.65 19.15L6.5 24ZM16.5 17L15.35 14.65L13 13.5L15.35 12.35L16.5 10L17.65 12.35L20 13.5L17.65 14.65L16.5 17Z" fill="var(--saluteca-ocean)" />
+                    </svg>
+                    <span className="fw-semibold">Completar datos con Inteligencia Artificial</span>
+                  </button>
+                </div>
+              )}
 
-              {/* Title (optional) */}
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-medium">
-                  Nombre del estudio <span className="text-muted">(opcional)</span>
-                </Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Ej: Hemograma completo"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  maxLength={STUDY_FIELD_LIMITS.title}
-                  disabled={!analyzed || uploading || analyzing}
-                />
-                <Form.Text className="text-muted" style={{ fontSize: "0.8rem" }}>
-                  {analyzed ? "Modificá si es necesario" : "Se completará automáticamente al analizar"}
-                </Form.Text>
-              </Form.Group>
+              <div className="row g-3 mb-3">
+                {/* Date - OPCIONAL */}
+                <div className="col-md-6">
+                  <Form.Group>
+                    <Form.Label className="fw-medium">
+                      Fecha <span className="text-muted">(opcional)</span>
+                    </Form.Label>
+                    <Form.Control
+                      type="date"
+                      value={formatDateForInput(date)}
+                      onChange={(e) => setDate(formatDateFromInput(e.target.value))}
+                      max={new Date().toISOString().split("T")[0]}
+                      maxLength={STUDY_FIELD_LIMITS.date}
+                      disabled={uploading || analyzing}
+                    />
+                  </Form.Group>
+                </div>
 
-              {/* Institution */}
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-medium">
-                  Institución <span className="text-muted">(opcional)</span>
-                </Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Ej: Hospital Italiano"
-                  value={institution}
-                  onChange={(e) => setInstitution(e.target.value)}
-                  maxLength={STUDY_FIELD_LIMITS.institution}
-                  disabled={!analyzed || uploading || analyzing}
-                />
-                <Form.Text className="text-muted" style={{ fontSize: "0.8rem" }}>
-                  {analyzed ? "Modificá si es necesario" : "Se completará automáticamente al analizar"}
-                </Form.Text>
-              </Form.Group>
+                {/* Title (optional) */}
+                <div className="col-md-6">
+                  <Form.Group>
+                    <Form.Label className="fw-medium">
+                      Nombre del estudio <span className="text-muted">(opcional)</span>
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      maxLength={STUDY_FIELD_LIMITS.title}
+                      disabled={uploading || analyzing}
+                    />
+                  </Form.Group>
+                </div>
+              </div>
 
-              {/* Doctor */}
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-medium">
-                  Médico <span className="text-muted">(opcional)</span>
-                </Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Ej: Dr. Juan Pérez"
-                  value={doctor}
-                  onChange={(e) => setDoctor(e.target.value)}
-                  maxLength={STUDY_FIELD_LIMITS.doctor}
-                  disabled={!analyzed || uploading || analyzing}
-                />
-                <Form.Text className="text-muted" style={{ fontSize: "0.8rem" }}>
-                  {analyzed ? "Modificá si es necesario" : "Se completará automáticamente al analizar"}
-                </Form.Text>
-              </Form.Group>
+              <div className="row g-3 mb-3">
+                {/* Institution */}
+                <div className="col-md-6">
+                  <Form.Group>
+                    <Form.Label className="fw-medium">
+                      Institución <span className="text-muted">(opcional)</span>
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={institution}
+                      onChange={(e) => setInstitution(e.target.value)}
+                      maxLength={STUDY_FIELD_LIMITS.institution}
+                      disabled={uploading || analyzing}
+                    />
+                  </Form.Group>
+                </div>
+
+                {/* Doctor */}
+                <div className="col-md-6">
+                  <Form.Group>
+                    <Form.Label className="fw-medium">
+                      Médico <span className="text-muted">(opcional)</span>
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={doctor}
+                      onChange={(e) => setDoctor(e.target.value)}
+                      maxLength={STUDY_FIELD_LIMITS.doctor}
+                      disabled={uploading || analyzing}
+                    />
+                  </Form.Group>
+                </div>
+              </div>
 
               {/* Conclusion */}
               <Form.Group className="mb-3">
@@ -747,17 +777,12 @@ export default function UploadStudyModal({
                 </Form.Label>
                 <Form.Control
                   as="textarea"
-                  rows={3}
-                  placeholder="Conclusión o diagnóstico del estudio..."
+                  rows={2}
                   value={conclusion}
                   onChange={(e) => setConclusion(e.target.value)}
                   maxLength={STUDY_FIELD_LIMITS.conclusion}
-                  // disabled={!analyzed || uploading || analyzing}
-                  disabled={true}
+                  disabled={uploading || analyzing}
                 />
-                <Form.Text className="text-muted" style={{ fontSize: "0.8rem" }}>
-                  {analyzed ? "Modificá si es necesario" : "Se completará automáticamente al analizar"}
-                </Form.Text>
               </Form.Group>
 
               {/* Owner */}
@@ -766,7 +791,7 @@ export default function UploadStudyModal({
                 <Form.Select
                   value={owner}
                   onChange={(e) => setOwner(e.target.value)}
-                  disabled={!analyzed || uploading || analyzing || !!familyMemberId}
+                  disabled={uploading || analyzing || !!familyMemberId}
                 >
                   <option value="self">Para mí</option>
                   {familyMembers.map((member) => (
@@ -775,9 +800,6 @@ export default function UploadStudyModal({
                     </option>
                   ))}
                 </Form.Select>
-                <Form.Text className="text-muted" style={{ fontSize: "0.8rem" }}>
-                  {analyzed ? "Seleccioná el destinatario" : "Disponible después de analizar"}
-                </Form.Text>
               </Form.Group>
 
               {/* Description */}
@@ -787,18 +809,14 @@ export default function UploadStudyModal({
                 </Form.Label>
                 <Form.Control
                   as="textarea"
-                  rows={3}
-                  placeholder="Agregá cualquier detalle adicional sobre el estudio..."
+                  rows={2}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   maxLength={STUDY_FIELD_LIMITS.description}
-                  disabled={!analyzed || uploading || analyzing}
+                  disabled={uploading || analyzing}
                 />
-                <div className="d-flex justify-content-between align-items-center">
-                  <Form.Text className="text-muted" style={{ fontSize: "0.8rem" }}>
-                    {analyzed ? "Agregá notas personales si lo necesitás" : "Disponible después de analizar"}
-                  </Form.Text>
-                  <Form.Text className="text-muted" style={{ fontSize: "0.8rem" }}>
+                <div className="d-flex justify-content-end align-items-center">
+                  <Form.Text className="text-muted" style={{ fontSize: "0.8rem", marginTop: "2px" }}>
                     {description.length}/{STUDY_FIELD_LIMITS.description}
                   </Form.Text>
                 </div>
@@ -806,39 +824,59 @@ export default function UploadStudyModal({
             </>
           )}
         </Modal.Body>
-        <Modal.Footer className="border-0 pt-0 gap-2">
+        <Modal.Footer className="border-0 pt-0 gap-2" style={{
+          position: "sticky",
+          bottom: 0,
+          background: "white",
+          zIndex: 10,
+          paddingTop: "12px",
+          paddingBottom: "calc(12px + env(safe-area-inset-bottom, 0px))",
+          borderTop: "1px solid var(--border-subtle)",
+          boxShadow: "0 -2px 8px rgba(0,0,0,0.06)",
+        }}>
           {!uploadSuccess && (
             <>
-              <Button
-                className="btn-secondary-saluteca flex-fill flex-md-grow-0"
+              <button
+                type="button"
+                className="btn btn-secondary-saluteca flex-fill flex-md-grow-0"
                 onClick={handleClose}
                 disabled={uploading || analyzing}
               >
                 Cancelar
-              </Button>
-              <Button
+              </button>
+              <button
                 type="submit"
-                className="btn-primary-saluteca flex-fill flex-md-grow-0 d-flex align-items-center justify-content-center"
+                className="btn btn-primary-saluteca flex-fill flex-md-grow-0 d-flex align-items-center justify-content-center"
                 disabled={!isValid || uploading || analyzing}
               >
-                {(uploading || analyzing) && (
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                    className="me-2"
-                  />
+                {analyzing ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      className="me-2"
+                    />
+                    Analizando...
+                  </>
+                ) : uploading ? (
+                  <>
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="true"
+                      className="me-2"
+                    />
+                    Guardando...
+                  </>
+                ) : (
+                  "Guardar estudio"
                 )}
-                {analyzing
-                  ? "Analizando..."
-                  : uploading
-                    ? "Guardando..."
-                    : analyzed
-                      ? "Confirmar y guardar"
-                      : "Analizar estudio"}
-              </Button>
+              </button>
             </>
           )}
         </Modal.Footer>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Modal, Button, Form, Spinner } from "react-bootstrap";
+import { Modal, Form, Spinner } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -32,7 +32,7 @@ export default function DeleteAccountModal({
 
       if (result.success) {
         toast.success(result.message);
-        
+
         // Cerrar sesión y redirigir
         await signOut({ redirect: false });
         router.refresh();
@@ -98,15 +98,25 @@ export default function DeleteAccountModal({
         </Form.Group>
       </Modal.Body>
       <Modal.Footer className="border-0 pt-0">
-        <Button 
-          variant="secondary" 
+        <button
+          type="button"
+          className="btn btn-secondary-saluteca"
           onClick={handleHide}
           disabled={isDeleting}
         >
           Cancelar
-        </Button>
-        <Button
-          variant="danger"
+        </button>
+        <button
+          type="button"
+          className="btn"
+          style={{
+            background: "var(--saluteca-danger)",
+            border: "none",
+            color: "white",
+            fontWeight: 500,
+            padding: "0.625rem 1.25rem",
+            borderRadius: "var(--radius-md)",
+          }}
           onClick={handleDelete}
           disabled={!isValid || isDeleting}
         >
@@ -125,7 +135,7 @@ export default function DeleteAccountModal({
           ) : (
             "Eliminar permanentemente"
           )}
-        </Button>
+        </button>
       </Modal.Footer>
     </Modal>
   );

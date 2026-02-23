@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/src/lib/auth/config";
 import { getStudyById } from "@/src/features/studies/api";
 import { getFamilyMembers } from "@/src/features/family/api";
-import AppShell from "@/src/shared/components/layout/AppShell";
+import AppShell from "@/components/layout/AppShell";
 import { Button } from "react-bootstrap";
 import StudyDetailClient from "@/user-dashboard/study/StudyDetailClient";
 
@@ -55,7 +55,7 @@ export default async function StudyDetailPage({ params }: { params: { id: string
             href="/app/studies"
             as="a"
           >
-            Volver a Mis Estudios
+            Volver a Estudios
           </Button>
         </div>
       </AppShell>

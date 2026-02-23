@@ -7,7 +7,11 @@ import styles from "./FAQ.module.css";
 const faqs = [
   {
     question: "¿Qué archivos puedo subir?",
-    answer: "Podés subir estudios en PDF o imágenes (JPG, PNG). Son los formatos más comunes que entregan clínicas, laboratorios y médicos.",
+    answer: "Podés subir estudios en PDF o imágenes (JPG, PNG). También podés sacarle una foto desde tu celular al estudio en papel y subirla directo. Son los formatos más comunes que entregan clínicas, laboratorios y médicos.",
+  },
+  {
+    question: "¿Qué hace la inteligencia artificial?",
+    answer: "Cuando subís un estudio, nuestra IA analiza el documento y completa automáticamente el título, la fecha, la institución y genera una observación con los datos más relevantes. Vos podés revisar y editar todo antes de guardarlo.",
   },
   {
     question: "¿Cómo comparto un estudio con mi médico?",

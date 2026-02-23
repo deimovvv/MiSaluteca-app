@@ -8,17 +8,17 @@ const steps = [
   {
     number: "1",
     title: "Subí tus estudios",
-    description: "Encontralos cuando los necesites",
+    description: "Nuestra IA clasifica título, fecha, institución y genera una observación por vos",
   },
   {
     number: "2",
-    title: "Ordenalos por fecha",
-    description: "Todo organizado en un solo lugar",
+    title: "Todo organizado",
+    description: "Encontrá cualquier estudio en segundos, siempre disponible",
   },
   {
     number: "3",
     title: "Compartí con link temporal",
-    description: "Revocá acceso con un clic",
+    description: "Tu médico lo ve sin cuenta. Vos revocás el acceso cuando quieras",
   },
 ];
 

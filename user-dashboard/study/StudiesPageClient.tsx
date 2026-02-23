@@ -81,7 +81,7 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
 
   return (
     <AppShell
-      title="Mis Estudios"
+      title="Estudios"
       action={
         <Button
           className="btn-primary-saluteca"
@@ -334,8 +334,9 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
           <p className="empty-state-description">
             No se encontraron estudios con los filtros aplicados
           </p>
-          <Button
-            className="btn-outline-saluteca"
+          <button
+            type="button"
+            className="btn btn-outline-saluteca"
             onClick={() => {
               setSearchQuery("");
               setMedicoQuery("");
@@ -345,7 +346,7 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
             }}
           >
             Limpiar filtros
-          </Button>
+          </button>
         </div>
       ) : (
         <div className="d-flex flex-column gap-1">

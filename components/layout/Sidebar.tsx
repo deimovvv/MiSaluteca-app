@@ -44,7 +44,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
       ),
     },
     {
-      label: "Mis Estudios",
+      label: "Estudios",
       href: "/app/studies",
       icon: (
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -128,21 +128,23 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
   return (
     <>
       <aside
-        className={`sidebar bg-white border-end d-flex flex-column ${isOpen ? "sidebar-open" : "sidebar-closed"}`}
+        className={`sidebar d-flex flex-column ${isOpen ? "sidebar-open" : "sidebar-closed"}`}
         style={{
           height: "100vh",
           position: "fixed",
           left: 0,
           top: 0,
-          transition: "transform 0.3s ease",
+          transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
           zIndex: 1000,
           overflow: "hidden",
+          background: "var(--surface-0)",
+          borderRight: "0.5px solid var(--border-default)",
         }}
       >
 
 
         {/* Logo */}
-        <div className="p-4 border-bottom d-flex align-items-center justify-content-between">
+        <div className="p-4 d-flex align-items-center justify-content-between" style={{ borderBottom: '0.5px solid var(--border-subtle)' }}>
           <Link href="/app" className="text-decoration-none d-flex align-items-center gap-2 gap-md-3">
             <img
               src="/images/saludchiquito_ojbsip.png"
@@ -164,6 +166,7 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
             onClick={onClose}
             aria-label="Cerrar menú"
             style={{ padding: 0, marginRight: "-8px" }}
+            suppressHydrationWarning
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -178,21 +181,24 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
               <li key={item.href} className="mb-2">
                 <Link
                   href={item.href}
-                  className={`d-flex align-items-center gap-3 px-3 py-3 text-decoration-none ${isActive(item.href) ? "text-white" : "text-dark hover-bg-light"
+                  className={`d-flex align-items-center gap-3 px-3 py-3 text-decoration-none ${isActive(item.href) ? "text-white" : "text-dark sidebar-link"
                     }`}
                   style={{
-                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    transition: "all var(--duration-normal) var(--ease-default)",
                     fontWeight: isActive(item.href) ? 600 : 500,
-                    borderRadius: "12px",
+                    fontSize: "var(--text-sm)",
+                    borderRadius: "var(--radius-md)",
                     background: isActive(item.href)
-                      ? "linear-gradient(135deg, #0284c7 0%, #016390 100%)"
+                      ? "linear-gradient(135deg, var(--saluteca-ocean-light) 0%, var(--saluteca-ocean) 100%)"
                       : "transparent",
-                    boxShadow: isActive(item.href)
-                      ? "0 4px 12px rgba(2, 132, 199, 0.2)"
-                      : "none",
+                    boxShadow: isActive(item.href) ? "var(--shadow-brand)" : "none",
                   }}
                 >
-                  <span className={isActive(item.href) ? "text-white" : "text-muted-saluteca"}>
+                  <span
+                    className={
+                      isActive(item.href) ? "text-white" : "text-muted-saluteca"
+                    }
+                  >
                     {item.icon}
                   </span>
                   <span>{item.label}</span>
@@ -203,44 +209,45 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
         </nav>
 
         {/* Sign out */}
-        <div className="p-3 border-top">
+        <div className="p-3" style={{ borderTop: '0.5px solid var(--border-subtle)' }}>
           <button
             onClick={() => signOut({ callbackUrl: "/" })}
-            className="d-flex align-items-center gap-3 px-3 py-3 w-100 text-dark hover-bg-light"
+            className="d-flex align-items-center gap-3 px-3 py-3 w-100 sidebar-link"
             style={{
-              transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              transition: "all var(--duration-normal) var(--ease-default)",
               fontWeight: 500,
-              borderRadius: "12px",
+              fontSize: "var(--text-sm)",
+              borderRadius: "var(--radius-md)",
               background: "transparent",
               border: "none",
               cursor: "pointer",
+              color: "var(--text-secondary)",
             }}
+            suppressHydrationWarning
           >
-            <span className="text-muted-saluteca">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M16 17L21 12L16 7"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M21 12H9"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M16 17L21 12L16 7"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M21 12H9"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
             <span>Cerrar sesión</span>
           </button>
         </div>

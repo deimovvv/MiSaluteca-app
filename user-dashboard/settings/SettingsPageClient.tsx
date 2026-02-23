@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import AppShell from "@/components/layout/AppShell";
-import { Button, Card, Form } from "react-bootstrap";
+import { Card, Form } from "react-bootstrap";
 import SharedLinksModal from "@/components/modals/SharedLinksModal";
 import DeleteAccountModal from "@/components/modals/DeleteAccountModal";
 import type { User } from "@/user-dashboard/server-actions/get-user";
@@ -115,7 +115,7 @@ export default function SettingsPageClient({ user, sharedLinks }: SettingsPageCl
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <circle cx="10" cy="10" r="8" fill="#4CAF50" />
+                    <circle cx="10" cy="10" r="8" fill="var(--saluteca-success)" />
                     <path
                       d="M6 10L8.5 12.5L14 7"
                       stroke="white"
@@ -137,13 +137,13 @@ export default function SettingsPageClient({ user, sharedLinks }: SettingsPageCl
                     Gestioná los links temporales de tus estudios compartidos
                   </div>
                 </div>
-                <Button
-                  className="btn-outline-saluteca"
-                  size="sm"
+                <button
+                  type="button"
+                  className="btn btn-primary-saluteca btn-sm"
                   onClick={() => setShowLinksModal(true)}
                 >
                   Ver enlaces
-                </Button>
+                </button>
               </div>
             </Card.Body>
           </Card>
@@ -161,13 +161,13 @@ export default function SettingsPageClient({ user, sharedLinks }: SettingsPageCl
                     Eliminar permanentemente tu cuenta y todos tus datos
                   </div>
                 </div>
-                <Button
-                  variant="outline-danger"
-                  size="sm"
+                <button
+                  type="button"
+                  className="btn btn-outline-danger btn-sm"
                   onClick={() => setShowDeleteModal(true)}
                 >
                   Eliminar cuenta
-                </Button>
+                </button>
               </div>
             </Card.Body>
           </Card>
@@ -205,7 +205,7 @@ export default function SettingsPageClient({ user, sharedLinks }: SettingsPageCl
                   <div className="fw-semibold mb-2">Acerca de Mi Saluteca</div>
                   <p className="text-muted mb-0" style={{ fontSize: "0.875rem" }}>
                     Tu historial médico digital, seguro y siempre accesible. Mantené organizados
-                    todos los estudios de tu familia en un solo lugar.
+                    todos tus estudios y los de tu familia en un solo lugar.
                   </p>
                 </div>
               </div>
