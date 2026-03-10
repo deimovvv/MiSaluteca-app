@@ -7,23 +7,15 @@ import styles from "./FAQ.module.css";
 const faqs = [
   {
     question: "¿Qué archivos puedo subir?",
-    answer: "Podés subir estudios en PDF o imágenes (JPG, PNG). También podés sacarle una foto desde tu celular al estudio en papel y subirla directo. Son los formatos más comunes que entregan clínicas, laboratorios y médicos.",
+    answer: "Podés subir estudios en PDF o imágenes (JPG, PNG). También podés sacarle una foto desde tu celular al estudio en papel y subirla directo. Son los formatos más comunes que entregan clínicas y laboratorios.",
   },
   {
     question: "¿Qué hace la inteligencia artificial?",
     answer: "Cuando subís un estudio, nuestra IA analiza el documento y completa automáticamente el título, la fecha, la institución y genera una observación con los datos más relevantes. Vos podés revisar y editar todo antes de guardarlo.",
   },
   {
-    question: "¿Cómo comparto un estudio con mi médico?",
-    answer: "Seleccionás el estudio, generás un link temporal y lo enviás por WhatsApp, email o el medio que prefieras. El link dura 24 horas desde que tu médico lo abre por primera vez.",
-  },
-  {
-    question: "¿El médico necesita cuenta?",
-    answer: "No, tu médico accede al estudio haciendo clic en el link. No necesita crear cuenta ni descargar nada.",
-  },
-  {
-    question: "¿Qué pasa si el link expira?",
-    answer: "Podés generar un nuevo link en cualquier momento desde tu cuenta. La expiración automática protege tu información.",
+    question: "¿Cómo comparto un estudio?",
+    answer: "Seleccionás el estudio, generás un link temporal y lo enviás por WhatsApp, email o el medio que prefieras.",
   },
   {
     question: "¿Puedo revocar acceso?",
@@ -34,12 +26,8 @@ const faqs = [
     answer: "Sí, podés eliminar tu cuenta y todos tus archivos en cualquier momento. La eliminación es permanente e irreversible.",
   },
   {
-    question: "¿Tiene costo?",
-    answer: "Durante esta etapa, Mi Saluteca es gratuito.",
-  },
-  {
-    question: "¿Qué seguridad tiene?",
-    answer: "Usamos links temporales con expiración automática y revocación manual. La seguridad se mejora de forma continua siguiendo buenas prácticas y procesos de auditoría.",
+    question: "¿Es segura la aplicación?",
+    answer: "Sí, sólo tú tienes acceso a tu información.",
   },
 ];
 

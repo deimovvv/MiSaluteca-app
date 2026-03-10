@@ -1,12 +1,12 @@
 "use client";
 import Navbar from "../landing/components/Navbar";
 import Hero from "../landing/components/Hero";
-import Statement from "../landing/components/Statement";
+
 import HowItWorks from "../landing/components/HowItWorks";
 import Benefits from "../landing/components/Benefits";
 import Privacy from "../landing/components/Privacy";
 import FAQ from "../landing/components/FAQ";
-import FinalCTA from "../landing/components/FinalCTA";
+
 import Footer from "../landing/components/Footer";
 
 export default function Home() {
@@ -17,12 +17,12 @@ export default function Home() {
     <>
       <Navbar />
       <Hero />
-      <Statement />
+
       <HowItWorks />
       <Benefits />
       <Privacy />
       <FAQ />
-      <FinalCTA />
+
       <Footer />
     </>
   );

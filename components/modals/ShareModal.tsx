@@ -187,8 +187,12 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
         ) : (
           <>
             <div
-              className="bg-success bg-opacity-10 text-success rounded p-3 mb-4 d-flex align-items-center gap-2"
-              style={{ border: "1px solid rgba(40, 167, 69, 0.25)" }}
+              className="rounded p-3 mb-4 d-flex align-items-center gap-2"
+              style={{
+                backgroundColor: "var(--saluteca-green-wash)",
+                border: "1px solid rgba(122, 187, 133, 0.3)",
+                color: "var(--saluteca-green-dark)",
+              }}
             >
               <svg
                 width="20"
@@ -197,7 +201,7 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <circle cx="10" cy="10" r="8" fill="currentColor" />
+                <circle cx="10" cy="10" r="8" fill="var(--saluteca-green)" />
                 <path
                   d="M6 10L8.5 12.5L14 7"
                   stroke="white"
@@ -262,7 +266,17 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
             </Form.Group>
 
             <div className="d-grid gap-2 mb-3">
-              <button type="button" className="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2" onClick={shareViaWhatsApp}>
+              <button
+                type="button"
+                className="btn w-100 d-flex align-items-center justify-content-center gap-2"
+                onClick={shareViaWhatsApp}
+                style={{
+                  backgroundColor: "var(--saluteca-green)",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "var(--radius-btn)",
+                }}
+              >
                 <svg
                   width="20"
                   height="20"

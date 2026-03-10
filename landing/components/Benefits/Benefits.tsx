@@ -7,22 +7,22 @@ import styles from "./Benefits.module.css";
 
 const benefits = [
   {
-    title: "IA que organiza por vos",
+    title: "Todo en un solo lugar",
     description: "Subí tu estudio y nuestra IA completa título, fecha, institución y una observación automáticamente.",
     icon: HiSparkles,
   },
   {
-    title: "Compartir en segundos",
+    title: "Compartilos",
     description: "Generá un link y envialo por WhatsApp o email.",
     icon: HiLink,
   },
   {
-    title: "Acceso temporal y revocable",
-    description: "Links que expiran y podés revocar con un clic.",
+    title: "Acceso gratuito",
+    description: "Usá Mi Saluteca sin costo durante esta etapa.",
     icon: HiLockClosed,
   },
   {
-    title: "Grupo familiar",
+    title: "Gestioná tu grupo familiar",
     description: "Cargá estudios para tus familiares y tené todo en un solo lugar.",
     icon: HiUserGroup,
   },
@@ -45,7 +45,7 @@ export default function Benefits() {
                 <Reveal delay={index * 0.1} variant="fadeUp">
                   <div className={`${styles.premiumBenefitCard} h-100`}>
                     <div className="mb-4">
-                      <IconComponent className={styles.icon} />
+                      <IconComponent className={`${styles.icon} ${index % 2 !== 0 ? styles.iconGreen : ''}`} />
                     </div>
                     <h3 className={`fw-bold mb-3 ${styles.benefitTitle}`}>
                       {benefit.title}

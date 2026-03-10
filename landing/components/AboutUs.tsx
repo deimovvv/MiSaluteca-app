@@ -38,7 +38,7 @@ export default function AboutUs() {
                     Nuestra misión
                   </p>
                   <p className="mb-0" style={{ fontSize: "1rem", lineHeight: "1.7" }}>
-                    Hacer que el acceso y la gestión de información de salud sea simple, segura y centrada en las personas.
+                    Hacer que el acceso y la gestión de información de la salud sea simple, segura y práctica. Creemos que cada familia debería poder acceder a su historial médico en cualquier momento y en cualquier lugar.
                   </p>
                 </div>
               </div>

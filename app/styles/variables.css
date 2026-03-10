@@ -11,13 +11,13 @@
 
 :root {
   /* ─── Brand Colors ─── */
-  --saluteca-ocean: #016390;
-  --saluteca-ocean-light: #0284c7;
-  --saluteca-ocean-dark: #014a6e;
-  --saluteca-ocean-deep: #003952;
-  --saluteca-sky: #7dd3fc;
-  --saluteca-sky-wash: #e0f2fe;
-  --saluteca-sky-faint: #f0f9ff;
+  --saluteca-ocean: #2F416A;
+  --saluteca-ocean-light: #43599E;
+  --saluteca-ocean-dark: #233257;
+  --saluteca-ocean-deep: #1A2540;
+  --saluteca-sky: #92A8E0;
+  --saluteca-sky-wash: #DAE2FA;
+  --saluteca-sky-faint: #EFF3FC;
 
   /* Legacy aliases — keep backward compatibility */
   --saluteca-primary: var(--saluteca-ocean);
@@ -30,6 +30,12 @@
   --saluteca-teal-wash: #ccfbf1;
   --saluteca-teal-faint: #f0fdfa;
 
+  /* ─── Brand Green (from brand palette) ─── */
+  --saluteca-green: #7ABB85;
+  --saluteca-green-dark: #5a8f62;
+  --saluteca-green-wash: rgba(122, 187, 133, 0.12);
+  --saluteca-green-faint: rgba(122, 187, 133, 0.06);
+
   /* ─── Family (Purple accent for grupo familiar) ─── */
   --saluteca-family: #7B1FA2;
   --saluteca-family-wash: #F3E5F5;
@@ -39,9 +45,9 @@
   --saluteca-secondary: var(--saluteca-teal);
 
   /* ─── Semantic Colors ─── */
-  --saluteca-success: #0d9488;
-  --saluteca-success-wash: #ccfbf1;
-  --saluteca-success-text: #115e56;
+  --saluteca-success: #7ABB85;
+  --saluteca-success-wash: rgba(122, 187, 133, 0.12);
+  --saluteca-success-text: #5a8f62;
 
   --saluteca-warning: #d97706;
   --saluteca-warning-wash: #fef3c7;
@@ -87,7 +93,7 @@
   --border-color: var(--border-default);
 
   /* ─── Focus ─── */
-  --focus-ring: rgba(1, 99, 144, 0.35);
+  --focus-ring: rgba(47, 65, 106, 0.35);
   --focus-ring-offset: 2px;
 
   /* ─── Shadows (Layered — Stripe-inspired) ─── */
@@ -107,11 +113,11 @@
     0 8px 16px rgba(0, 0, 0, 0.05),
     0 16px 32px rgba(0, 0, 0, 0.04);
   --shadow-brand:
-    0 4px 12px rgba(1, 99, 144, 0.15),
-    0 2px 4px rgba(1, 99, 144, 0.1);
+    0 4px 12px rgba(47, 65, 106, 0.15),
+    0 2px 4px rgba(47, 65, 106, 0.1);
   --shadow-brand-hover:
-    0 8px 20px rgba(1, 99, 144, 0.2),
-    0 4px 8px rgba(1, 99, 144, 0.12);
+    0 8px 20px rgba(47, 65, 106, 0.2),
+    0 4px 8px rgba(47, 65, 106, 0.12);
 
   /* ─── Spacing (4px base unit) ─── */
   --space-1: 4px;
@@ -188,7 +194,7 @@
 
   /* ─── Bootstrap Overrides ─── */
   --bs-primary: var(--saluteca-ocean);
-  --bs-primary-rgb: 1, 99, 144;
+  --bs-primary-rgb: 47, 65, 106;
   --bs-secondary: var(--saluteca-teal);
   --bs-secondary-rgb: 13, 148, 136;
   --bs-dark: var(--text-primary);

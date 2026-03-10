@@ -7,7 +7,7 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import styles from "./Navbar.module.css";
 
-export default function Navbar() {
+export default function Navbar({ whiteLogo = false }: { whiteLogo?: boolean }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
@@ -52,7 +52,7 @@ export default function Navbar() {
           className={`d-flex align-items-center gap-2 ${styles.navbarBrandCustom}`}
         >
           <img
-            src="/images/Recurso_11Logo_Final_x7_e3cva8.png"
+            src={whiteLogo && !scrolled ? "/images/logoblanco.png" : "/images/Logo_Saluteca_AzulNew.png"}
             alt="Mi Saluteca"
             width={42}
             height={12}

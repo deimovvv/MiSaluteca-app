@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Container, Row, Col } from "react-bootstrap";
 import styles from "./Footer.module.css";
 
@@ -7,33 +8,70 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className={`py-5 ${styles.footer}`}>
+    <footer className={styles.footer}>
       <div className="premium-container">
-        <Row className="mb-4">
-          <Col md={12}>
-            <p className={`mb-0 ${styles.description}`}>
-              Mi Saluteca es una plataforma digital para guardar, organizar y compartir estudios médicos de forma simple y segura.
-            </p>
-          </Col>
-        </Row>
-        <Row className="align-items-center">
-          <Col md={6} className="mb-3 mb-md-0">
-            <p className={`mb-0 ${styles.copyright}`}>
-              Mi Saluteca © {currentYear}
-            </p>
-          </Col>
-          <Col md={6} className="text-md-end">
-            <a href="#" className={`text-decoration-none me-4 hover-link ${styles.link}`}>
-              Privacidad
-            </a>
-            <a href="/terminos" className={`text-decoration-none me-4 hover-link ${styles.link}`}>
-              Términos
-            </a>
-            <a href="#" className={`text-decoration-none hover-link ${styles.link}`}>
-              Contacto
-            </a>
-          </Col>
-        </Row>
+        {/* Top section */}
+        <div className={styles.footerTop}>
+          <Row className="align-items-start">
+            {/* Brand column */}
+            <Col xs={12} md={5} className="mb-4 mb-md-0">
+              <div className={styles.brand}>
+                <div className={styles.logoWrap}>
+                  <Image
+                    src="/images/logoblanco.png"
+                    alt="Mi Saluteca"
+                    width={36}
+                    height={36}
+                    className={styles.logoImg}
+                  />
+                  <span className={styles.logoText}>Mi Saluteca</span>
+                </div>
+                <p className={styles.brandDescription}>
+                  Tu historial médico digital. Guardá, organizá y compartí tus estudios de forma simple y segura.
+                </p>
+              </div>
+            </Col>
+
+            {/* Links columns */}
+            <Col xs={4} md={2} className="mb-4 mb-md-0">
+              <h4 className={styles.columnTitle}>Producto</h4>
+              <ul className={styles.linkList}>
+                <li><a href="#como-funciona" className={styles.link}>Cómo funciona</a></li>
+                <li><a href="#beneficios" className={styles.link}>Beneficios</a></li>
+                <li><a href="#faq" className={styles.link}>FAQ</a></li>
+              </ul>
+            </Col>
+
+            <Col xs={4} md={2} className="mb-4 mb-md-0">
+              <h4 className={styles.columnTitle}>Empresa</h4>
+              <ul className={styles.linkList}>
+                <li><a href="#quienes-somos" className={styles.link}>Quiénes somos</a></li>
+                <li><a href="#" className={styles.link}>Contacto</a></li>
+              </ul>
+            </Col>
+
+            <Col xs={4} md={3}>
+              <h4 className={styles.columnTitle}>Legal</h4>
+              <ul className={styles.linkList}>
+                <li><a href="/privacidad" className={styles.link}>Privacidad</a></li>
+                <li><a href="/terminos" className={styles.link}>Términos de uso</a></li>
+              </ul>
+            </Col>
+          </Row>
+        </div>
+
+        {/* Divider */}
+        <div className={styles.divider} />
+
+        {/* Bottom bar */}
+        <div className={styles.footerBottom}>
+          <p className={styles.copyright}>
+            © {currentYear} Mi Saluteca. Todos los derechos reservados.
+          </p>
+          <p className={styles.madeWith}>
+            Hecho con <em className={styles.greenHeart}>♥</em> en Argentina
+          </p>
+        </div>
       </div>
     </footer>
   );

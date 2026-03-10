@@ -23,7 +23,7 @@
 
 .premiumAccordion :global(.accordion-item:hover) {
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
-  border-color: rgba(1, 99, 144, 0.1);
+  border-color: rgba(122, 187, 133, 0.2);
   transform: translateY(-2px);
 }
 
@@ -39,11 +39,9 @@
 }
 
 .premiumAccordion :global(.accordion-button:not(.collapsed)) {
-  background: linear-gradient(
-    to right,
-    rgba(1, 99, 144, 0.03),
-    rgba(1, 99, 144, 0.01)
-  );
+  background: linear-gradient(to right,
+      rgba(1, 99, 144, 0.03),
+      rgba(1, 99, 144, 0.01));
   color: var(--primary-blue);
   box-shadow: none;
 }

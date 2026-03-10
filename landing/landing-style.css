@@ -1,10 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --primary-blue: #016390;
-  --primary-blue-light: #0284c7;
+  --primary-blue: #2F416A;
+  --primary-blue-light: #43599E;
   --accent-teal: #0d9488;
   --accent-teal-light: #5eead4;
+  --brand-green: #7ABB85;
+  --brand-green-faint: rgba(122, 187, 133, 0.08);
   --gray-text: #64748b;
   --gray-text-dark: #475569;
   --background: #ffffff;
@@ -111,8 +113,8 @@ h6 {
 }
 
 .btn-primary:hover {
-  background-color: #014a6d;
-  border-color: #014a6d;
+  background-color: #233257;
+  border-color: #233257;
 }
 
 /* .btn {

@@ -2,6 +2,7 @@
 
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { HiComputerDesktop, HiDevicePhoneMobile } from "react-icons/hi2";
 import Reveal from "../Reveal/Reveal";
 import styles from "./Hero.module.css";
 
@@ -22,13 +23,13 @@ export default function Hero() {
         <div
           className={`${styles.heroImageBg} ${styles.heroImageDesktop}`}
           style={{
-            backgroundImage: "url('/images/hero-nuevo.png')"
+            backgroundImage: "url('/images/herodesktoponew.png')"
           }}
         ></div>
         <div
           className={`${styles.heroImageBg} ${styles.heroImageMobile}`}
           style={{
-            backgroundImage: "url('/images/mobiletest.png')"
+            backgroundImage: "url('/images/heronewmobilee2.png')"
           }}
         ></div>
         <div className={styles.heroImageOverlay}></div>
@@ -37,22 +38,37 @@ export default function Hero() {
       {/* Content with Parallax */}
       <motion.div style={{ y: contentY, opacity }}>
         <Container className={`position-relative ${styles.heroContent}`}>
-          <Row className="align-items-center min-vh-100 py-5">
+          <Row className={styles.heroRow}>
             <Col lg={10} xl={9}>
               <Reveal delay={0.2} variant="fadeUp">
                 <h1 className={`${styles.heroTitle} mb-2`}>
-                  Tu historial de salud, ordenado en un solo lugar.
+                  Tu historial de salud,<br className={styles.mobileBreak} /> en un solo lugar.
                 </h1>
               </Reveal>
 
               <Reveal delay={0.4} variant="fadeUp">
                 <p className={`${styles.heroSubtitle} mb-3`}>
-                  Subí tus estudios y compartilos con un link seguro.
+                  Organizá, guardá y compartí<br className={styles.mobileBreak} /> tu información médica<br className={styles.mobileBreak} /> de forma simple y segura.
                 </p>
               </Reveal>
 
+              <Reveal delay={0.5} variant="fadeUp">
+                <div className={`mb-4 ${styles.platformStrip}`}>
+                  <span className={styles.platformLabel}>Disponible en</span>
+                  <div className={styles.platformBadge}>
+                    <HiComputerDesktop className={styles.platformIcon} />
+                    <span>Web</span>
+                  </div>
+                  <span className={styles.platformAnd}>&</span>
+                  <div className={styles.platformBadge}>
+                    <HiDevicePhoneMobile className={styles.platformIcon} />
+                    <span>App</span>
+                  </div>
+                </div>
+              </Reveal>
+
               <Reveal delay={0.6} variant="fadeIn">
-                <div className="d-flex gap-3 flex-wrap">
+                <div className="d-flex gap-3 flex-wrap justify-content-center justify-content-md-start">
                   <Button
                     href="/app"
                     className={styles.btnHeroPrimary}

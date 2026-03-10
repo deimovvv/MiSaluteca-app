@@ -28,7 +28,7 @@
   }
 
   .navbarCustom .navbarBrandCustom {
-    color: #016390 !important;
+    color: #2F416A !important;
   }
 
   .navbarCustom .navLinkCustom {
@@ -36,7 +36,7 @@
   }
 
   .navbarCustom .navLinkCustom:hover {
-    color: #016390 !important;
+    color: #2F416A !important;
   }
 
   .navbarTogglerCustom {
@@ -70,7 +70,7 @@
 }
 
 .navbarScrolled .navbarBrandCustom {
-  color: #016390 !important;
+  color: #2F416A !important;
 }
 
 .navbarBrandText {
@@ -94,10 +94,29 @@
   font-weight: 500;
   font-size: 0.9rem;
   transition: all 0.2s ease;
+  position: relative;
+}
+
+.navLinkCustom::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 70%;
+  height: 2px;
+  background: #7ABB85;
+  border-radius: 2px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
 }
 
 .navLinkCustom:hover {
   color: #fff !important;
+}
+
+.navLinkCustom:hover::after {
+  transform: translateX(-50%) scaleX(1);
 }
 
 .navbarScrolled .navLinkCustom {
@@ -105,7 +124,11 @@
 }
 
 .navbarScrolled .navLinkCustom:hover {
-  color: #016390 !important;
+  color: #2F416A !important;
+}
+
+.navbarScrolled .navLinkCustom:hover::after {
+  transform: translateX(-50%) scaleX(1);
 }
 
 .navLinkLogin {
@@ -119,17 +142,17 @@
 }
 
 .navbarScrolled .navLinkLogin {
-  color: #016390 !important;
+  color: #2F416A !important;
 }
 
 .navbarScrolled .navLinkLogin:hover {
-  color: #014a6d !important;
+  color: #233257 !important;
 }
 
 .btnNavbarLogin {
   background: rgba(255, 255, 255, 0.95) !important;
   border: 2px solid rgba(255, 255, 255, 0.95) !important;
-  color: #016390 !important;
+  color: #2F416A !important;
   font-weight: 600;
   font-size: 0.9rem;
   padding: 0.5rem 1.5rem;
@@ -140,28 +163,28 @@
 .btnNavbarLogin:hover {
   background: #fff !important;
   border-color: #fff !important;
-  color: #014a6d !important;
+  color: #233257 !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4);
 }
 
 .navbarScrolled .btnNavbarLogin {
   background: transparent;
-  border-color: #016390;
-  color: #016390;
+  border-color: #2F416A;
+  color: #2F416A;
 }
 
 .navbarScrolled .btnNavbarLogin:hover {
-  background: #016390;
-  border-color: #016390;
+  background: #2F416A;
+  border-color: #2F416A;
   color: #fff;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(1, 99, 144, 0.3);
 }
 
 .btnNavbarCta {
-  background: #016390;
-  border: 2px solid #016390;
+  background: #2F416A;
+  border: 2px solid #2F416A;
   color: #fff;
   font-weight: 600;
   font-size: 0.9rem;
@@ -171,8 +194,8 @@
 }
 
 .btnNavbarCta:hover {
-  background: #014a6d;
-  border-color: #014a6d;
+  background: #233257;
+  border-color: #233257;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(1, 99, 144, 0.3);
 }

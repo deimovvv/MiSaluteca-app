@@ -22,7 +22,7 @@
 }
 
 .btn-primary-saluteca:hover {
-  background: linear-gradient(135deg, #0ea5e9 0%, var(--saluteca-ocean-light) 100%);
+  background: linear-gradient(135deg, #4A63AD 0%, var(--saluteca-ocean-light) 100%);
   color: var(--saluteca-white);
   transform: translateY(-1px);
   box-shadow: var(--shadow-brand-hover);

@@ -22,7 +22,7 @@ export default function Loading() {
                     }}
                 >
                     <img
-                        src="/images/Recurso_11Logo_Final_x7_e3cva8.png"
+                        src="/images/Logo_Saluteca_AzulNew.png"
                         alt="Cargando"
                         width={56}
                         height={56}

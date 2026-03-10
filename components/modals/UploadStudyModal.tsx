@@ -342,7 +342,7 @@ export default function UploadStudyModal({
                   width: "80px",
                   height: "80px",
                   borderRadius: "50%",
-                  backgroundColor: "var(--saluteca-sky-wash)",
+                  backgroundColor: "var(--saluteca-green-wash)",
                 }}
               >
                 <svg
@@ -354,7 +354,7 @@ export default function UploadStudyModal({
                 >
                   <path
                     d="M33.3333 10L15 28.3333L6.66667 20"
-                    stroke="var(--saluteca-ocean)"
+                    stroke="var(--saluteca-green)"
                     strokeWidth="3"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -498,8 +498,8 @@ export default function UploadStudyModal({
                 <div
                   className="mb-3 p-3 rounded-3"
                   style={{
-                    backgroundColor: 'var(--saluteca-sky-faint)',
-                    border: '1px solid var(--saluteca-sky)'
+                    backgroundColor: 'var(--saluteca-green-faint)',
+                    border: '1px solid rgba(122, 187, 133, 0.25)'
                   }}
                 >
                   <div className="d-flex align-items-center">
@@ -508,7 +508,7 @@ export default function UploadStudyModal({
                       style={{
                         width: '32px',
                         height: '32px',
-                        backgroundColor: 'var(--saluteca-ocean)',
+                        backgroundColor: 'var(--saluteca-green)',
                         borderRadius: '50%',
                         flexShrink: 0
                       }}
@@ -530,7 +530,7 @@ export default function UploadStudyModal({
                       </svg>
                     </div>
                     <span style={{
-                      color: 'var(--saluteca-ocean-deep)',
+                      color: 'var(--saluteca-green-dark)',
                       fontSize: '0.9375rem',
                       fontWeight: 500,
                       lineHeight: 1.5

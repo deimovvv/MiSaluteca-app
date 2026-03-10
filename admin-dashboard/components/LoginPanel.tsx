@@ -38,6 +38,19 @@ const LoginPanel = () => {
         >
             <Card style={{ width: "100%", maxWidth: "400px" }} className="shadow-sm">
                 <Card.Body className="p-4">
+                    <div className="text-center mb-3">
+                        <img
+                            src="/images/Logo_Saluteca_AzulNew.png"
+                            alt="Mi Saluteca"
+                            style={{ width: "48px", height: "48px", objectFit: "contain" }}
+                        />
+                        <img
+                            src="/images/Recurso 21Logo_Mi Saluteca_AzulNew.png"
+                            alt="Mi Saluteca"
+                            className="ms-2"
+                            style={{ height: "28px", objectFit: "contain" }}
+                        />
+                    </div>
                     <Card.Title className="text-center mb-4">
                         <h2>Acceso</h2>
                     </Card.Title>
@@ -61,7 +74,17 @@ const LoginPanel = () => {
                         )}
 
 
-                        <button type="submit" disabled={loading} className="w-100 btn btn-outline-primary">
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-100 btn"
+                            style={{
+                                backgroundColor: "#2F416A",
+                                borderColor: "#2F416A",
+                                color: "#fff",
+                                borderRadius: "50px",
+                            }}
+                        >
                             {loading ? (
                                 <>
                                     <span

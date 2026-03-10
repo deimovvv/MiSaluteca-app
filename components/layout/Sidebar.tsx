@@ -147,13 +147,13 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
         <div className="p-4 d-flex align-items-center justify-content-between" style={{ borderBottom: '0.5px solid var(--border-subtle)' }}>
           <Link href="/app" className="text-decoration-none d-flex align-items-center gap-2 gap-md-3">
             <img
-              src="/images/saludchiquito_ojbsip.png"
+              src="/images/Logo_Saluteca_AzulNew.png"
               alt="Mi Saluteca"
               className="d-block"
-              style={{ width: "32px", height: "32px" }}
+              style={{ width: "32px", height: "32px", objectFit: "contain" }}
             />
             <img
-              src="/images/Mi_Saluteca_Azul_rbupo7.png"
+              src="/images/Recurso 21Logo_Mi Saluteca_AzulNew.png"
               alt="Mi Saluteca"
               className="d-block"
               style={{ height: "22px", objectFit: "contain" }}

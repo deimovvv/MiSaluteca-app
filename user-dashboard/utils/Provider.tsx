@@ -25,7 +25,7 @@ const Provider = ({ children }: ProviderProps) => {
                     },
                     success: {
                         iconTheme: {
-                            primary: "var(--saluteca-primary, #0066CC)",
+                            primary: "var(--saluteca-green, #7ABB85)",
                             secondary: "var(--saluteca-white, #fff)",
                         },
                     },

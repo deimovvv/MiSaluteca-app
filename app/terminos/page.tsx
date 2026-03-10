@@ -84,12 +84,12 @@ export default function TerminosPage() {
 
     return (
         <>
-            <Navbar />
+            <Navbar whiteLogo />
 
             {/* Hero */}
             <section
                 style={{
-                    background: "#ffffff",
+                    background: "linear-gradient(165deg, #1e2d4d 0%, #2F416A 40%, #3a5280 100%)",
                     paddingTop: "140px",
                     paddingBottom: "80px",
                 }}
@@ -101,19 +101,19 @@ export default function TerminosPage() {
                                 style={{
                                     fontSize: "clamp(2.5rem, 5vw, 4rem)",
                                     fontWeight: 700,
-                                    color: "#000",
+                                    color: "#fff",
                                     letterSpacing: "-0.03em",
                                     lineHeight: 1.1,
                                     marginBottom: "1.5rem",
                                 }}
                             >
                                 Términos de{" "}
-                                <span style={{ color: "#016390" }}>Servicio.</span>
+                                <span style={{ color: "#7ABB85" }}>Servicio.</span>
                             </h1>
                             <p
                                 style={{
                                     fontSize: "clamp(1.1rem, 2vw, 1.3rem)",
-                                    color: "#6b6b6b",
+                                    color: "rgba(255,255,255,0.7)",
                                     lineHeight: 1.7,
                                     maxWidth: "560px",
                                     margin: 0,
@@ -129,7 +129,7 @@ export default function TerminosPage() {
             {/* Secciones de contenido alternando white/dark */}
             <section
                 style={{
-                    background: "#1a1a1a",
+                    background: "#f4f7fb",
                     padding: "100px 0",
                 }}
             >
@@ -148,7 +148,7 @@ export default function TerminosPage() {
                                         style={{
                                             fontSize: "1.25rem",
                                             fontWeight: 700,
-                                            color: "#fff",
+                                            color: "#1e2d4d",
                                             marginBottom: "0.75rem",
                                             letterSpacing: "-0.01em",
                                         }}
@@ -158,7 +158,7 @@ export default function TerminosPage() {
                                     <p
                                         style={{
                                             margin: 0,
-                                            color: "rgba(255,255,255,0.6)",
+                                            color: "#5a6a8a",
                                             fontSize: "1rem",
                                             lineHeight: 1.75,
                                             maxWidth: "700px",
@@ -174,7 +174,7 @@ export default function TerminosPage() {
                                                 flexDirection: "column",
                                                 gap: "0.5rem",
                                                 marginTop: "0.75rem",
-                                                color: "rgba(255,255,255,0.6)",
+                                                color: "#5a6a8a",
                                                 fontSize: "1rem",
                                                 lineHeight: 1.75,
                                                 maxWidth: "700px",
@@ -189,17 +189,18 @@ export default function TerminosPage() {
                                         <div
                                             style={{
                                                 marginTop: "1rem",
-                                                background: "rgba(2, 132, 199, 0.1)",
-                                                border: "1px solid rgba(2, 132, 199, 0.2)",
+                                                background: "rgba(122,187,133,0.06)",
+                                                border: "1px solid rgba(122,187,133,0.2)",
+                                                borderLeft: "3px solid #7ABB85",
                                                 borderRadius: "12px",
                                                 padding: "1rem 1.25rem",
                                                 fontSize: "0.9375rem",
-                                                color: "rgba(255,255,255,0.7)",
+                                                color: "#5a6a8a",
                                                 lineHeight: 1.7,
                                                 maxWidth: "700px",
                                             }}
                                         >
-                                            <strong style={{ color: "#38bdf8" }}>
+                                            <strong style={{ color: "#5a8f62" }}>
                                                 Importante:
                                             </strong>{" "}
                                             {section.important}
@@ -215,7 +216,7 @@ export default function TerminosPage() {
             {/* White section — secciones 8-14 */}
             <section
                 style={{
-                    background: "#ffffff",
+                    background: "linear-gradient(165deg, #1e2d4d 0%, #2F416A 40%, #3a5280 100%)",
                     padding: "100px 0",
                 }}
             >
@@ -234,7 +235,7 @@ export default function TerminosPage() {
                                         style={{
                                             fontSize: "1.25rem",
                                             fontWeight: 700,
-                                            color: "#000",
+                                            color: "#fff",
                                             marginBottom: "0.75rem",
                                             letterSpacing: "-0.01em",
                                         }}
@@ -244,7 +245,7 @@ export default function TerminosPage() {
                                     <p
                                         style={{
                                             margin: 0,
-                                            color: "#6b6b6b",
+                                            color: "rgba(255,255,255,0.75)",
                                             fontSize: "1rem",
                                             lineHeight: 1.75,
                                             maxWidth: "700px",
@@ -260,7 +261,7 @@ export default function TerminosPage() {
                                                 flexDirection: "column",
                                                 gap: "0.5rem",
                                                 marginTop: "0.75rem",
-                                                color: "#6b6b6b",
+                                                color: "rgba(255,255,255,0.75)",
                                                 fontSize: "1rem",
                                                 lineHeight: 1.75,
                                                 maxWidth: "700px",

@@ -168,16 +168,17 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
         <div className="p-4 border-bottom d-flex align-items-center justify-content-between">
           <Link href="/app" className="text-decoration-none d-flex align-items-center gap-2 gap-md-3">
             <img
-              src="/images/saludchiquito_ojbsip.png"
+              src="/images/Logo_Saluteca_AzulNew.png"
               alt="Mi Saluteca"
               className="d-block"
               style={{
                 width: "32px",
                 height: "32px",
+                objectFit: "contain",
               }}
             />
             <img
-              src="/images/Mi_Saluteca_Azul_rbupo7.png"
+              src="/images/Recurso 21Logo_Mi Saluteca_AzulNew.png"
               alt="Mi Saluteca"
               className="d-block"
               style={{
@@ -219,10 +220,10 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                     fontWeight: isActive(item.href) ? 600 : 500,
                     borderRadius: "12px",
                     background: isActive(item.href)
-                      ? "linear-gradient(135deg, #0284c7 0%, #016390 100%)"
+                      ? "linear-gradient(135deg, var(--saluteca-ocean-light) 0%, var(--saluteca-ocean) 100%)"
                       : "transparent",
                     boxShadow: isActive(item.href)
-                      ? "0 4px 12px rgba(2, 132, 199, 0.2)"
+                      ? "0 4px 12px rgba(47, 65, 106, 0.2)"
                       : "none",
                   }}
                 >
