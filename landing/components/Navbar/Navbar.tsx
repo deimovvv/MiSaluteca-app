@@ -12,13 +12,24 @@ export default function Navbar({ whiteLogo = false }: { whiteLogo?: boolean }) {
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [signingIn, setSigningIn] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    setIsMobile(window.innerWidth <= 768);
+
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   const handleSignIn = () => {
@@ -52,7 +63,7 @@ export default function Navbar({ whiteLogo = false }: { whiteLogo?: boolean }) {
           className={`d-flex align-items-center gap-2 ${styles.navbarBrandCustom}`}
         >
           <img
-            src={whiteLogo && !scrolled ? "/images/logoblanco.png" : "/images/Logo_Saluteca_AzulNew.png"}
+            src={(whiteLogo && !scrolled && !isMobile) ? "/images/logoblanco.png" : "/images/Logo_Saluteca_AzulNew.png"}
             alt="Mi Saluteca"
             width={42}
             height={12}
