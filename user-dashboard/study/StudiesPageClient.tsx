@@ -334,9 +334,8 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
           <p className="empty-state-description">
             No se encontraron estudios con los filtros aplicados
           </p>
-          <button
-            type="button"
-            className="btn btn-outline-saluteca"
+          <Button
+            className="btn-primary-saluteca"
             onClick={() => {
               setSearchQuery("");
               setMedicoQuery("");
@@ -346,7 +345,7 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
             }}
           >
             Limpiar filtros
-          </button>
+          </Button>
         </div>
       ) : (
         <div className="d-flex flex-column gap-1">

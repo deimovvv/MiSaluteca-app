@@ -53,7 +53,7 @@ async function extractTextFromPDF(
 
     // Importar PDF.js dinámicamente
     const pdfjsLib = await import('pdfjs-dist');
-    
+
     // Configurar el worker de PDF.js - usar la versión del paquete instalado
     // La versión debe coincidir con la instalada en node_modules
     const pdfjsVersion = pdfjsLib.version || '5.4.624';
@@ -100,7 +100,7 @@ async function extractTextFromPDF(
       });
 
       // Aplicar OCR a la página
-      onProgress?.(`Aplicando OCR a página ${pageNum} de ${totalPages}...`);
+      onProgress?.(`Analizando página ${pageNum} de ${totalPages}...`);
       const { data: { text } } = await worker.recognize(blob);
 
       // Agregar el texto de esta página
@@ -215,7 +215,7 @@ async function extractTextFromDOCX(
       canvas.toBlob((b) => resolve(b!), 'image/png');
     });
 
-    onProgress?.('Aplicando OCR al documento...');
+    onProgress?.('Analizando documento...');
     const { data: { text } } = await worker.recognize(blob);
 
     document.body.removeChild(container);

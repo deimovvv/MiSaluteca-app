@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "react-bootstrap";
-import styles from "./FamilyEmptyState.module.css";
 
 interface FamilyEmptyStateProps {
   onAddClick: () => void;
@@ -9,8 +8,8 @@ interface FamilyEmptyStateProps {
 
 export default function FamilyEmptyState({ onAddClick }: FamilyEmptyStateProps) {
   return (
-    <div className={styles.emptyState}>
-      <div className={styles.emptyStateIcon}>
+    <div className="empty-state">
+      <div className="empty-state-icon">
         <svg
           width="40"
           height="40"
@@ -48,8 +47,8 @@ export default function FamilyEmptyState({ onAddClick }: FamilyEmptyStateProps) 
           />
         </svg>
       </div>
-      <h2 className={styles.emptyStateTitle}>No hay familiares</h2>
-      <p className={styles.emptyStateDescription}>
+      <h2 className="empty-state-title">No hay familiares</h2>
+      <p className="empty-state-description">
         Agregá a tus familiares para gestionar sus estudios médicos
       </p>
       <Button

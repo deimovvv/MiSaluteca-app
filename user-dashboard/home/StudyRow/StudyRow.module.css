@@ -32,7 +32,8 @@
 
 .studyRowDescription {
   font-size: 0.875rem;
-  color: var(--text-muted);
+  /* color: var(--text-muted); */
+  color: #5e5e5e;
   margin-bottom: 0;
   display: -webkit-box;
   -webkit-line-clamp: 1;

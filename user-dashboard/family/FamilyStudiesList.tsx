@@ -48,9 +48,9 @@ export default function FamilyStudiesList({
             />
           </svg>
         </div>
-        <h4 className="empty-state-title" style={{ fontSize: "1.25rem" }}>
+        <h2 className="empty-state-title">
           {!hasFilters ? "No hay estudios aún" : "No se encontraron resultados"}
-        </h4>
+        </h2>
         <p className="empty-state-description">
           {!hasFilters
             ? `Subí el primer estudio de ${memberName.split(" ")[0]}`

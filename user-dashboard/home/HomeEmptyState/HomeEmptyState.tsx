@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "react-bootstrap";
-import styles from "./HomeEmptyState.module.css";
 
 interface HomeEmptyStateProps {
   onUploadClick: () => void;
@@ -9,8 +8,8 @@ interface HomeEmptyStateProps {
 
 export default function HomeEmptyState({ onUploadClick }: HomeEmptyStateProps) {
   return (
-    <div className={styles.emptyState}>
-      <div className={styles.emptyStateIcon}>
+    <div className="empty-state">
+      <div className="empty-state-icon">
         <svg
           width="40"
           height="40"
@@ -48,8 +47,8 @@ export default function HomeEmptyState({ onUploadClick }: HomeEmptyStateProps) {
           />
         </svg>
       </div>
-      <h2 className={styles.emptyStateTitle}>Aún no hay estudios</h2>
-      <p className={styles.emptyStateDescription}>
+      <h2 className="empty-state-title">Aún no hay estudios</h2>
+      <p className="empty-state-description">
         Comienza subiendo tu primer estudio médico para mantener todo organizado
       </p>
       <Button className="btn-primary-saluteca" onClick={onUploadClick}>
