@@ -59,8 +59,8 @@ export default function AddFamilyMemberModal({
       <Modal.Header closeButton className="border-0 pb-0">
         <Modal.Title className="h5 fw-semibold">Agregar familiar</Modal.Title>
       </Modal.Header>
-      <Form onSubmit={handleSubmit}>
-        <Modal.Body>
+      <Form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", overflow: "hidden", flex: "1 1 auto", minHeight: 0 }}>
+        <Modal.Body style={{ overflowY: "auto", flex: "1 1 auto", minHeight: 0 }}>
           <p className="text-muted mb-4">
             Agregá a un familiar para poder gestionar sus estudios médicos
           </p>
@@ -119,7 +119,14 @@ export default function AddFamilyMemberModal({
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer className="border-0 pt-0 gap-2">
+        <Modal.Footer className="border-0 pt-0 gap-2" style={{
+          flexShrink: 0,
+          background: "white",
+          padding: "12px 16px",
+          paddingBottom: "calc(12px + env(safe-area-inset-bottom, 0px))",
+          borderTop: "1px solid var(--border-subtle)",
+          boxShadow: "0 -2px 8px rgba(0,0,0,0.06)",
+        }}>
           <button type="button" className="btn btn-secondary-saluteca flex-fill flex-md-grow-0" onClick={handleClose} disabled={saving}>
             Cancelar
           </button>

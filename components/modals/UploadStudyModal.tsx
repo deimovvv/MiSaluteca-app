@@ -331,8 +331,8 @@ export default function UploadStudyModal({
           {uploadSuccess ? "Estudio subido" : "Subir estudio médico"}
         </Modal.Title>
       </Modal.Header>
-      <Form onSubmit={handleConfirm}>
-        <Modal.Body style={{ overflowY: "auto", flex: "1 1 auto" }}>
+      <Form onSubmit={handleConfirm} style={{ display: "flex", flexDirection: "column", overflow: "hidden", flex: "1 1 auto", minHeight: 0 }}>
+        <Modal.Body style={{ overflowY: "auto", flex: "1 1 auto", minHeight: 0, paddingBottom: "1rem" }}>
           {uploadSuccess ? (
             // Success State
             <div className="text-center py-4">
@@ -825,11 +825,10 @@ export default function UploadStudyModal({
           )}
         </Modal.Body>
         <Modal.Footer className="border-0 pt-0 gap-2" style={{
-          position: "sticky",
-          bottom: 0,
+          flexShrink: 0,
           background: "white",
           zIndex: 10,
-          paddingTop: "12px",
+          padding: "12px 16px",
           paddingBottom: "calc(12px + env(safe-area-inset-bottom, 0px))",
           borderTop: "1px solid var(--border-subtle)",
           boxShadow: "0 -2px 8px rgba(0,0,0,0.06)",

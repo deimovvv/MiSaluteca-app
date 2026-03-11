@@ -8,10 +8,10 @@
 
 /* ─── Primary Button ─── */
 .btn-primary-saluteca {
-  background: linear-gradient(135deg, var(--saluteca-ocean-light) 0%, var(--saluteca-ocean) 100%);
+  background: var(--saluteca-ocean);
   border: none;
   color: var(--saluteca-white);
-  font-weight: 500;
+  font-weight: 600;
   padding: 0.625rem 1.25rem;
   border-radius: var(--radius-btn);
   transition: all var(--duration-normal) var(--ease-default);
@@ -22,13 +22,14 @@
 }
 
 .btn-primary-saluteca:hover {
-  background: linear-gradient(135deg, #4A63AD 0%, var(--saluteca-ocean-light) 100%);
+  background: var(--saluteca-ocean-dark);
   color: var(--saluteca-white);
   transform: translateY(-1px);
   box-shadow: var(--shadow-brand-hover);
 }
 
 .btn-primary-saluteca:active {
+  background: var(--saluteca-ocean-deep);
   transform: translateY(0);
   box-shadow: var(--shadow-brand);
 }
@@ -39,7 +40,9 @@
 }
 
 .btn-primary-saluteca:disabled {
-  opacity: 0.5;
+  background: var(--saluteca-ocean);
+  color: var(--saluteca-white);
+  opacity: 0.45;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;

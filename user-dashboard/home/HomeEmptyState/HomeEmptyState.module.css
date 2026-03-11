@@ -23,9 +23,13 @@
 }
 
 .emptyStateDescription {
-  font-size: 1rem;
-  color: var(--text-muted);
+  font-size: 1.0625rem;
+  color: var(--text-secondary);
   margin-bottom: 1.5rem;
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
 }
 
 /* Mobile responsive styles */

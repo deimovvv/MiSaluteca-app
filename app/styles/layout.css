@@ -254,6 +254,33 @@
     width: auto;
   }
 
+  /* Fullscreen modal — proper flex layout so body scrolls & footer stays pinned */
+  .modal-fullscreen-sm-down .modal-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .modal-fullscreen-sm-down .modal-content>form {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .modal-fullscreen-sm-down .modal-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    min-height: 0;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .modal-fullscreen-sm-down .modal-footer {
+    flex-shrink: 0;
+  }
+
   /* Fullscreen modal footer — larger tappable buttons */
   .modal-fullscreen-sm-down .modal-footer .btn {
     font-size: 0.9375rem !important;
