@@ -32,6 +32,7 @@ export default function FamilyMemberDetail({
   const [shareStudy, setShareStudy] = useState<Study | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [medicoQuery, setMedicoQuery] = useState("");
+  const [institutionQuery, setInstitutionQuery] = useState("");
   const [selectedMonth, setSelectedMonth] = useState<string>("");
   const [selectedYear, setSelectedYear] = useState<string>("");
 
@@ -46,6 +47,10 @@ export default function FamilyMemberDetail({
       medicoQuery === "" ||
       study.medico?.toLowerCase().includes(medicoQuery.toLowerCase());
 
+    const matchesInstitution =
+      institutionQuery === "" ||
+      study.institution?.toLowerCase().includes(institutionQuery.toLowerCase());
+
     const matchesDate = (!selectedMonth && !selectedYear) || (() => {
       const studyDate = parseDateFromDB(study.date);
       const monthMatch = !selectedMonth || studyDate.getMonth() + 1 === parseInt(selectedMonth);
@@ -53,10 +58,10 @@ export default function FamilyMemberDetail({
       return monthMatch && yearMatch;
     })();
 
-    return matchesSearch && matchesMedico && matchesDate;
+    return matchesSearch && matchesMedico && matchesInstitution && matchesDate;
   });
 
-  const hasFilters = !!(searchQuery || medicoQuery || selectedMonth || selectedYear);
+  const hasFilters = !!(searchQuery || medicoQuery || institutionQuery || selectedMonth || selectedYear);
 
   return (
     <>
@@ -78,6 +83,8 @@ export default function FamilyMemberDetail({
         setSearchQuery={setSearchQuery}
         medicoQuery={medicoQuery}
         setMedicoQuery={setMedicoQuery}
+        institutionQuery={institutionQuery}
+        setInstitutionQuery={setInstitutionQuery}
         selectedMonth={selectedMonth}
         setSelectedMonth={setSelectedMonth}
         selectedYear={selectedYear}

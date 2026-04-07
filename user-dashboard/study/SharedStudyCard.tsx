@@ -10,7 +10,10 @@ interface SharedStudyCardProps {
   linkUuid: string;
 }
 
-export default function SharedStudyCard({ study, linkUuid }: SharedStudyCardProps) {
+export default function SharedStudyCard({
+  study,
+  linkUuid,
+}: SharedStudyCardProps) {
   const [isDownloading, setIsDownloading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [imageError, setImageError] = useState(false);
@@ -35,7 +38,7 @@ export default function SharedStudyCard({ study, linkUuid }: SharedStudyCardProp
 
         // Manejar error de expiración con redirección
         if (errorData.errorType === "expired") {
-          window.location.reload(); // Recargar para mostrar la pantalla de expirado
+          window.location.reload();
           return;
         }
 
@@ -54,7 +57,11 @@ export default function SharedStudyCard({ study, linkUuid }: SharedStudyCardProp
       document.body.removeChild(a);
     } catch (error) {
       console.error("Error:", error);
-      setError(error instanceof Error ? error.message : "Error al descargar el estudio");
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Error al descargar el estudio",
+      );
     } finally {
       setIsDownloading(false);
     }
@@ -67,7 +74,8 @@ export default function SharedStudyCard({ study, linkUuid }: SharedStudyCardProp
           <div
             className="mb-3 position-relative"
             style={{
-              background: "linear-gradient(135deg, var(--saluteca-danger-wash) 0%, #fecaca 100%)",
+              background:
+                "linear-gradient(135deg, var(--saluteca-danger-wash) 0%, #fecaca 100%)",
               border: "1px solid #fca5a5",
               borderRadius: "12px",
               padding: "16px 48px 16px 16px",
@@ -270,7 +278,9 @@ export default function SharedStudyCard({ study, linkUuid }: SharedStudyCardProp
                     strokeLinejoin="round"
                   />
                 </svg>
-                <p className="text-muted mb-2">{study.mimeType.split("/")[1].toUpperCase()}</p>
+                <p className="text-muted mb-2">
+                  {study.mimeType.split("/")[1].toUpperCase()}
+                </p>
                 <p className="text-muted small mb-0">
                   Descargá el archivo para visualizarlo
                 </p>
@@ -334,7 +344,6 @@ export default function SharedStudyCard({ study, linkUuid }: SharedStudyCardProp
               </>
             )}
           </Button>
-
         </div>
       </Card.Body>
     </Card>

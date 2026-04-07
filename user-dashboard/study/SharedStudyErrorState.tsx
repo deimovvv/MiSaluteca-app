@@ -1,6 +1,11 @@
 import { Container } from "react-bootstrap";
 
-export type ErrorType = "notFound" | "expired" | "revoked" | "studyNotFound" | "serverError";
+export type ErrorType =
+  | "notFound"
+  | "expired"
+  | "revoked"
+  | "studyNotFound"
+  | "serverError";
 
 interface SharedStudyErrorStateProps {
   type: ErrorType;
@@ -36,14 +41,19 @@ export default function SharedStudyErrorState({
                 strokeWidth="2"
                 strokeLinecap="round"
               />
-              <circle cx="20" cy="26.6667" r="1.5" fill="var(--saluteca-gray)" />
+              <circle
+                cx="20"
+                cy="26.6667"
+                r="1.5"
+                fill="var(--saluteca-gray)"
+              />
             </svg>
           ),
         };
       case "expired":
         return {
-          title: "Link expirado",
-          description: "Este link ha expirado y ya no está disponible",
+          title: "Link eliminado",
+          description: "Este link fue eliminado por el dueño del estudio",
           icon: (
             <svg
               width="40"
@@ -76,8 +86,8 @@ export default function SharedStudyErrorState({
         };
       case "revoked":
         return {
-          title: "Link expirado",
-          description: "Este link fue revocado por el dueño del estudio",
+          title: "Link eliminado",
+          description: "Este link fue eliminado por el dueño del estudio",
           icon: (
             <svg
               width="40"
@@ -133,14 +143,20 @@ export default function SharedStudyErrorState({
                 strokeWidth="2"
                 strokeLinecap="round"
               />
-              <circle cx="20" cy="26.6667" r="1.5" fill="var(--saluteca-gray)" />
+              <circle
+                cx="20"
+                cy="26.6667"
+                r="1.5"
+                fill="var(--saluteca-gray)"
+              />
             </svg>
           ),
         };
       case "serverError":
         return {
           title: "Error del servidor",
-          description: "Hubo un problema al cargar el estudio. Por favor, intenta nuevamente más tarde.",
+          description:
+            "Hubo un problema al cargar el estudio. Por favor, intenta nuevamente más tarde.",
           icon: (
             <svg
               width="40"
@@ -162,7 +178,12 @@ export default function SharedStudyErrorState({
                 strokeWidth="2"
                 strokeLinecap="round"
               />
-              <circle cx="20" cy="26.6667" r="1.5" fill="var(--saluteca-gray)" />
+              <circle
+                cx="20"
+                cy="26.6667"
+                r="1.5"
+                fill="var(--saluteca-gray)"
+              />
             </svg>
           ),
         };

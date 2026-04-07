@@ -29,7 +29,7 @@ interface StudyRow extends RowDataPacket {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ uuid: string }> }
+  { params }: { params: Promise<{ uuid: string }> },
 ) {
   try {
     // Obtener el UUID del link compartido
@@ -40,13 +40,13 @@ export async function GET(
       `SELECT id, id_usuario, id_estudio, nombre_medico, uuid, created_at, fecha_abierto 
        FROM links 
        WHERE uuid = ?`,
-      [uuid]
+      [uuid],
     );
 
     if (linkRows.length === 0) {
       return NextResponse.json(
         { error: "Link no encontrado.", errorType: "notFound" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -56,20 +56,22 @@ export async function GET(
     if (!link.fecha_abierto) {
       // Actualizar fecha_abierto con la fecha actual
       const currentDate = dateNowWithMinutes();
-      await pool.execute(
-        `UPDATE links SET fecha_abierto = ? WHERE uuid = ?`,
-        [currentDate, uuid]
-      );
+      await pool.execute(`UPDATE links SET fecha_abierto = ? WHERE uuid = ?`, [
+        currentDate,
+        uuid,
+      ]);
     } else {
       // Verificar si el link expiró
       const fechaAbierto = moment(link.fecha_abierto, "DD-MM-YYYY HH:mm");
-      const expirationDate = fechaAbierto.clone().add(SHARE_LINK_EXPIRATION_HOURS, "hours");
+      const expirationDate = fechaAbierto
+        .clone()
+        .add(SHARE_LINK_EXPIRATION_HOURS, "hours");
       const currentDate = moment(dateNowWithMinutes(), "DD-MM-YYYY HH:mm");
 
       if (currentDate.isAfter(expirationDate)) {
         return NextResponse.json(
-          { error: "El link ha expirado.", errorType: "expired" },
-          { status: 403 }
+          { error: "El link ha sido eliminado.", errorType: "expired" },
+          { status: 403 },
         );
       }
     }
@@ -79,13 +81,13 @@ export async function GET(
       `SELECT id, uuid, id_usuario, file_key, file_name, mime_type 
        FROM estudios 
        WHERE id = ?`,
-      [link.id_estudio]
+      [link.id_estudio],
     );
 
     if (studyRows.length === 0) {
       return NextResponse.json(
         { error: "Estudio no encontrado.", errorType: "notFound" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -93,15 +95,19 @@ export async function GET(
 
     // SEGURIDAD: Validar que file_key no contenga path traversal
     if (!isValidFilePath(study.file_key)) {
-      console.error(`[SEGURIDAD] Intento de path traversal detectado en link compartido: ${study.file_key}`);
+      console.error(
+        `[SEGURIDAD] Intento de path traversal detectado en link compartido: ${study.file_key}`,
+      );
       return NextResponse.json(
         { error: "Ruta de archivo inválida.", errorType: "serverError" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Construir la ruta del archivo
-    const baseUploadDir = (process.env.DIRECTORY_UPLOADS || "./uploads").replace("./", "");
+    const baseUploadDir = (
+      process.env.DIRECTORY_UPLOADS || "./uploads"
+    ).replace("./", "");
     const filePath = join(process.cwd(), baseUploadDir, study.file_key);
 
     // Leer el archivo
@@ -111,8 +117,11 @@ export async function GET(
     } catch (error) {
       console.error("Error al leer archivo:", error);
       return NextResponse.json(
-        { error: "El archivo no pudo ser encontrado en el servidor.", errorType: "serverError" },
-        { status: 404 }
+        {
+          error: "El archivo no pudo ser encontrado en el servidor.",
+          errorType: "serverError",
+        },
+        { status: 404 },
       );
     }
 
@@ -130,8 +139,11 @@ export async function GET(
   } catch (error) {
     console.error("Error en download-shared-study endpoint:", error);
     return NextResponse.json(
-      { error: "Error al descargar el archivo. Por favor, intentá nuevamente.", errorType: "serverError" },
-      { status: 500 }
+      {
+        error: "Error al descargar el archivo. Por favor, intentá nuevamente.",
+        errorType: "serverError",
+      },
+      { status: 500 },
     );
   }
 }

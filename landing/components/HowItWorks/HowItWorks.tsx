@@ -6,7 +6,7 @@ import styles from "./HowItWorks.module.css";
 
 const steps = [
   { number: "1", title: "Subís tus estudios" },
-  { number: "2", title: "Se procesan con IA" },
+  { number: "2", title: "Se integran con IA" },
   { number: "3", title: "Accedé cuando los necesites" },
   { number: "4", title: "Compartilos con quien desees" },
 ];
@@ -26,18 +26,16 @@ export default function HowItWorks() {
 
         <div className={styles.timeline}>
           {steps.map((step, index) => (
-            <Reveal key={index} delay={index * 0.18} variant="fadeUp">
-              <div className={styles.timelineStep}>
-                <div className={styles.circleWrap}>
-                  <div className={styles.circle}>
-                    <span className={styles.circleNumber}>{step.number}</span>
-                  </div>
-                  {index < steps.length - 1 && (
-                    <div className={styles.connector} aria-hidden="true" />
-                  )}
+            <Reveal key={index} delay={index * 0.18} variant="fadeUp" className={styles.timelineStep}>
+              <div className={styles.circleWrap}>
+                <div className={styles.circle}>
+                  <span className={styles.circleNumber}>{step.number}</span>
                 </div>
-                <h3 className={styles.stepTitle}>{step.title}</h3>
+                {index < steps.length - 1 && (
+                  <div className={styles.connector} aria-hidden="true" />
+                )}
               </div>
+              <h3 className={styles.stepTitle}>{step.title}</h3>
             </Reveal>
           ))}
         </div>

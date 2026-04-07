@@ -32,7 +32,13 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
       label: "Inicio",
       href: "/app",
       icon: (
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <path
             d="M3 10L10 3L17 10V17C17 17.5304 16.7893 18.0391 16.4142 18.4142C16.0391 18.7893 15.5304 19 15 19H5C4.46957 19 3.96086 18.7893 3.58579 18.4142C3.21071 18.0391 3 17.5304 3 17V10Z"
             stroke="currentColor"
@@ -47,7 +53,13 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
       label: "Estudios",
       href: "/app/studies",
       icon: (
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <path
             d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V16C4 16.5304 4.21071 17.0391 4.58579 17.4142C4.96086 17.7893 5.46957 18 6 18H14C14.5304 18 15.0391 17.7893 15.4142 17.4142C15.7893 17.0391 16 16.5304 16 16V7L13 2Z"
             stroke="currentColor"
@@ -69,7 +81,13 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
       label: "Grupo Familiar",
       href: "/app/family",
       icon: (
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <path
             d="M14 6C14 7.65685 12.6569 9 11 9C9.34315 9 8 7.65685 8 6C8 4.34315 9.34315 3 11 3C12.6569 3 14 4.34315 14 6Z"
             stroke="currentColor"
@@ -105,7 +123,13 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
       label: "Configuración",
       href: "/app/settings",
       icon: (
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <path
             d="M10 12C11.1046 12 12 11.1046 12 10C12 8.89543 11.1046 8 10 8C8.89543 8 8 8.89543 8 10C8 11.1046 8.89543 12 10 12Z"
             stroke="currentColor"
@@ -141,11 +165,15 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
           borderRight: "0.5px solid var(--border-default)",
         }}
       >
-
-
         {/* Logo */}
-        <div className="p-4 d-flex align-items-center justify-content-between" style={{ borderBottom: '0.5px solid var(--border-subtle)' }}>
-          <Link href="/app" className="text-decoration-none d-flex align-items-center gap-2 gap-md-3">
+        <div
+          className="p-4 d-flex align-items-center justify-content-between"
+          style={{ borderBottom: "0.5px solid var(--border-subtle)" }}
+        >
+          <Link
+            href="/"
+            className="text-decoration-none d-flex align-items-center gap-2 gap-md-3"
+          >
             <img
               src="/images/Logo_Saluteca_AzulNew.png"
               alt="Mi Saluteca"
@@ -168,30 +196,51 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
             style={{ padding: 0, marginRight: "-8px" }}
             suppressHydrationWarning
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M18 6L6 18M6 6L18 18"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-grow-1 p-3" style={{ overflowY: "auto", minHeight: 0 }}>
+        <nav
+          className="flex-grow-1 p-3"
+          style={{ overflowY: "auto", minHeight: 0 }}
+        >
           <ul className="list-unstyled mb-0">
             {navItems.map((item) => (
               <li key={item.href} className="mb-2">
                 <Link
                   href={item.href}
-                  className={`d-flex align-items-center gap-3 px-3 py-3 text-decoration-none ${isActive(item.href) ? "text-white" : "text-dark sidebar-link"
-                    }`}
+                  className={`d-flex align-items-center gap-3 px-3 py-3 text-decoration-none ${
+                    isActive(item.href)
+                      ? "text-white"
+                      : "text-dark sidebar-link"
+                  }`}
                   style={{
-                    transition: "all var(--duration-normal) var(--ease-default)",
+                    transition:
+                      "all var(--duration-normal) var(--ease-default)",
                     fontWeight: isActive(item.href) ? 600 : 500,
                     fontSize: "var(--text-sm)",
                     borderRadius: "var(--radius-md)",
                     background: isActive(item.href)
                       ? "linear-gradient(135deg, var(--saluteca-ocean-light) 0%, var(--saluteca-ocean) 100%)"
                       : "transparent",
-                    boxShadow: isActive(item.href) ? "var(--shadow-brand)" : "none",
+                    boxShadow: isActive(item.href)
+                      ? "var(--shadow-brand)"
+                      : "none",
                   }}
                 >
                   <span
@@ -209,7 +258,10 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
         </nav>
 
         {/* Sign out */}
-        <div className="p-3" style={{ borderTop: '0.5px solid var(--border-subtle)' }}>
+        <div
+          className="p-3"
+          style={{ borderTop: "0.5px solid var(--border-subtle)" }}
+        >
           <button
             onClick={() => signOut({ callbackUrl: "/" })}
             className="d-flex align-items-center gap-3 px-3 py-3 w-100 sidebar-link"
@@ -225,7 +277,13 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
             }}
             suppressHydrationWarning
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path
                 d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9"
                 stroke="currentColor"

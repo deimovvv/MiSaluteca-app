@@ -152,8 +152,9 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
   return (
     <>
       <aside
-        className={`sidebar bg-white border-end d-flex flex-column ${isOpen ? "sidebar-open" : "sidebar-closed"
-          }`}
+        className={`sidebar bg-white border-end d-flex flex-column ${
+          isOpen ? "sidebar-open" : "sidebar-closed"
+        }`}
         style={{
           height: "100vh",
           position: "fixed",
@@ -166,7 +167,10 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
       >
         {/* Logo */}
         <div className="p-4 border-bottom d-flex align-items-center justify-content-between">
-          <Link href="/app" className="text-decoration-none d-flex align-items-center gap-2 gap-md-3">
+          <Link
+            href="/app"
+            className="text-decoration-none d-flex align-items-center gap-2 gap-md-3"
+          >
             <img
               src="/images/Logo_Saluteca_AzulNew.png"
               alt="Mi Saluteca"
@@ -195,26 +199,42 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
             aria-label="Cerrar menú"
             style={{
               padding: 0,
-              marginRight: "-8px"
+              marginRight: "-8px",
             }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M18 6L6 18M6 6L18 18"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-grow-1 p-3" style={{ overflowY: "auto", minHeight: 0 }}>
+        <nav
+          className="flex-grow-1 p-3"
+          style={{ overflowY: "auto", minHeight: 0 }}
+        >
           <ul className="list-unstyled">
             {navItems.map((item) => (
               <li key={item.href} className="mb-2">
                 <Link
                   href={item.href}
-                  className={`d-flex align-items-center gap-3 px-3 py-3 text-decoration-none ${isActive(item.href)
-                    ? "text-white"
-                    : "text-dark hover-bg-light"
-                    }`}
+                  className={`d-flex align-items-center gap-3 px-3 py-3 text-decoration-none ${
+                    isActive(item.href)
+                      ? "text-white"
+                      : "text-dark hover-bg-light"
+                  }`}
                   style={{
                     transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                     fontWeight: isActive(item.href) ? 600 : 500,
@@ -227,7 +247,11 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
                       : "none",
                   }}
                 >
-                  <span className={isActive(item.href) ? "text-white" : "text-muted-saluteca"}>
+                  <span
+                    className={
+                      isActive(item.href) ? "text-white" : "text-muted-saluteca"
+                    }
+                  >
                     {item.icon}
                   </span>
                   <span>{item.label}</span>
@@ -252,7 +276,13 @@ export default function Sidebar({ isOpen = true, onClose }: SidebarProps) {
             }}
           >
             <span className="text-muted-saluteca">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9"
                   stroke="currentColor"

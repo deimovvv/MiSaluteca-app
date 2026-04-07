@@ -7,6 +7,8 @@ interface FamilyStudiesFiltersProps {
   setSearchQuery: (query: string) => void;
   medicoQuery: string;
   setMedicoQuery: (query: string) => void;
+  institutionQuery: string;
+  setInstitutionQuery: (query: string) => void;
   selectedMonth: string;
   setSelectedMonth: (month: string) => void;
   selectedYear: string;
@@ -33,6 +35,8 @@ export default function FamilyStudiesFilters({
   setSearchQuery,
   medicoQuery,
   setMedicoQuery,
+  institutionQuery,
+  setInstitutionQuery,
   selectedMonth,
   setSelectedMonth,
   selectedYear,
@@ -40,11 +44,15 @@ export default function FamilyStudiesFilters({
 }: FamilyStudiesFiltersProps) {
   // Generate years array (from 2020 to current year + 1)
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: currentYear - 2019 + 1 }, (_, i) => 2020 + i);
+  const years = Array.from(
+    { length: currentYear - 2019 + 1 },
+    (_, i) => 2020 + i,
+  );
 
   const clearAllFilters = () => {
     setSearchQuery("");
     setMedicoQuery("");
+    setInstitutionQuery("");
     setSelectedMonth("");
     setSelectedYear("");
   };
@@ -52,7 +60,7 @@ export default function FamilyStudiesFilters({
   return (
     <div className="bg-white rounded-3 p-3 mb-4 border">
       <div className="row g-3">
-        <div className="col-md-6">
+        <div className="col-12 col-md-4">
           <InputGroup>
             <InputGroup.Text className="bg-white border-end-0">
               <svg
@@ -88,7 +96,7 @@ export default function FamilyStudiesFilters({
           </InputGroup>
         </div>
 
-        <div className="col-md-6">
+        <div className="col-12 col-md-4">
           <Form.Control
             type="text"
             placeholder="Buscar por médico..."
@@ -98,7 +106,17 @@ export default function FamilyStudiesFilters({
           />
         </div>
 
-        <div className="col-md-6 date-filter-month">
+        <div className="col-12 col-md-4">
+          <Form.Control
+            type="text"
+            placeholder="Buscar por institución..."
+            value={institutionQuery}
+            onChange={(e) => setInstitutionQuery(e.target.value)}
+            style={{ boxShadow: "none" }}
+          />
+        </div>
+
+        <div className="col-12 col-md-6 date-filter-month">
           <Form.Select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
@@ -113,7 +131,7 @@ export default function FamilyStudiesFilters({
           </Form.Select>
         </div>
 
-        <div className="col-md-6 date-filter-year">
+        <div className="col-12 col-md-6 date-filter-year">
           <Form.Select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
@@ -130,10 +148,12 @@ export default function FamilyStudiesFilters({
       </div>
 
       {/* Active filters display */}
-      {(searchQuery || medicoQuery || selectedMonth || selectedYear) && (
+      {(searchQuery || medicoQuery || institutionQuery || selectedMonth || selectedYear) && (
         <div className="mt-3 pt-3 border-top">
           <div className="d-flex align-items-center gap-2 flex-wrap">
-            <span className="text-muted" style={{ fontSize: "0.875rem" }}>Filtros activos:</span>
+            <span className="text-muted" style={{ fontSize: "0.875rem" }}>
+              Filtros activos:
+            </span>
             {searchQuery && (
               <span className="badge bg-light text-dark border">
                 Búsqueda: &quot;{searchQuery}&quot;
@@ -156,9 +176,21 @@ export default function FamilyStudiesFilters({
                 />
               </span>
             )}
+            {institutionQuery && (
+              <span className="badge bg-light text-dark border">
+                Institución: &quot;{institutionQuery}&quot;
+                <button
+                  className="btn-close btn-close-sm ms-2"
+                  style={{ fontSize: "0.6rem" }}
+                  onClick={() => setInstitutionQuery("")}
+                  aria-label="Close"
+                />
+              </span>
+            )}
             {(selectedMonth || selectedYear) && (
               <span className="badge bg-light text-dark border">
-                {selectedMonth && months.find(m => m.value === selectedMonth)?.label}
+                {selectedMonth &&
+                  months.find((m) => m.value === selectedMonth)?.label}
                 {selectedMonth && selectedYear && " "}
                 {selectedYear}
                 <button

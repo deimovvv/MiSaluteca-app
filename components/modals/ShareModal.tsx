@@ -21,7 +21,8 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
   const [isGenerating, setIsGenerating] = useState(false);
 
   // Verificar si Web Share API está disponible
-  const canUseNativeShare = typeof navigator !== 'undefined' && 'share' in navigator;
+  const canUseNativeShare =
+    typeof navigator !== "undefined" && "share" in navigator;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,7 +36,8 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
       console.log("response", response);
 
       if (response.success && response.data) {
-        const baseUrl = process.env.NEXT_PUBLIC_URL_LINK_SHARE || window.location.origin;
+        const baseUrl =
+          process.env.NEXT_PUBLIC_URL_LINK_SHARE || window.location.origin;
         const link = `${baseUrl}/s/${response.data.uuid}`;
         setShareLink(link);
       } else {
@@ -69,7 +71,6 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
         //   title: "Compartir estudio médico - SALUTECA",
         //   text: text,
         // });
-
       }
     }
   };
@@ -83,7 +84,13 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered fullscreen="sm-down" backdrop="static">
+    <Modal
+      show={show}
+      onHide={handleClose}
+      centered
+      fullscreen="sm-down"
+      backdrop="static"
+    >
       <Modal.Header closeButton className="border-0 pb-0">
         <Modal.Title className="h5 fw-semibold">Compartir estudio</Modal.Title>
       </Modal.Header>
@@ -91,7 +98,8 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
         {!shareLink ? (
           <>
             <p className="text-muted mb-4">
-              Generá un link temporal y seguro para compartir este estudio con tu médico
+              Generá un link temporal y seguro para compartir este estudio con
+              tu médico
             </p>
 
             <div
@@ -123,10 +131,12 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
                   <circle cx="10" cy="7" r="1" fill="var(--saluteca-primary)" />
                 </svg>
                 <div style={{ fontSize: "0.875rem" }}>
-                  <div className="fw-medium mb-1">El link expira 24 horas después del primer acceso</div>
+                  <div className="fw-medium mb-1">
+                    El link expira 24 horas después del primer acceso
+                  </div>
                   <div className="text-muted">
                     Solo las personas con el link podrán ver este estudio. Podés
-                    revocar el acceso en cualquier momento.
+                    finalizar el acceso en cualquier momento.
                   </div>
                 </div>
               </div>
@@ -134,7 +144,9 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
 
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3">
-                <Form.Label className="fw-medium">¿Con quien compartis este estudio? (obligatorio)</Form.Label>
+                <Form.Label className="fw-medium">
+                  ¿Con quien compartis este estudio? (obligatorio)
+                </Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Ej: Juan Pérez"
@@ -226,7 +238,11 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
                   type="button"
                   className="btn btn-primary-saluteca"
                   onClick={copyToClipboard}
-                  style={{ minWidth: "80px", padding: "0.5rem 1rem", whiteSpace: "nowrap" }}
+                  style={{
+                    minWidth: "80px",
+                    padding: "0.5rem 1rem",
+                    whiteSpace: "nowrap",
+                  }}
                 >
                   {copied ? (
                     <>
@@ -254,9 +270,28 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
                     <>
                       <span className="d-none d-sm-inline">Copiar</span>
                       <span className="d-sm-none">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M5 4H11C11.5 4 12 4.5 12 5V11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                          <rect x="4" y="5" width="7" height="7" stroke="currentColor" strokeWidth="2" rx="1" />
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M5 4H11C11.5 4 12 4.5 12 5V11"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          />
+                          <rect
+                            x="4"
+                            y="5"
+                            width="7"
+                            height="7"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            rx="1"
+                          />
                         </svg>
                       </span>
                     </>
@@ -299,13 +334,20 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
               className="bg-light rounded p-3 mb-3"
               style={{ fontSize: "0.875rem" }}
             >
-              <div className="fw-medium mb-1">Este link expira 24 horas después del primer acceso</div>
+              <div className="fw-medium mb-1">
+                Este link expira 24 horas después del primer acceso
+              </div>
               <div className="text-muted">
-                Podés revocar el acceso desde Configuración → Enlaces compartidos
+                Podés revocar el acceso desde Configuración → Enlaces
+                compartidos
               </div>
             </div>
 
-            <button type="button" className="btn btn-primary-saluteca w-100" onClick={handleClose}>
+            <button
+              type="button"
+              className="btn btn-primary-saluteca w-100"
+              onClick={handleClose}
+            >
               Cerrar
             </button>
           </>

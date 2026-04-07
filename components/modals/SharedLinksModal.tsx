@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Modal, Button, ListGroup, Spinner, Toast, ToastContainer } from "react-bootstrap";
+import {
+  Modal,
+  Button,
+  ListGroup,
+  Spinner,
+  Toast,
+  ToastContainer,
+} from "react-bootstrap";
 import { revokeShareLink } from "@/src/features/sharing/api";
 import { SHARE_LINK_EXPIRATION_HOURS } from "@/config/constants";
 import type { ShareLink } from "@/src/features/sharing/api";
@@ -20,14 +27,14 @@ export default function SharedLinksModal({
   links,
   onLinkRevoked,
 }: SharedLinksModalProps) {
-
   const [copiedLinkId, setCopiedLinkId] = useState<string | null>(null);
   const [revokingLinkId, setRevokingLinkId] = useState<string | null>(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
   const handleCopyLink = (linkId: string, uuid: string) => {
-    const baseUrl = process.env.NEXT_PUBLIC_URL_LINK_SHARE || window.location.origin;
+    const baseUrl =
+      process.env.NEXT_PUBLIC_URL_LINK_SHARE || window.location.origin;
     const url = `${baseUrl}/s/${uuid}`;
     navigator.clipboard.writeText(url);
 
@@ -48,7 +55,9 @@ export default function SharedLinksModal({
         setShowToast(true);
 
         // Calcular la nueva fecha (1 mes antes)
-        const oneMonthAgo = moment().subtract(1, "month").format("DD-MM-YYYY HH:mm");
+        const oneMonthAgo = moment()
+          .subtract(1, "month")
+          .format("DD-MM-YYYY HH:mm");
         onLinkRevoked(linkId, oneMonthAgo);
       } else {
         setToastMessage(response.message || "Error al revocar el link");
@@ -67,7 +76,9 @@ export default function SharedLinksModal({
     if (!fechaAbierto) return false;
 
     const fechaAbertoMoment = moment(fechaAbierto, "DD-MM-YYYY HH:mm");
-    const expirationDate = fechaAbertoMoment.clone().add(SHARE_LINK_EXPIRATION_HOURS, "hours");
+    const expirationDate = fechaAbertoMoment
+      .clone()
+      .add(SHARE_LINK_EXPIRATION_HOURS, "hours");
     const now = moment();
 
     return now.isAfter(expirationDate);
@@ -141,7 +152,9 @@ export default function SharedLinksModal({
                 <div className="d-flex align-items-start justify-content-between">
                   <div className="flex-grow-1">
                     <div className="d-flex align-items-center gap-2 mb-2">
-                      <div className="fw-medium">{link.studyTitle || "Estudio médico"}</div>
+                      <div className="fw-medium">
+                        {link.studyTitle || "Estudio médico"}
+                      </div>
                       {isExpired && (
                         <span
                           className="badge"
@@ -153,26 +166,45 @@ export default function SharedLinksModal({
                             padding: "0.25rem 0.5rem",
                           }}
                         >
-                          Expirado
+                          Eliminado
                         </span>
                       )}
                     </div>
                     <div className="d-flex align-items-center gap-2 flex-wrap">
-                      <span className="text-muted" style={{ fontSize: "0.75rem" }}>
+                      <span
+                        className="text-muted"
+                        style={{ fontSize: "0.75rem" }}
+                      >
                         Creado: {link.createdAt}
                       </span>
                       {link.openedAt && (
                         <>
-                          <span className="text-muted" style={{ fontSize: "0.75rem" }}>•</span>
-                          <span className="text-muted" style={{ fontSize: "0.75rem" }}>
+                          <span
+                            className="text-muted"
+                            style={{ fontSize: "0.75rem" }}
+                          >
+                            •
+                          </span>
+                          <span
+                            className="text-muted"
+                            style={{ fontSize: "0.75rem" }}
+                          >
                             Abierto: {formatDate(link.openedAt)}
                           </span>
                         </>
                       )}
                       {link.doctorName && (
                         <>
-                          <span className="text-muted" style={{ fontSize: "0.75rem" }}>•</span>
-                          <span className="text-muted" style={{ fontSize: "0.75rem" }}>
+                          <span
+                            className="text-muted"
+                            style={{ fontSize: "0.75rem" }}
+                          >
+                            •
+                          </span>
+                          <span
+                            className="text-muted"
+                            style={{ fontSize: "0.75rem" }}
+                          >
                             Dr/a. {link.doctorName}
                           </span>
                         </>
@@ -187,7 +219,11 @@ export default function SharedLinksModal({
                       type="button"
                       className="btn btn-link text-decoration-none p-0 d-flex align-items-center hover-opacity"
                       onClick={() => handleCopyLink(link.id, link.uuid)}
-                      style={{ fontSize: "0.875rem", color: "var(--saluteca-ocean)", transition: "opacity 0.2s" }}
+                      style={{
+                        fontSize: "0.875rem",
+                        color: "var(--saluteca-ocean)",
+                        transition: "opacity 0.2s",
+                      }}
                       disabled={isRevoking}
                     >
                       <svg
@@ -219,7 +255,11 @@ export default function SharedLinksModal({
                       type="button"
                       className="btn btn-link text-decoration-none p-0 d-flex align-items-center hover-opacity"
                       onClick={() => handleRevokeLink(link.id)}
-                      style={{ fontSize: "0.875rem", color: "var(--saluteca-danger)", transition: "opacity 0.2s" }}
+                      style={{
+                        fontSize: "0.875rem",
+                        color: "var(--saluteca-danger)",
+                        transition: "opacity 0.2s",
+                      }}
                       disabled={isRevoking}
                     >
                       {isRevoking ? (
@@ -231,7 +271,11 @@ export default function SharedLinksModal({
                             role="status"
                             aria-hidden="true"
                             className="me-1"
-                            style={{ width: "14px", height: "14px", borderWidth: "1.5px" }}
+                            style={{
+                              width: "14px",
+                              height: "14px",
+                              borderWidth: "1.5px",
+                            }}
                           />
                           Cancelando...
                         </>
@@ -253,25 +297,37 @@ export default function SharedLinksModal({
     <>
       <Modal show={show} onHide={onHide} size="lg" centered>
         <Modal.Header closeButton className="border-0 pb-0">
-          <Modal.Title className="h5 fw-semibold">Enlaces compartidos</Modal.Title>
+          <Modal.Title className="h5 fw-semibold">
+            Enlaces compartidos
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body className="px-0">
           <div className="px-4">
             <p className="text-muted mb-3" style={{ fontSize: "0.875rem" }}>
-              Todos los enlaces generados para compartir estudios. Los enlaces expiran {SHARE_LINK_EXPIRATION_HOURS} horas después del primer acceso.
+              Todos los enlaces generados para compartir estudios. Los enlaces
+              expiran {SHARE_LINK_EXPIRATION_HOURS} horas después del primer
+              acceso.
             </p>
             {renderLinksList(links)}
           </div>
         </Modal.Body>
         <Modal.Footer className="border-0 pt-0">
-          <button type="button" className="btn btn-primary-saluteca" onClick={onHide}>
+          <button
+            type="button"
+            className="btn btn-primary-saluteca"
+            onClick={onHide}
+          >
             Cerrar
           </button>
         </Modal.Footer>
       </Modal>
 
       {/* Toast de éxito */}
-      <ToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}>
+      <ToastContainer
+        position="top-end"
+        className="p-3"
+        style={{ zIndex: 9999 }}
+      >
         <Toast
           show={showToast}
           onClose={() => setShowToast(false)}

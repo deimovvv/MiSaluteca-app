@@ -17,12 +17,16 @@ interface StudiesPageClientProps {
   familyMembers: FamilyMember[];
 }
 
-export default function StudiesPageClient({ studies, familyMembers }: StudiesPageClientProps) {
+export default function StudiesPageClient({
+  studies,
+  familyMembers,
+}: StudiesPageClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFamilyMember, setSelectedFamilyMember] = useState<string>("");
   const [selectedMonth, setSelectedMonth] = useState<string>("");
   const [selectedYear, setSelectedYear] = useState<string>("");
   const [medicoQuery, setMedicoQuery] = useState("");
+  const [institutionQuery, setInstitutionQuery] = useState("");
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -31,7 +35,10 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
 
   // Generate years array (from 2020 to current year + 1)
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: currentYear - 2019 + 1 }, (_, i) => 2020 + i);
+  const years = Array.from(
+    { length: currentYear - 2019 + 1 },
+    (_, i) => 2020 + i,
+  );
 
   const months = [
     { value: "01", label: "Enero" },
@@ -64,19 +71,34 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
       medicoQuery === "" ||
       study.medico?.toLowerCase().includes(medicoQuery.toLowerCase());
 
-    const matchesDate = (!selectedMonth && !selectedYear) || (() => {
-      const studyDate = parseDateFromDB(study.date);
-      const monthMatch = !selectedMonth || studyDate.getMonth() + 1 === parseInt(selectedMonth);
-      const yearMatch = !selectedYear || studyDate.getFullYear() === parseInt(selectedYear);
-      return monthMatch && yearMatch;
-    })();
+    const matchesInstitution =
+      institutionQuery === "" ||
+      study.institution?.toLowerCase().includes(institutionQuery.toLowerCase());
 
-    return matchesSearch && matchesFamilyMember && matchesMedico && matchesDate;
+    const matchesDate =
+      (!selectedMonth && !selectedYear) ||
+      (() => {
+        const studyDate = parseDateFromDB(study.date);
+        const monthMatch =
+          !selectedMonth ||
+          studyDate.getMonth() + 1 === parseInt(selectedMonth);
+        const yearMatch =
+          !selectedYear || studyDate.getFullYear() === parseInt(selectedYear);
+        return monthMatch && yearMatch;
+      })();
+
+    return (
+      matchesSearch &&
+      matchesFamilyMember &&
+      matchesMedico &&
+      matchesInstitution &&
+      matchesDate
+    );
   });
 
   // Sort by date (newest first)
-  const sortedStudies = [...filteredStudies].sort(
-    (a, b) => moment(b.date).diff(moment(a.date))
+  const sortedStudies = [...filteredStudies].sort((a, b) =>
+    moment(b.date).diff(moment(a.date)),
   );
 
   return (
@@ -118,7 +140,7 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
       {/* Search and Filters */}
       <div className="bg-white rounded-3 p-3 mb-4 border">
         <div className="row g-3">
-          <div className="col-md-6">
+          <div className="col-12 col-md-4">
             <InputGroup>
               <InputGroup.Text className="bg-white border-end-0">
                 <svg
@@ -157,7 +179,7 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
             </InputGroup>
           </div>
 
-          <div className="col-md-6">
+          <div className="col-12 col-md-4">
             <Form.Control
               type="text"
               placeholder="Buscar por médico..."
@@ -167,13 +189,23 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
             />
           </div>
 
-          <div className="col-md-4">
+          <div className="col-12 col-md-4">
+            <Form.Control
+              type="text"
+              placeholder="Buscar por institución..."
+              value={institutionQuery}
+              onChange={(e) => setInstitutionQuery(e.target.value)}
+              style={{ boxShadow: "none" }}
+            />
+          </div>
+
+          <div className="col-12 col-md-4">
             <Form.Select
               value={selectedFamilyMember}
               onChange={(e) => setSelectedFamilyMember(e.target.value)}
               style={{ fontSize: "0.9rem" }}
             >
-              <option value="">Todos</option>
+              <option value="">Todos (Mis estudios y familiares)</option>
               <option value="me">Mis estudios</option>
               {familyMembers.map((member) => (
                 <option key={member.id} value={member.id}>
@@ -183,7 +215,7 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
             </Form.Select>
           </div>
 
-          <div className="col-md-4 date-filter-month">
+          <div className="col-12 col-md-4 date-filter-month">
             <Form.Select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
@@ -198,7 +230,7 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
             </Form.Select>
           </div>
 
-          <div className="col-md-4 date-filter-year">
+          <div className="col-12 col-md-4 date-filter-year">
             <Form.Select
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
@@ -215,10 +247,17 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
         </div>
 
         {/* Active filters display */}
-        {(searchQuery || medicoQuery || selectedFamilyMember || selectedMonth || selectedYear) && (
+        {(searchQuery ||
+          medicoQuery ||
+          institutionQuery ||
+          selectedFamilyMember ||
+          selectedMonth ||
+          selectedYear) && (
           <div className="mt-3 pt-3 border-top">
             <div className="d-flex align-items-center gap-2 flex-wrap">
-              <span className="text-muted" style={{ fontSize: "0.875rem" }}>Filtros activos:</span>
+              <span className="text-muted" style={{ fontSize: "0.875rem" }}>
+                Filtros activos:
+              </span>
               {searchQuery && (
                 <span className="badge bg-light text-dark border">
                   Búsqueda: &quot;{searchQuery}&quot;
@@ -241,11 +280,23 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
                   />
                 </span>
               )}
+              {institutionQuery && (
+                <span className="badge bg-light text-dark border">
+                  Institución: &quot;{institutionQuery}&quot;
+                  <button
+                    className="btn-close btn-close-sm ms-2"
+                    style={{ fontSize: "0.6rem" }}
+                    onClick={() => setInstitutionQuery("")}
+                    aria-label="Close"
+                  />
+                </span>
+              )}
               {selectedFamilyMember && (
                 <span className="badge bg-light text-dark border">
                   {selectedFamilyMember === "me"
                     ? "Mis estudios"
-                    : familyMembers.find(m => m.id === selectedFamilyMember)?.name}
+                    : familyMembers.find((m) => m.id === selectedFamilyMember)
+                        ?.name}
                   <button
                     className="btn-close btn-close-sm ms-2"
                     style={{ fontSize: "0.6rem" }}
@@ -256,7 +307,8 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
               )}
               {(selectedMonth || selectedYear) && (
                 <span className="badge bg-light text-dark border">
-                  {selectedMonth && months.find(m => m.value === selectedMonth)?.label}
+                  {selectedMonth &&
+                    months.find((m) => m.value === selectedMonth)?.label}
                   {selectedMonth && selectedYear && " "}
                   {selectedYear}
                   <button
@@ -277,6 +329,7 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
                 onClick={() => {
                   setSearchQuery("");
                   setMedicoQuery("");
+                  setInstitutionQuery("");
                   setSelectedFamilyMember("");
                   setSelectedMonth("");
                   setSelectedYear("");
@@ -291,14 +344,15 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
 
       {/* Results count */}
       <div className="mb-3">
-        <p className="text-muted-saluteca mb-0" style={{ fontSize: "0.875rem" }}>
-          {sortedStudies.length === 0 ? (
-            "No se encontraron estudios"
-          ) : sortedStudies.length === 1 ? (
-            "1 estudio encontrado"
-          ) : (
-            `${sortedStudies.length} estudios encontrados`
-          )}
+        <p
+          className="text-muted-saluteca mb-0"
+          style={{ fontSize: "0.875rem" }}
+        >
+          {sortedStudies.length === 0
+            ? "No se encontraron estudios"
+            : sortedStudies.length === 1
+              ? "1 estudio encontrado"
+              : `${sortedStudies.length} estudios encontrados`}
         </p>
       </div>
 
@@ -327,7 +381,12 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
-              <circle cx="20" cy="26.6667" r="1.5" fill="var(--saluteca-gray)" />
+              <circle
+                cx="20"
+                cy="26.6667"
+                r="1.5"
+                fill="var(--saluteca-gray)"
+              />
             </svg>
           </div>
           <h2 className="empty-state-title">No hay estudios</h2>
@@ -339,6 +398,7 @@ export default function StudiesPageClient({ studies, familyMembers }: StudiesPag
             onClick={() => {
               setSearchQuery("");
               setMedicoQuery("");
+              setInstitutionQuery("");
               setSelectedFamilyMember("");
               setSelectedMonth("");
               setSelectedYear("");
