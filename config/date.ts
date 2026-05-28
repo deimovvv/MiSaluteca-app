@@ -6,4 +6,4 @@ export const dateNowWithMinutes = () => {
 
 export const dateNow = () => {
   return moment().subtract(3, "hours").format("DD-MM-YYYY");
-}
+};

@@ -1,7 +1,11 @@
 import { sharingRepository } from "../repositories/sharing.repository";
 import { v4 as uuidv4 } from "uuid";
 import { dateNowWithMinutes } from "@/config/date";
-import type { ShareLink, GenerateShareLinkResult, RevokeShareLinkResult } from "../types/sharing.types";
+import type {
+  ShareLink,
+  GenerateShareLinkResult,
+  RevokeShareLinkResult,
+} from "../types/sharing.types";
 
 interface GenerateShareLinkInput {
   studyId: string;
@@ -17,7 +21,9 @@ export class SharingService {
     return sharingRepository.findByUserId(userId);
   }
 
-  async generateShareLink(input: GenerateShareLinkInput): Promise<GenerateShareLinkResult> {
+  async generateShareLink(
+    input: GenerateShareLinkInput,
+  ): Promise<GenerateShareLinkResult> {
     try {
       const { studyId, doctorName, userId } = input;
 
@@ -57,7 +63,10 @@ export class SharingService {
     }
   }
 
-  async revokeShareLink(linkId: string, userId: string): Promise<RevokeShareLinkResult> {
+  async revokeShareLink(
+    linkId: string,
+    userId: string,
+  ): Promise<RevokeShareLinkResult> {
     try {
       const deleted = await sharingRepository.delete(linkId, userId);
 
@@ -70,7 +79,7 @@ export class SharingService {
 
       return {
         success: true,
-        message: "Link revocado exitosamente",
+        message: "Link eliminado exitosamente",
       };
     } catch (error) {
       console.error("Error en revokeShareLink service:", error);
@@ -84,7 +93,8 @@ export class SharingService {
   private generateShareUuid(): string {
     const uuid = uuidv4();
     const timestamp = new Date().getTime().toString();
-    const formattedTimestamp = timestamp.match(/.{1,4}/g)?.join("-") || timestamp;
+    const formattedTimestamp =
+      timestamp.match(/.{1,4}/g)?.join("-") || timestamp;
     return `${uuid}-${formattedTimestamp}`;
   }
 }

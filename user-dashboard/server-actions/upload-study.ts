@@ -17,7 +17,9 @@ interface UploadStudyResult {
   studyId?: number;
 }
 
-export async function uploadStudy(formData: FormData): Promise<UploadStudyResult> {
+export async function uploadStudy(
+  formData: FormData,
+): Promise<UploadStudyResult> {
   try {
     // Obtener la sesión del usuario
     const session = await getServerSession(authOptions);
@@ -26,6 +28,36 @@ export async function uploadStudy(formData: FormData): Promise<UploadStudyResult
       return {
         success: false,
         message: "No hay sesión activa. Por favor, iniciá sesión nuevamente.",
+      };
+    }
+
+    // Verificar límite de subidas por día
+    const today = dateNow();
+    let countFiles = 0;
+
+    // Obtener los datos del usuario actual
+    const [userRows] = await pool.execute<RowDataPacket[]>(
+      "SELECT count_files, date_files FROM users WHERE id = ?",
+      [session.user.userId],
+    );
+
+    if (userRows.length > 0) {
+      const userData = userRows[0];
+      countFiles = userData.count_files || 0;
+
+      // Si la fecha está vacía, o si cambió de fecha de la última subida (nuevo día)
+      if (!userData.date_files || userData.date_files !== today) {
+        countFiles = 0;
+      }
+    }
+
+    if (countFiles >= parseInt(process.env.LIMIT_UPLOAD!)) {
+      return {
+        success: false,
+        message:
+          "Alcanzaste el límite de " +
+          process.env.LIMIT_UPLOAD +
+          " archivos subidos por día.",
       };
     }
 
@@ -57,7 +89,8 @@ export async function uploadStudy(formData: FormData): Promise<UploadStudyResult
     }
 
     // Usar el MIME type detectado por magic bytes (confiable), no el declarado por el cliente
-    const trustedMimeType = validationResult.detectedMimeType || 'application/octet-stream';
+    const trustedMimeType =
+      validationResult.detectedMimeType || "application/octet-stream";
 
     if (!date) {
       return {
@@ -114,7 +147,7 @@ export async function uploadStudy(formData: FormData): Promise<UploadStudyResult
     if (familyMemberId && familyMemberId !== "self") {
       const [rows] = await pool.execute<RowDataPacket[]>(
         "SELECT id FROM familiares WHERE id = ? AND id_usuario = ?",
-        [familyMemberId, session.user.userId]
+        [familyMemberId, session.user.userId],
       );
 
       if (rows.length === 0) {
@@ -129,8 +162,14 @@ export async function uploadStudy(formData: FormData): Promise<UploadStudyResult
 
     // Guardar el archivo en el sistema de archivos
     // TODO: En producción, subir a S3 o similar
-    const baseUploadDir = (process.env.DIRECTORY_UPLOADS || "./uploads").replace("./", "");
-    const uploadDir = join(process.cwd(), baseUploadDir, session.user.userId.toString());
+    const baseUploadDir = (
+      process.env.DIRECTORY_UPLOADS || "./uploads"
+    ).replace("./", "");
+    const uploadDir = join(
+      process.cwd(),
+      baseUploadDir,
+      session.user.userId.toString(),
+    );
     await mkdir(uploadDir, { recursive: true });
 
     const timestamp = Date.now();
@@ -147,8 +186,9 @@ export async function uploadStudy(formData: FormData): Promise<UploadStudyResult
 
     const uuid = uuidv4();
     const timestampString = new Date().getTime().toString();
-    const formattedTimestamp = timestampString.match(/.{1,4}/g)?.join('-') || timestampString;
-    const finalUuid = uuid + '-' + formattedTimestamp;
+    const formattedTimestamp =
+      timestampString.match(/.{1,4}/g)?.join("-") || timestampString;
+    const finalUuid = uuid + "-" + formattedTimestamp;
     // Insertar en la base de datos
     const [result] = await pool.execute<ResultSetHeader>(
       `INSERT INTO estudios (
@@ -184,7 +224,13 @@ export async function uploadStudy(formData: FormData): Promise<UploadStudyResult
         trustedMimeType, // Usar MIME type detectado (seguro), no file.type (manipulable)
         file.size,
         dateNow(),
-      ]
+      ],
+    );
+
+    // Actualizar el contador y la fecha del usuario
+    await pool.execute(
+      "UPDATE users SET count_files = ?, date_files = ? WHERE id = ?",
+      [countFiles + 1, today, session.user.userId],
     );
 
     return {
@@ -196,7 +242,8 @@ export async function uploadStudy(formData: FormData): Promise<UploadStudyResult
     console.error("Error al subir estudio:", error);
     return {
       success: false,
-      message: "Ocurrió un error al subir el estudio. Por favor, intentá nuevamente.",
+      message:
+        "Ocurrió un error al subir el estudio. Por favor, intentá nuevamente.",
     };
   }
 }

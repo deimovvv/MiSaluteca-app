@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { Container, Row, Col, Modal } from "react-bootstrap";
 import { useState } from "react";
 import styles from "./Footer.module.css";
@@ -19,7 +18,7 @@ export default function Footer() {
             <Col xs={12} md={5} className="mb-4 mb-md-0">
               <div className={styles.brand}>
                 <div className={styles.logoWrap}>
-                  <Image
+                  <img
                     src="/images/logoblanco.png"
                     alt="Mi Saluteca"
                     width={36}
@@ -66,8 +65,8 @@ export default function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a 
-                    href="#" 
+                  <a
+                    href="#"
                     className={styles.link}
                     onClick={(e) => {
                       e.preventDefault();
@@ -85,7 +84,7 @@ export default function Footer() {
               <ul className={styles.linkList}>
                 <li>
                   <a href="/privacidad" className={styles.link}>
-                    Privacidad
+                    Políticas de privacidad
                   </a>
                 </li>
                 <li>
@@ -112,20 +111,61 @@ export default function Footer() {
         </div>
       </div>
 
-      <Modal show={showContactModal} onHide={() => setShowContactModal(false)} centered>
+      <Modal
+        show={showContactModal}
+        onHide={() => setShowContactModal(false)}
+        centered
+      >
         <Modal.Header closeButton style={{ borderBottom: "none" }}>
-          <Modal.Title style={{ color: "#2F416A", fontWeight: "700" }}>Contacto</Modal.Title>
+          <Modal.Title style={{ color: "#2F416A", fontWeight: "700" }}>
+            Contacto
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body className="text-center px-4 pb-5 pt-3">
           <div style={{ marginBottom: "1.5rem" }}>
-            <span style={{ color: "#4a5568", fontSize: "0.9rem", textTransform: "uppercase", letterSpacing: "1px", fontWeight: "600" }}>Teléfono</span>
-            <p style={{ fontSize: "1.2rem", color: "#2F416A", fontWeight: "500", marginTop: "0.2rem" }}>
+            <span
+              style={{
+                color: "#4a5568",
+                fontSize: "0.9rem",
+                textTransform: "uppercase",
+                letterSpacing: "1px",
+                fontWeight: "600",
+              }}
+            >
+              Teléfono
+            </span>
+            <p
+              style={{
+                fontSize: "1.2rem",
+                color: "#2F416A",
+                fontWeight: "500",
+                marginTop: "0.2rem",
+              }}
+            >
               +54 9 11 1234-5678
             </p>
           </div>
           <div>
-            <span style={{ color: "#4a5568", fontSize: "0.9rem", textTransform: "uppercase", letterSpacing: "1px", fontWeight: "600" }}>Email</span>
-            <p style={{ fontSize: "1.2rem", color: "#2F416A", fontWeight: "500", marginTop: "0.2rem", marginBottom: 0 }}>
+            <span
+              style={{
+                color: "#4a5568",
+                fontSize: "0.9rem",
+                textTransform: "uppercase",
+                letterSpacing: "1px",
+                fontWeight: "600",
+              }}
+            >
+              Email
+            </span>
+            <p
+              style={{
+                fontSize: "1.2rem",
+                color: "#2F416A",
+                fontWeight: "500",
+                marginTop: "0.2rem",
+                marginBottom: 0,
+              }}
+            >
               contacto@misaluteca.com
             </p>
           </div>

@@ -82,6 +82,8 @@ export default function UploadStudyModal({
     if (e.target.files && e.target.files[0]) {
       await processFile(e.target.files[0]);
     }
+    // Resetear el valor del input para asegurar que el evento onChange siempre dispare
+    e.target.value = "";
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -317,6 +319,8 @@ export default function UploadStudyModal({
       setUploadSuccess(false);
       setErrorMessage(null);
       setUploading(false);
+      const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+      if (fileInput) fileInput.value = "";
     }, 750)
   };
 
@@ -611,6 +615,9 @@ export default function UploadStudyModal({
                           setInstitution("");
                           setDoctor("");
                           setConclusion("");
+                          
+                          const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+                          if (fileInput) fileInput.value = "";
                         }}
                         disabled={uploading || analyzing}
                       >

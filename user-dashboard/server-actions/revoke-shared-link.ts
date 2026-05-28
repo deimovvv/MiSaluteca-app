@@ -12,7 +12,7 @@ interface RevokeSharedLinkResponse {
 }
 
 export async function revokeSharedLink(
-  linkId: number
+  linkId: number,
 ): Promise<RevokeSharedLinkResponse> {
   try {
     // Obtener la sesión del usuario
@@ -25,14 +25,16 @@ export async function revokeSharedLink(
     }
 
     // Cambiar fecha_abierto a 1 mes antes para revocar el acceso
-    const oneMonthAgo = moment().subtract(1, "month").format("DD-MM-YYYY HH:mm");
+    const oneMonthAgo = moment()
+      .subtract(1, "month")
+      .format("DD-MM-YYYY HH:mm");
 
     // Actualizar el link solo si pertenece al usuario
     const [result] = await pool.execute<ResultSetHeader>(
       `UPDATE links 
        SET fecha_abierto = ? 
        WHERE id = ? AND id_usuario = ?`,
-      [oneMonthAgo, linkId, session.user.userId]
+      [oneMonthAgo, linkId, session.user.userId],
     );
 
     // Verificar si se actualizó algún registro
@@ -45,7 +47,7 @@ export async function revokeSharedLink(
 
     return {
       success: true,
-      message: "Link revocado exitosamente",
+      message: "Link eliminado exitosamente",
     };
   } catch (error) {
     console.error("Error al revocar link:", error);

@@ -5,13 +5,13 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 const secret = new TextEncoder().encode(
-  process.env.JWT_SECRET || "mi-secreto-super-seguro-cambiar-en-produccion"
+  process.env.JWT_SECRET || "mi-secreto-super-seguro-cambiar-en-produccion",
 );
 
 export async function login(formData: FormData) {
   const password = formData.get("password") as string;
 
-  if (password === "ml2026") {
+  if (password === "ml1423") {
     // Crear token JWT
     const token = await new SignJWT({ authenticated: true })
       .setProtectedHeader({ alg: "HS256" })

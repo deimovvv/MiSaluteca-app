@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import Navbar from "../landing/components/Navbar";
 import Hero from "../landing/components/Hero";
 
@@ -11,7 +12,28 @@ import Footer from "../landing/components/Footer";
 
 export default function Home() {
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.search) {
+      const url = new URL(window.location.href);
+      const params = new URLSearchParams(url.search);
 
+      let changed = false;
+      if (params.has("error")) {
+        params.delete("error");
+        changed = true;
+      }
+      if (params.has("callbackUrl")) {
+        params.delete("callbackUrl");
+        changed = true;
+      }
+
+      if (changed) {
+        const newSearch = params.toString();
+        const newUrl = window.location.pathname + (newSearch ? `?${newSearch}` : "");
+        window.history.replaceState({}, "", newUrl);
+      }
+    }
+  }, []);
 
   return (
     <>

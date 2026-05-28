@@ -51,7 +51,7 @@ export default function SharedLinksModal({
       const response = await revokeShareLink(linkId);
 
       if (response.success) {
-        setToastMessage("Link revocado exitosamente");
+        setToastMessage("Link eliminado exitosamente");
         setShowToast(true);
 
         // Calcular la nueva fecha (1 mes antes)

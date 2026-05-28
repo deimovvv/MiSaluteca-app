@@ -3,7 +3,9 @@
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import OpenAI from "openai";
-
+import { pool } from "@/lib/database";
+import { RowDataPacket } from "mysql2/promise";
+import { dateNow } from "@/config/date";
 export interface AnalysisResult {
   success: boolean;
   studyName?: string;
@@ -18,7 +20,9 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export async function analyzeStudyWithAI(ocrText: string): Promise<AnalysisResult> {
+export async function analyzeStudyWithAI(
+  ocrText: string,
+): Promise<AnalysisResult> {
   try {
     const session = await getServerSession(authOptions);
     if (!session || !session.user || !session.user.userId) {
@@ -38,6 +42,36 @@ export async function analyzeStudyWithAI(ocrText: string): Promise<AnalysisResul
       return {
         success: false,
         message: "No se pudo extraer texto del documento.",
+      };
+    }
+
+    // Verificar límite de análisis por día
+    const today = dateNow();
+    let countAnalyze = 0;
+
+    // Obtener los datos del usuario actual
+    const [userRows] = await pool.execute<RowDataPacket[]>(
+      "SELECT count_analyze, date_analyze FROM users WHERE id = ?",
+      [session.user.userId],
+    );
+
+    if (userRows.length > 0) {
+      const userData = userRows[0];
+      countAnalyze = userData.count_analyze || 0;
+
+      // Si la fecha está vacía, o si cambió de fecha del último análisis (nuevo día)
+      if (!userData.date_analyze || userData.date_analyze !== today) {
+        countAnalyze = 0;
+      }
+    }
+
+    if (countAnalyze >= parseInt(process.env.LIMIT_ANALYZE!)) {
+      return {
+        success: false,
+        message:
+          "Alcanzaste el límite de " +
+          process.env.LIMIT_ANALYZE +
+          " análisis con inteligencia artificial por día.",
       };
     }
 
@@ -132,6 +166,12 @@ ${ocrText}`;
 
     const parsedResponse = JSON.parse(responseText);
 
+    // Actualizar el contador y la fecha del usuario
+    await pool.execute(
+      "UPDATE users SET count_analyze = ?, date_analyze = ? WHERE id = ?",
+      [countAnalyze + 1, today, session.user.userId],
+    );
+
     return {
       success: true,
       studyName: parsedResponse.studyName || "",
@@ -144,7 +184,9 @@ ${ocrText}`;
     console.error("Error al analizar estudio con IA:", error);
     return {
       success: false,
-      message: "Error al analizar el estudio: " + (error instanceof Error ? error.message : "Error desconocido"),
+      message:
+        "Error al analizar el estudio: " +
+        (error instanceof Error ? error.message : "Error desconocido"),
     };
   }
 }
