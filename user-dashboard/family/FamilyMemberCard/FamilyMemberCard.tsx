@@ -5,6 +5,7 @@ import { Card } from "react-bootstrap";
 import { formatDate } from "@/lib/formatters";
 import { RELATION_LABELS, FamilyMember } from "@/types";
 import styles from "./FamilyMemberCard.module.css";
+import FamilyMemberActions from "../FamilyMemberActions";
 
 interface FamilyMemberCardProps {
   member: FamilyMember;
@@ -42,6 +43,8 @@ export default function FamilyMemberCard({ member }: FamilyMemberCardProps) {
               {member.age && ` • ${member.age} años`}
             </p>
           </div>
+
+          <FamilyMemberActions member={member} />
         </div>
 
         {member.notes && (
@@ -121,10 +124,10 @@ export default function FamilyMemberCard({ member }: FamilyMemberCardProps) {
               style={{ fontSize: "0.875rem" }}
               prefetch={false}
             >
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {/* <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M8 3.33337V12.6667" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M3.33337 8H12.6667" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              </svg> */}
               Cargar primer estudio
             </Link>
           </>

@@ -73,7 +73,7 @@ export default function Navbar({ whiteLogo = false }: { whiteLogo?: boolean }) {
           className={styles.navbarTogglerCustom}
         />
         <BSNavbar.Collapse id="basic-navbar-nav">
-          <Nav className="ms-auto align-items-center gap-3">
+          <Nav className="ms-auto align-items-start align-items-lg-center gap-3 mt-3 mt-lg-0">
             <Nav.Link href="/#como-funciona" className={styles.navLinkCustom}>
               Cómo funciona
             </Nav.Link>

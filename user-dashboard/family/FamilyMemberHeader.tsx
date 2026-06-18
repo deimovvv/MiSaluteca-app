@@ -4,6 +4,7 @@ import { Card } from "react-bootstrap";
 import { RELATION_LABELS } from "@/types";
 import { formatDate } from "@/lib/formatters";
 import type { FamilyMember } from "@/types";
+import FamilyMemberActions from "./FamilyMemberActions";
 
 interface FamilyMemberHeaderProps {
   member: FamilyMember;
@@ -13,7 +14,10 @@ interface FamilyMemberHeaderProps {
 
 export default function FamilyMemberHeader({ member, studyCount, lastStudyDate }: FamilyMemberHeaderProps) {
   return (
-    <div className="bg-white rounded-3 p-4 mb-4 border">
+    <div className="bg-white rounded-3 p-4 mb-4 border position-relative">
+      <div className="position-absolute" style={{ top: "1.25rem", right: "1.25rem", zIndex: 10 }}>
+        <FamilyMemberActions member={member} redirectOnDelete="/app/family" />
+      </div>
       <div className="row">
         <div className="col-md-3">
           <div className="d-flex flex-column align-items-center text-center">
@@ -41,7 +45,7 @@ export default function FamilyMemberHeader({ member, studyCount, lastStudyDate }
           </div>
         </div>
 
-        <div className="col-md-9">
+        <div className="col-md-9 pe-md-5">
           <div className="row g-3 mb-3">
             <div className="col-12">
               <Card className="border">

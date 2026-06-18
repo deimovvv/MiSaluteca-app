@@ -72,24 +72,11 @@ export async function getSharedStudy(uuid: string): Promise<StudyResult> {
 
       // Obtener los datos del estudio usando id_estudio
       const [studyRows] = await connection.query<RowDataPacket[]>(
-        `SELECT 
-          id,
-          uuid,
-          id_usuario,
-          email_usuario,
-          id_familiar,
-          titulo,
-          fecha,
-          institucion,
-          conclusion,
-          descripcion,
-          file_key,
-          file_name,
-          mime_type,
-          file_size,
-          created_at
-        FROM estudios 
-        WHERE id = ?
+        `SELECT e.id, e.uuid, e.id_usuario, e.email_usuario, e.id_familiar, e.titulo, e.fecha, 
+                e.institucion, e.conclusion, e.descripcion, e.created_at,
+                e.file_key, e.file_name, e.mime_type, e.file_size
+        FROM estudios e
+        WHERE e.id = ?
         LIMIT 1`,
         [linkData.id_estudio]
       );
@@ -103,6 +90,33 @@ export async function getSharedStudy(uuid: string): Promise<StudyResult> {
 
       const studyData = studyRows[0];
 
+      // Fetch files array manually
+      const [fileRows] = await connection.query<RowDataPacket[]>(
+        `SELECT id, file_key, file_name, mime_type, file_size 
+         FROM estudios_archivos 
+         WHERE id_estudio = ?`,
+        [studyData.id]
+      );
+
+      let files: any[] = fileRows.map((f) => ({
+        id: f.id.toString(),
+        fileKey: f.file_key,
+        fileName: f.file_name,
+        mimeType: f.mime_type,
+        size: f.file_size
+      }));
+      
+      if (files.length === 0 && studyData.file_key) {
+        files = [{ 
+          fileKey: studyData.file_key, 
+          fileName: studyData.file_name || "", 
+          mimeType: studyData.mime_type || "", 
+          size: studyData.file_size || 0 
+        }];
+      }
+      
+      files = files.filter(f => f && f.fileKey);
+
       // Construir el objeto Study
       const study: Study = {
         id: studyData.id.toString(),
@@ -115,10 +129,7 @@ export async function getSharedStudy(uuid: string): Promise<StudyResult> {
         medico: linkData.nombre_medico,
         conclusion: studyData.conclusion || undefined,
         description: studyData.descripcion || undefined,
-        fileKey: studyData.file_key,
-        fileName: studyData.file_name,
-        mimeType: studyData.mime_type,
-        size: studyData.file_size,
+        files,
         createdAt: studyData.created_at, // Mantener como string DD-MM-YYYY
       };
 

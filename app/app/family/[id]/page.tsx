@@ -71,10 +71,7 @@ export default async function FamilyMemberDetailPage({
     getLastStudyDateByFamilyMember(member.id),
   ]);
 
-  console.log("familyMembers", familyMembers);
-  console.log("studies", studies);
-  console.log("studyCount", studyCount);
-  console.log("lastStudyDate", lastStudyDate);
+
 
   return (
     <AppShell title={member.name}>

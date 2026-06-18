@@ -237,13 +237,13 @@ function checkForMaliciousContent(buffer: Buffer, mimeType: string): FileValidat
         };
       }
 
-      // Detectar /OpenAction (ejecuta al abrir)
-      if (content.includes('/OpenAction')) {
-        return {
-          isValid: false,
-          error: 'El PDF contiene acciones de apertura automática sospechosas.'
-        };
-      }
+      // Detectar /OpenAction (ejecuta al abrir) - Removido porque causa muchos falsos positivos (usualmente solo indica la página inicial o nivel de zoom)
+      // if (content.includes('/OpenAction')) {
+      //   return {
+      //     isValid: false,
+      //     error: 'El PDF contiene acciones de apertura automática sospechosas.'
+      //   };
+      // }
 
       // Detectar shellcode común (patrones hexadecimales sospechosos)
       const shellcodePatterns = [

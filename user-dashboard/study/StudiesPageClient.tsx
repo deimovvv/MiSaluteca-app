@@ -253,93 +253,93 @@ export default function StudiesPageClient({
           selectedFamilyMember ||
           selectedMonth ||
           selectedYear) && (
-          <div className="mt-3 pt-3 border-top">
-            <div className="d-flex align-items-center gap-2 flex-wrap">
-              <span className="text-muted" style={{ fontSize: "0.875rem" }}>
-                Filtros activos:
-              </span>
-              {searchQuery && (
-                <span className="badge bg-light text-dark border">
-                  Búsqueda: &quot;{searchQuery}&quot;
-                  <button
-                    className="btn-close btn-close-sm ms-2"
-                    style={{ fontSize: "0.6rem" }}
-                    onClick={() => setSearchQuery("")}
-                    aria-label="Close"
-                  />
+            <div className="mt-3 pt-3 border-top">
+              <div className="d-flex align-items-center gap-2 flex-wrap">
+                <span className="text-muted" style={{ fontSize: "0.875rem" }}>
+                  Filtros activos:
                 </span>
-              )}
-              {medicoQuery && (
-                <span className="badge bg-light text-dark border">
-                  Médico: &quot;{medicoQuery}&quot;
-                  <button
-                    className="btn-close btn-close-sm ms-2"
-                    style={{ fontSize: "0.6rem" }}
-                    onClick={() => setMedicoQuery("")}
-                    aria-label="Close"
-                  />
-                </span>
-              )}
-              {institutionQuery && (
-                <span className="badge bg-light text-dark border">
-                  Institución: &quot;{institutionQuery}&quot;
-                  <button
-                    className="btn-close btn-close-sm ms-2"
-                    style={{ fontSize: "0.6rem" }}
-                    onClick={() => setInstitutionQuery("")}
-                    aria-label="Close"
-                  />
-                </span>
-              )}
-              {selectedFamilyMember && (
-                <span className="badge bg-light text-dark border">
-                  {selectedFamilyMember === "me"
-                    ? "Mis estudios"
-                    : familyMembers.find((m) => m.id === selectedFamilyMember)
+                {searchQuery && (
+                  <span className="badge bg-light text-dark border">
+                    Búsqueda: &quot;{searchQuery}&quot;
+                    <button
+                      className="btn-close btn-close-sm ms-2"
+                      style={{ fontSize: "0.6rem" }}
+                      onClick={() => setSearchQuery("")}
+                      aria-label="Close"
+                    />
+                  </span>
+                )}
+                {medicoQuery && (
+                  <span className="badge bg-light text-dark border">
+                    Médico: &quot;{medicoQuery}&quot;
+                    <button
+                      className="btn-close btn-close-sm ms-2"
+                      style={{ fontSize: "0.6rem" }}
+                      onClick={() => setMedicoQuery("")}
+                      aria-label="Close"
+                    />
+                  </span>
+                )}
+                {institutionQuery && (
+                  <span className="badge bg-light text-dark border">
+                    Institución: &quot;{institutionQuery}&quot;
+                    <button
+                      className="btn-close btn-close-sm ms-2"
+                      style={{ fontSize: "0.6rem" }}
+                      onClick={() => setInstitutionQuery("")}
+                      aria-label="Close"
+                    />
+                  </span>
+                )}
+                {selectedFamilyMember && (
+                  <span className="badge bg-light text-dark border">
+                    {selectedFamilyMember === "me"
+                      ? "Mis estudios"
+                      : familyMembers.find((m) => m.id === selectedFamilyMember)
                         ?.name}
-                  <button
-                    className="btn-close btn-close-sm ms-2"
-                    style={{ fontSize: "0.6rem" }}
-                    onClick={() => setSelectedFamilyMember("")}
-                    aria-label="Close"
-                  />
-                </span>
-              )}
-              {(selectedMonth || selectedYear) && (
-                <span className="badge bg-light text-dark border">
-                  {selectedMonth &&
-                    months.find((m) => m.value === selectedMonth)?.label}
-                  {selectedMonth && selectedYear && " "}
-                  {selectedYear}
-                  <button
-                    className="btn-close btn-close-sm ms-2"
-                    style={{ fontSize: "0.6rem" }}
-                    onClick={() => {
-                      setSelectedMonth("");
-                      setSelectedYear("");
-                    }}
-                    aria-label="Close"
-                  />
-                </span>
-              )}
-              <Button
-                variant="link"
-                className="text-danger p-0"
-                style={{ fontSize: "0.875rem" }}
-                onClick={() => {
-                  setSearchQuery("");
-                  setMedicoQuery("");
-                  setInstitutionQuery("");
-                  setSelectedFamilyMember("");
-                  setSelectedMonth("");
-                  setSelectedYear("");
-                }}
-              >
-                Limpiar todos
-              </Button>
+                    <button
+                      className="btn-close btn-close-sm ms-2"
+                      style={{ fontSize: "0.6rem" }}
+                      onClick={() => setSelectedFamilyMember("")}
+                      aria-label="Close"
+                    />
+                  </span>
+                )}
+                {(selectedMonth || selectedYear) && (
+                  <span className="badge bg-light text-dark border">
+                    {selectedMonth &&
+                      months.find((m) => m.value === selectedMonth)?.label}
+                    {selectedMonth && selectedYear && " "}
+                    {selectedYear}
+                    <button
+                      className="btn-close btn-close-sm ms-2"
+                      style={{ fontSize: "0.6rem" }}
+                      onClick={() => {
+                        setSelectedMonth("");
+                        setSelectedYear("");
+                      }}
+                      aria-label="Close"
+                    />
+                  </span>
+                )}
+                <Button
+                  variant="link"
+                  className="text-danger p-0"
+                  style={{ fontSize: "0.875rem" }}
+                  onClick={() => {
+                    setSearchQuery("");
+                    setMedicoQuery("");
+                    setInstitutionQuery("");
+                    setSelectedFamilyMember("");
+                    setSelectedMonth("");
+                    setSelectedYear("");
+                  }}
+                >
+                  Limpiar todos
+                </Button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
 
       {/* Results count */}
@@ -444,12 +444,10 @@ export default function StudiesPageClient({
           onDelete={() => {
             // TODO: Implement delete
             setShowEditModal(false);
-            console.log("Study deleted:", selectedStudy.id);
           }}
           onUpdate={(updatedStudy) => {
             // TODO: Implement update
             setShowEditModal(false);
-            console.log("Study updated:", updatedStudy);
           }}
         />
       )}

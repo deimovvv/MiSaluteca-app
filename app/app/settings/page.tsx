@@ -17,7 +17,6 @@ export default async function SettingsPage() {
     getUser(),
     getSharedLinks(),
   ]);
-  console.log("user", user);
 
   if (!user) {
     redirect("/");

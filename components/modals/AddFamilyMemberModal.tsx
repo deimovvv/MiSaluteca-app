@@ -5,6 +5,8 @@ import { Modal, Form } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { addFamilyMember } from "@/user-dashboard/server-actions/new-member-family";
 import { useRouter } from "next/navigation";
+import { MAX_FAMILY_MEMBER_NAME_LENGTH } from "@/config/constants";
+
 interface AddFamilyMemberModalProps {
   show: boolean;
   onHide: () => void;
@@ -75,7 +77,7 @@ export default function AddFamilyMemberModal({
               placeholder="Ej: Juan"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              maxLength={200}
+              maxLength={MAX_FAMILY_MEMBER_NAME_LENGTH}
               required
               autoFocus
             />

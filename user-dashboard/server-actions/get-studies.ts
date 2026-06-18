@@ -2,7 +2,7 @@
 
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { Study } from "@/types";
+import { Study, StudyFile } from "@/types";
 import { pool } from "@/lib/database";
 import { RowDataPacket } from "mysql2/promise";
 
@@ -18,12 +18,77 @@ interface StudyRow extends RowDataPacket {
   medico: string;
   conclusion: string | null;
   descripcion: string | null;
-  file_key: string;
-  file_name: string;
-  mime_type: string;
-  file_size: number;
+  file_key?: string;
+  file_name?: string;
+  mime_type?: string;
+  file_size?: number;
   created_at: string;
   updated_at: string;
+}
+
+const mapStudyRowToStudy = (row: StudyRow, fileRows: any[]): Study => {
+  let files: StudyFile[] = fileRows
+    .filter((f) => f.id_estudio === row.id)
+    .map((f) => ({
+      id: f.id.toString(),
+      fileKey: f.file_key,
+      fileName: f.file_name,
+      mimeType: f.mime_type,
+      size: f.file_size,
+    }));
+  
+  // Backwards compatibility fallback if migration hasn't dropped old columns yet
+  if (files.length === 0 && row.file_key) {
+    files = [{ 
+      fileKey: row.file_key, 
+      fileName: row.file_name || "", 
+      mimeType: row.mime_type || "", 
+      size: row.file_size || 0 
+    }];
+  }
+
+  // Remove potential nulls
+  files = files.filter(f => f && f.fileKey);
+
+  return {
+    id: row.id.toString(),
+    uuid: row.uuid,
+    userId: row.id_usuario.toString(),
+    familyMemberId: row.id_familiar ? row.id_familiar.toString() : undefined,
+    title: row.titulo || undefined,
+    date: row.fecha, // Mantener como string DD-MM-YYYY
+    institution: row.institucion || undefined,
+    medico: row.medico,
+    conclusion: row.conclusion || undefined,
+    description: row.descripcion || undefined,
+    files,
+    createdAt: row.created_at, // Mantener como string DD-MM-YYYY
+  };
+};
+
+const BASE_QUERY = `
+  SELECT e.id, e.uuid, e.id_usuario, e.email_usuario, e.id_familiar, e.titulo, e.fecha, 
+         e.institucion, e.medico, e.conclusion, e.descripcion, e.created_at, e.updated_at,
+         e.file_key, e.file_name, e.mime_type, e.file_size
+  FROM estudios e
+`;
+
+async function fetchStudiesWithFiles(query: string, params: any[]): Promise<Study[]> {
+  const [rows] = await pool.execute<StudyRow[]>(query, params);
+
+  if (rows.length === 0) return [];
+
+  const studyIds = rows.map((r) => r.id);
+  const placeholders = studyIds.map(() => '?').join(',');
+
+  const [fileRows] = await pool.execute<RowDataPacket[]>(
+    `SELECT id, id_estudio, file_key, file_name, mime_type, file_size 
+     FROM estudios_archivos 
+     WHERE id_estudio IN (${placeholders})`,
+    studyIds
+  );
+
+  return rows.map((r) => mapStudyRowToStudy(r, fileRows));
 }
 
 /**
@@ -37,35 +102,10 @@ export async function getStudies(): Promise<Study[]> {
       return [];
     }
 
-    const [rows] = await pool.execute<StudyRow[]>(
-      `SELECT id, uuid, id_usuario, email_usuario, id_familiar, titulo, fecha, 
-              institucion, medico, conclusion, descripcion, file_key, file_name, 
-              mime_type, file_size, created_at, updated_at 
-       FROM estudios 
-       WHERE id_usuario = ? 
-       ORDER BY fecha DESC, created_at DESC`,
+    return await fetchStudiesWithFiles(
+      `${BASE_QUERY} WHERE e.id_usuario = ? ORDER BY e.fecha DESC, e.created_at DESC`,
       [session.user.userId]
     );
-
-    const studies: Study[] = rows.map((row) => ({
-      id: row.id.toString(),
-      uuid: row.uuid,
-      userId: row.id_usuario.toString(),
-      familyMemberId: row.id_familiar ? row.id_familiar.toString() : undefined,
-      title: row.titulo || undefined,
-      date: row.fecha, // Mantener como string DD-MM-YYYY
-      institution: row.institucion || undefined,
-      medico: row.medico,
-      conclusion: row.conclusion || undefined,
-      description: row.descripcion || undefined,
-      fileKey: row.file_key,
-      fileName: row.file_name,
-      mimeType: row.mime_type,
-      size: row.file_size,
-      createdAt: row.created_at, // Mantener como string DD-MM-YYYY
-    }));
-
-    return studies;
   } catch (error) {
     console.error("Error al obtener estudios:", error);
     return [];
@@ -104,35 +144,10 @@ export async function getStudiesByFamilyMember(familyMemberId: string): Promise<
       return [];
     }
 
-    const [rows] = await pool.execute<StudyRow[]>(
-      `SELECT id, uuid, id_usuario, email_usuario, id_familiar, titulo, fecha, 
-              institucion, medico, conclusion, descripcion, file_key, file_name, 
-              mime_type, file_size, created_at, updated_at 
-       FROM estudios 
-       WHERE id_usuario = ? AND id_familiar = ? 
-       ORDER BY fecha DESC, created_at DESC`,
+    return await fetchStudiesWithFiles(
+      `${BASE_QUERY} WHERE e.id_usuario = ? AND e.id_familiar = ? ORDER BY e.fecha DESC, e.created_at DESC`,
       [session.user.userId, parseInt(familyMemberId)]
     );
-
-    const studies: Study[] = rows.map((row) => ({
-      id: row.id.toString(),
-      uuid: row.uuid,
-      userId: row.id_usuario.toString(),
-      familyMemberId: row.id_familiar ? row.id_familiar.toString() : undefined,
-      title: row.titulo || undefined,
-      date: row.fecha, // Mantener como string DD-MM-YYYY
-      institution: row.institucion || undefined,
-      medico: row.medico,
-      conclusion: row.conclusion || undefined,
-      description: row.descripcion || undefined,
-      fileKey: row.file_key,
-      fileName: row.file_name,
-      mimeType: row.mime_type,
-      size: row.file_size,
-      createdAt: row.created_at, // Mantener como string DD-MM-YYYY
-    }));
-
-    return studies;
   } catch (error) {
     console.error("Error al obtener estudios del familiar:", error);
     return [];
@@ -152,8 +167,8 @@ export async function getStudyCountByFamilyMember(familyMemberId: string): Promi
 
     const [rows] = await pool.execute<RowDataPacket[]>(
       `SELECT COUNT(*) as count 
-       FROM estudios 
-       WHERE id_usuario = ? AND id_familiar = ?`,
+       FROM estudios e
+       WHERE e.id_usuario = ? AND e.id_familiar = ?`,
       [session.user.userId, parseInt(familyMemberId)]
     );
 
@@ -177,9 +192,9 @@ export async function getLastStudyDateByFamilyMember(familyMemberId: string): Pr
 
     const [rows] = await pool.execute<RowDataPacket[]>(
       `SELECT fecha 
-       FROM estudios 
-       WHERE id_usuario = ? AND id_familiar = ? 
-       ORDER BY fecha DESC, created_at DESC 
+       FROM estudios e
+       WHERE e.id_usuario = ? AND e.id_familiar = ? 
+       ORDER BY e.fecha DESC, e.created_at DESC 
        LIMIT 1`,
       [session.user.userId, parseInt(familyMemberId)]
     );
@@ -206,37 +221,12 @@ export async function getStudyById(studyId: string): Promise<Study | null> {
       return null;
     }
 
-    const [rows] = await pool.execute<StudyRow[]>(
-      `SELECT id, uuid, id_usuario, email_usuario, id_familiar, titulo, fecha, 
-              institucion, medico, conclusion, descripcion, file_key, file_name, 
-              mime_type, file_size, created_at, updated_at 
-       FROM estudios 
-       WHERE id = ? AND id_usuario = ?`,
+    const studies = await fetchStudiesWithFiles(
+      `${BASE_QUERY} WHERE e.id = ? AND e.id_usuario = ?`,
       [parseInt(studyId), session.user.userId]
     );
 
-    if (rows.length === 0) {
-      return null;
-    }
-
-    const row = rows[0];
-    return {
-      id: row.id.toString(),
-      uuid: row.uuid,
-      userId: row.id_usuario.toString(),
-      familyMemberId: row.id_familiar ? row.id_familiar.toString() : undefined,
-      title: row.titulo || undefined,
-      date: row.fecha, // Mantener como string DD-MM-YYYY
-      institution: row.institucion || undefined,
-      medico: row.medico,
-      conclusion: row.conclusion || undefined,
-      description: row.descripcion || undefined,
-      fileKey: row.file_key,
-      fileName: row.file_name,
-      mimeType: row.mime_type,
-      size: row.file_size,
-      createdAt: row.created_at, // Mantener como string DD-MM-YYYY
-    };
+    return studies.length > 0 ? studies[0] : null;
   } catch (error) {
     console.error("Error al obtener estudio por ID:", error);
     return null;

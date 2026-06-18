@@ -4,6 +4,7 @@ import { useState } from "react";
 import ShareModal from "@/components/modals/ShareModal";
 import ViewStudyModal from "@/components/modals/ViewStudyModal";
 import UploadStudyModal from "@/components/modals/UploadStudyModal";
+import EditStudyModal from "@/components/modals/EditStudyModal";
 import FamilyMemberHeader from "./FamilyMemberHeader";
 import FamilyStudiesFilters from "./FamilyStudiesFilters";
 import FamilyStudiesList from "./FamilyStudiesList";
@@ -29,7 +30,9 @@ export default function FamilyMemberDetail({
 }: FamilyMemberDetailProps) {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [shareStudy, setShareStudy] = useState<Study | null>(null);
+  const [editStudy, setEditStudy] = useState<Study | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [medicoQuery, setMedicoQuery] = useState("");
   const [institutionQuery, setInstitutionQuery] = useState("");
@@ -102,6 +105,10 @@ export default function FamilyMemberDetail({
         }}
         onShare={(study) => setShareStudy(study)}
         onUpload={onUploadClick || (() => setShowUploadModal(true))}
+        onEdit={(study) => {
+          setEditStudy(study);
+          setShowEditModal(true);
+        }}
       />
 
       {/* Modals */}
@@ -129,6 +136,26 @@ export default function FamilyMemberDetail({
             study={shareStudy}
           />
         </>
+      )}
+
+      {editStudy && (
+        <EditStudyModal
+          show={showEditModal}
+          onHide={() => {
+            setShowEditModal(false);
+            setEditStudy(null);
+          }}
+          study={editStudy}
+          familyMembers={familyMembers}
+          onDelete={() => {
+            // TODO: Implement delete
+            setShowEditModal(false);
+          }}
+          onUpdate={(updatedStudy) => {
+            // TODO: Implement update
+            setShowEditModal(false);
+          }}
+        />
       )}
     </>
   );

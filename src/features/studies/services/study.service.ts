@@ -245,7 +245,11 @@ export class StudyService {
 
       // 2. Eliminar archivo del filesystem
       try {
-        await this.deleteFile(study.fileKey);
+        if (study.files && study.files.length > 0) {
+          // TODO: Si hay múltiples archivos, habría que iterar y eliminar todos.
+          // Por ahora eliminamos el principal (como funcionaba antes).
+          await this.deleteFile(study.files[0].fileKey);
+        }
       } catch (error) {
         console.error("Error al eliminar archivo:", error);
         // Continuar con la eliminación de DB aunque falle el archivo

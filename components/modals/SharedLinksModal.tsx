@@ -89,7 +89,6 @@ export default function SharedLinksModal({
   };
 
   const renderLinksList = (links: ShareLink[]) => {
-    console.log(links);
 
     if (links.length === 0) {
       return (

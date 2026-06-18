@@ -93,12 +93,10 @@ export default function HomeDashboard({ recentStudies, stats, familyMembers }: H
             onDelete={() => {
               // TODO: Implement delete
               setShowEditModal(false);
-              console.log("Study deleted:", selectedStudy.id);
             }}
             onUpdate={(updatedStudy) => {
               // TODO: Implement update
               setShowEditModal(false);
-              console.log("Study updated:", updatedStudy);
             }}
           />
           <ViewStudyModal

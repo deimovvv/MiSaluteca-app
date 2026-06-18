@@ -2,6 +2,14 @@
  * Types específicos para el feature de Studies
  */
 
+export interface StudyFile {
+  id?: string;
+  fileKey: string;
+  fileName: string;
+  mimeType: string;
+  size: number;
+}
+
 export interface Study {
   id: string;
   uuid: string;
@@ -13,10 +21,7 @@ export interface Study {
   medico: string;
   conclusion?: string;
   description?: string;
-  fileKey: string;
-  fileName: string;
-  mimeType: string;
-  size: number;
+  files: StudyFile[];
   createdAt: string; // Formato: DD-MM-YYYY
 }
 

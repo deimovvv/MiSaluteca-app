@@ -57,17 +57,32 @@ export async function deleteStudy(
     }
 
     const study = studyRows[0];
-    const fileKey = study.file_key as string;
+    const baseUploadDir = (process.env.DIRECTORY_UPLOADS || "./uploads").replace("./", "");
 
-    // Eliminar el archivo físico del sistema de archivos
-    try {
-      const baseUploadDir = (process.env.DIRECTORY_UPLOADS || "./uploads").replace("./", "");
-      const filePath = join(process.cwd(), baseUploadDir, fileKey);
-      await unlink(filePath);
-    } catch (fileError) {
-      console.error("Error al eliminar el archivo físico:", fileError);
-      // Continuamos aunque falle la eliminación del archivo físico
-      // El registro se eliminará de todas formas
+    // Obtener archivos de la nueva tabla
+    const [fileRows] = await pool.execute<RowDataPacket[]>(
+      "SELECT file_key FROM estudios_archivos WHERE id_estudio = ?",
+      [studyIdNum]
+    );
+
+    // Recopilar todos los file_keys a eliminar (incluyendo el legacy si existe)
+    const fileKeysToDelete: string[] = fileRows.map(row => row.file_key);
+    if (study.file_key && !fileKeysToDelete.includes(study.file_key)) {
+      fileKeysToDelete.push(study.file_key);
+    }
+
+    // Eliminar los archivos físicos
+    for (const fileKey of fileKeysToDelete) {
+      if (!fileKey) continue;
+      try {
+        const filePath = join(process.cwd(), baseUploadDir, fileKey);
+        await unlink(filePath);
+      } catch (fileError: any) {
+        if (fileError.code !== 'ENOENT') {
+          console.error(`Error al eliminar el archivo físico ${fileKey}:`, fileError);
+        }
+        // Continuamos aunque falle
+      }
     }
 
     // Eliminar el estudio de la base de datos

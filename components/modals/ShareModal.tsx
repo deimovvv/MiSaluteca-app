@@ -33,7 +33,6 @@ export default function ShareModal({ show, onHide, study }: ShareModalProps) {
         doctorName: doctorName.trim(),
         vinculo: vinculo,
       });
-      console.log("response", response);
 
       if (response.success && response.data) {
         const baseUrl =

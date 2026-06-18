@@ -6,6 +6,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { ResultSetHeader } from "mysql2/promise";
 import { v4 as uuidv4 } from "uuid";
+import { MAX_FAMILY_MEMBER_NAME_LENGTH } from "@/config/constants";
+
 interface AddFamilyMemberData {
   name: string;
 }
@@ -40,10 +42,10 @@ export async function addFamilyMember(
     }
 
     // Validar longitud del nombre
-    if (data.name.length > 200) {
+    if (data.name.length > MAX_FAMILY_MEMBER_NAME_LENGTH) {
       return {
         success: false,
-        message: "El nombre no puede superar los 200 caracteres.",
+        message: `El nombre no puede superar los ${MAX_FAMILY_MEMBER_NAME_LENGTH} caracteres.`,
       };
     }
 

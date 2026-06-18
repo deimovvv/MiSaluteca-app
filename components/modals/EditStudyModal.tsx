@@ -153,7 +153,7 @@ export default function EditStudyModal({
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
             {/* File info (read-only) */}
-            <div
+            {/* <div
               className="border rounded p-3 mb-4"
               style={{ backgroundColor: "var(--surface-inset)" }}
             >
@@ -188,7 +188,7 @@ export default function EditStudyModal({
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className="row g-3 mb-3">
               {/* Date */}

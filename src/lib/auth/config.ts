@@ -56,7 +56,6 @@ export const authOptions: NextAuthOptions = {
         },
       },
       profile(profile): User {
-        console.log("Profile completo recibido de Google:", profile);
         // 👈 Aquí defines qué props tendrá el objeto 'user'
         return {
           id: profile.sub, // ID único de Google
@@ -78,19 +77,15 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async signIn({ user, profile, account }) {
-      // console.log("user signIn", user);
-      // console.log("account provider", account?.provider);
 
       // Solo ejecutar lógica de DB para Google Provider
       if (!profile || account?.provider !== "google") {
-        console.log("Credentials login - skip DB update");
         return true;
       }
 
       // Lógica para Google Provider
       const googleProfile = profile as GoogleProfile;
 
-      console.log("googleProfile", googleProfile);
 
 
       const [rows] = (await pool.execute(
@@ -111,7 +106,6 @@ export const authOptions: NextAuthOptions = {
             dateNowWithMinutes(),
           ]
         );
-        // console.log("Usuario de Google insertado en DB");
       } else {
         await pool.execute(
           "UPDATE users SET name=?, given_name=?, family_name=?, image=?, locale=?, updated_at=? WHERE email=? LIMIT 1",
@@ -125,7 +119,6 @@ export const authOptions: NextAuthOptions = {
             user.email,
           ]
         );
-        // console.log("Usuario de Google actualizado en DB");
       }
 
       return true;
@@ -156,11 +149,9 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ session, token }) {
-      // console.log("token en session", token);
       // Si el token no existe o no tiene sessionId, NextAuth ya lo manejará
       // No debemos retornar null aquí, ya que causa CLIENT_FETCH_ERROR
       if (!token || !token.sessionId) {
-        // console.log("Token inválido - NextAuth manejará el logout");
         throw new Error("Invalid session");
       }
 
@@ -171,7 +162,6 @@ export const authOptions: NextAuthOptions = {
       if (token.userId) {
         session.user.userId = token.userId;
       }
-      // console.log("session después de asignar type", session);
 
       // const [rows] = await pool.query(
       //   "SELECT id, locale FROM users WHERE email = ?",

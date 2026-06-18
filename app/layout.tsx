@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://misaluteca.com"),
   title: "Mi Saluteca - Tu historial médico, siempre contigo",
   description: "Gestiona tu salud y la de tu familia de forma segura y privada",
+  formatDetection: {
+    telephone: false,
+  },
   icons: {
     icon: "/saludchiquito_ojbsip.png",
   },

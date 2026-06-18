@@ -11,6 +11,7 @@ interface FamilyStudiesListProps {
   onView: (study: Study) => void;
   onShare: (study: Study) => void;
   onUpload: () => void;
+  onEdit: (study: Study) => void;
 }
 
 export default function FamilyStudiesList({
@@ -20,6 +21,7 @@ export default function FamilyStudiesList({
   onView,
   onShare,
   onUpload,
+  onEdit,
 }: FamilyStudiesListProps) {
   if (studies.length === 0) {
     return (
@@ -73,6 +75,7 @@ export default function FamilyStudiesList({
           study={study}
           onView={onView}
           onShare={onShare}
+          onEdit={onEdit}
           hideOwner
         />
       ))}

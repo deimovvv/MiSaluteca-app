@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Modal, Button, Spinner } from "react-bootstrap";
+import { Modal, Button, Spinner, Form } from "react-bootstrap";
 import { Study, FamilyMember } from "@/types";
 import { formatDate } from "@/lib/formatters";
 import toast from "react-hot-toast";
@@ -23,6 +23,12 @@ export default function ViewStudyModal({
   const [downloading, setDownloading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loadingPreview, setLoadingPreview] = useState(false);
+  
+  // Si no hay archivos, dejamos un array vacío
+  const files = study.files || [];
+  const [activeFileIndex, setActiveFileIndex] = useState(0);
+  
+  const activeFile = files[activeFileIndex];
 
   const familyMember = study.familyMemberId
     ? familyMembers.find(fm => fm.id === study.familyMemberId)
@@ -32,22 +38,22 @@ export default function ViewStudyModal({
   useEffect(() => {
     let activeUrl = "";
 
-    if (show && study.uuid) {
+    if (show && study.uuid && activeFile) {
       setLoadingPreview(true);
-      fetch(`/api/download-study/${study.uuid}`)
+      const urlParams = activeFile.id ? `?fileId=${activeFile.id}` : "";
+      fetch(`/api/download-study/${study.uuid}${urlParams}`)
         .then((res) => {
           if (!res.ok) throw new Error("Failed to load");
           return res.blob();
         })
         .then((blob) => {
           let properBlob = blob;
-          // Fix generic octet-stream to match known extension if missing mimeType
           if (blob.type === "application/octet-stream" || !blob.type) {
-            if (study.fileName.toLowerCase().endsWith(".pdf")) {
+            if (activeFile.fileName.toLowerCase().endsWith(".pdf")) {
               properBlob = new Blob([blob], { type: "application/pdf" });
-            } else if (study.fileName.toLowerCase().endsWith(".jpg") || study.fileName.toLowerCase().endsWith(".jpeg")) {
+            } else if (activeFile.fileName.toLowerCase().endsWith(".jpg") || activeFile.fileName.toLowerCase().endsWith(".jpeg")) {
               properBlob = new Blob([blob], { type: "image/jpeg" });
-            } else if (study.fileName.toLowerCase().endsWith(".png")) {
+            } else if (activeFile.fileName.toLowerCase().endsWith(".png")) {
               properBlob = new Blob([blob], { type: "image/png" });
             }
           }
@@ -64,13 +70,20 @@ export default function ViewStudyModal({
       }
       setPreviewUrl(null);
     };
-  }, [show, study.uuid, study.fileName]);
+  }, [show, study.uuid, activeFile]);
+
+  // Reset index when study changes
+  useEffect(() => {
+    setActiveFileIndex(0);
+  }, [study.id, show]);
 
   const handleDownload = async () => {
+    if (!activeFile) return;
     setDownloading(true);
 
     try {
-      const response = await fetch(`/api/download-study/${study.uuid}`);
+      const urlParams = activeFile.id ? `?fileId=${activeFile.id}` : "";
+      const response = await fetch(`/api/download-study/${study.uuid}${urlParams}`);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -79,18 +92,13 @@ export default function ViewStudyModal({
         return;
       }
 
-      // Obtener el blob del archivo
       const blob = await response.blob();
-
-      // Crear un link temporal para descargar el archivo
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = study.fileName;
+      a.download = activeFile.fileName;
       document.body.appendChild(a);
       a.click();
-
-      // Limpiar
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
@@ -137,7 +145,7 @@ export default function ViewStudyModal({
           </div>
         </div>
 
-        {/* Details Grid: Extracted Metadata */}
+        {/* Details Grid */}
         <div className="row g-4 mb-4">
           {study.institution && (
             <div className="col-12 col-md-6">
@@ -176,66 +184,80 @@ export default function ViewStudyModal({
         )}
 
         {/* File Preview */}
-        <div className="mb-3">
-          <div className="d-flex justify-content-between align-items-center mb-2">
-            <div className="fw-semibold text-muted" style={{ fontSize: "0.875rem" }}>
-              Visualización del Documento
-            </div>
-            <button
-              type="button"
-              className="btn btn-outline-saluteca btn-sm d-flex align-items-center gap-2"
-              onClick={handleDownload}
-              disabled={downloading}
-            >
-              {downloading ? (
-                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
-              ) : (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 15L12 3M12 15L8 11M12 15L16 11M2 17L2 20C2 20.5523 2.44772 21 3 21L21 21C21.5523 21 22 20.5523 22 20L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+        {files.length > 0 && activeFile && (
+          <div className="mb-3">
+            <div className="d-flex flex-wrap justify-content-between align-items-center mb-2 gap-2">
+              <div className="fw-semibold text-muted" style={{ fontSize: "0.875rem" }}>
+                Visualización del Documento ({activeFileIndex + 1} de {files.length})
+              </div>
+              
+              {files.length > 1 && (
+                <Form.Select 
+                  size="sm" 
+                  className="w-auto border-saluteca"
+                  value={activeFileIndex}
+                  onChange={(e) => setActiveFileIndex(Number(e.target.value))}
+                >
+                  {files.map((f, idx) => (
+                    <option key={idx} value={idx}>{f.fileName}</option>
+                  ))}
+                </Form.Select>
               )}
-              Descargar original
-            </button>
-          </div>
 
-          <div
-            className="w-100 border rounded overflow-hidden position-relative d-flex justify-content-center align-items-center"
-            style={{ minHeight: "200px", maxHeight: "600px", backgroundColor: "var(--surface-canvas)" }}
-          >
-            {loadingPreview ? (
-              <div className="text-center text-muted p-5">
-                <Spinner animation="border" className="mb-3" style={{ color: "var(--saluteca-ocean)" }} />
-                <div>Cargando vista previa...</div>
-              </div>
-            ) : previewUrl ? (
-              study.fileName.toLowerCase().endsWith(".pdf") || study.mimeType?.includes("pdf") ? (
-                <iframe
-                  src={previewUrl}
-                  className="w-100 border-0"
-                  style={{ height: "600px" }}
-                  title="PDF Preview"
-                />
+              <button
+                type="button"
+                className="btn btn-outline-saluteca btn-sm d-flex align-items-center gap-2"
+                onClick={handleDownload}
+                disabled={downloading}
+              >
+                {downloading ? (
+                  <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                ) : (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 15L12 3M12 15L8 11M12 15L16 11M2 17L2 20C2 20.5523 2.44772 21 3 21L21 21C21.5523 21 22 20.5523 22 20L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+                Descargar original
+              </button>
+            </div>
+
+            <div
+              className="w-100 border rounded overflow-hidden position-relative d-flex justify-content-center align-items-center"
+              style={{ minHeight: "200px", maxHeight: "600px", backgroundColor: "var(--surface-canvas)" }}
+            >
+              {loadingPreview ? (
+                <div className="text-center text-muted p-5">
+                  <Spinner animation="border" className="mb-3" style={{ color: "var(--saluteca-ocean)" }} />
+                  <div>Cargando vista previa...</div>
+                </div>
+              ) : previewUrl ? (
+                activeFile.fileName.toLowerCase().endsWith(".pdf") || activeFile.mimeType?.includes("pdf") ? (
+                  <iframe
+                    src={previewUrl}
+                    className="w-100 border-0"
+                    style={{ height: "600px" }}
+                    title="PDF Preview"
+                  />
+                ) : (
+                  <ImageMagnifier
+                    src={previewUrl}
+                    alt="Vista previa del estudio"
+                    zoomLevel={2.5}
+                    lensSize={120}
+                    style={{ width: "100%", maxHeight: "600px" }}
+                  />
+                )
               ) : (
-                <ImageMagnifier
-                  src={previewUrl}
-                  alt="Vista previa del estudio"
-                  zoomLevel={2.5}
-                  lensSize={120}
-                  style={{ width: "100%", maxHeight: "600px" }}
-                />
-              )
-            ) : (
-              <div className="text-center text-muted p-5">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="mb-3 opacity-50">
-                  <path d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V9L13 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <div>No se pudo cargar la vista previa. Por favor, descargá el archivo.</div>
-              </div>
-            )}
+                <div className="text-center text-muted p-5">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="mb-3 opacity-50">
+                    <path d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V9L13 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <div>No se pudo cargar la vista previa. Por favor, descargá el archivo.</div>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-
-
+        )}
 
         {/* Uploaded info */}
         <div className="text-muted" style={{ fontSize: "0.8125rem" }}>

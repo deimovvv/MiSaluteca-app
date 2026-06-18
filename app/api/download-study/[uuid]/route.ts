@@ -31,23 +31,43 @@ export async function GET(
       );
     }
 
-    // Obtener el UUID del estudio
+    // Obtener el UUID del estudio y el posible fileId
     const { uuid } = await params;
-    console.log("uuid es", uuid);
+    const searchParams = request.nextUrl.searchParams;
+    const fileId = searchParams.get("fileId");
 
-    // Buscar el estudio en la base de datos
-    const [rows] = await pool.execute<StudyRow[]>(
-      `SELECT id, uuid, id_usuario, file_key, file_name, mime_type 
-       FROM estudios 
-       WHERE uuid = ?`,
-      [uuid]
-    );
+    let query = `SELECT id, uuid, id_usuario, file_key, file_name, mime_type FROM estudios WHERE uuid = ?`;
+    let queryParams: any[] = [uuid];
+
+    if (fileId) {
+      query = `SELECT e.id_usuario, ea.file_key, ea.file_name, ea.mime_type 
+               FROM estudios e 
+               JOIN estudios_archivos ea ON e.id = ea.id_estudio 
+               WHERE e.uuid = ? AND ea.id = ?`;
+      queryParams = [uuid, fileId];
+    }
+
+    // Buscar el estudio (y archivo) en la base de datos
+    const [rows] = await pool.execute<StudyRow[]>(query, queryParams);
 
     if (rows.length === 0) {
-      return NextResponse.json(
-        { error: "Estudio no encontrado." },
-        { status: 404 }
-      );
+      // Fallback: Si se pidió con fileId pero no se encontró, probar buscar en estudios por retrocompatibilidad
+      if (fileId) {
+        const [fallbackRows] = await pool.execute<StudyRow[]>(
+          `SELECT id, uuid, id_usuario, file_key, file_name, mime_type FROM estudios WHERE uuid = ? AND file_key IS NOT NULL`,
+          [uuid]
+        );
+        if (fallbackRows.length > 0) {
+           rows.push(fallbackRows[0]);
+        }
+      }
+      
+      if (rows.length === 0) {
+        return NextResponse.json(
+          { error: "Archivo o estudio no encontrado." },
+          { status: 404 }
+        );
+      }
     }
 
     const study = rows[0];

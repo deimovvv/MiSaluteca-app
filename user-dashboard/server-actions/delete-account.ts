@@ -38,7 +38,15 @@ export async function deleteAccount(): Promise<DeleteAccountResult> {
       [userId]
     );
 
-    const fileKeys = studyRows.map((row) => row.file_key as string);
+    const [fileRows] = await pool.execute<RowDataPacket[]>(
+      "SELECT ea.file_key FROM estudios_archivos ea JOIN estudios e ON ea.id_estudio = e.id WHERE e.id_usuario = ?",
+      [userId]
+    );
+
+    const fileKeys = new Set([
+      ...studyRows.map((row) => row.file_key as string),
+      ...fileRows.map((row) => row.file_key as string)
+    ].filter(Boolean));
 
     // Iniciar transacción para asegurar que todo se elimine correctamente
     const connection = await pool.getConnection();
@@ -89,8 +97,10 @@ export async function deleteAccount(): Promise<DeleteAccountResult> {
       try {
         const filePath = join(process.cwd(), baseUploadDir, fileKey);
         await unlink(filePath);
-      } catch (fileError) {
-        console.error(`Error al eliminar el archivo físico ${fileKey}:`, fileError);
+      } catch (fileError: any) {
+        if (fileError.code !== 'ENOENT') {
+          console.error(`Error al eliminar el archivo físico ${fileKey}:`, fileError);
+        }
         // Continuamos aunque falle la eliminación de algún archivo físico
       }
     }

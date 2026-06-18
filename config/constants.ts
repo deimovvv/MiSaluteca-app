@@ -1,6 +1,7 @@
 // Configuración de tiempos de expiración
 export const SHARE_LINK_EXPIRATION_HOURS = 24;
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+export const MAX_FAMILY_MEMBER_NAME_LENGTH = 40;
 
 // Opciones de vínculo para compartir estudios
 export const VINCULO_OPTIONS = [

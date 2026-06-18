@@ -149,10 +149,10 @@ export default function SettingsPageClient({ user, sharedLinks }: SettingsPageCl
           </Card>
 
           {/* Danger Zone */}
-          <Card className="border-danger">
-            <Card.Header className="bg-white border-bottom border-danger">
+          <Card >
+            {/* <Card.Header className="bg-white border-bottom border-danger">
               <h3 className="h6 mb-0 fw-semibold text-danger">Zona peligrosa</h3>
-            </Card.Header>
+            </Card.Header> */}
             <Card.Body>
               <div className="d-flex align-items-start justify-content-between">
                 <div>

@@ -1,6 +1,6 @@
 import { pool } from "@/src/lib/database/connection";
 import { RowDataPacket, ResultSetHeader } from "mysql2/promise";
-import type { Study } from "../types/study.types";
+import type { Study, StudyFile } from "../types/study.types";
 
 interface StudyRow extends RowDataPacket {
   id: number;
@@ -14,10 +14,10 @@ interface StudyRow extends RowDataPacket {
   medico: string | null;
   conclusion: string | null;
   descripcion: string | null;
-  file_key: string;
-  file_name: string;
-  mime_type: string;
-  file_size: number;
+  file_key?: string;
+  file_name?: string;
+  mime_type?: string;
+  file_size?: number;
   created_at: string;
   updated_at: string;
 }
@@ -49,6 +49,13 @@ interface UpdateStudyData {
   description?: string | null;
 }
 
+const BASE_QUERY = `
+  SELECT e.id, e.uuid, e.id_usuario, e.email_usuario, e.id_familiar, e.titulo, e.fecha, 
+         e.institucion, e.medico, e.conclusion, e.descripcion, e.created_at, e.updated_at,
+         e.file_key, e.file_name, e.mime_type, e.file_size
+  FROM estudios e
+`;
+
 /**
  * Repository para el acceso a datos de estudios
  * Responsabilidad: queries SQL y mapeo de datos
@@ -57,7 +64,28 @@ export class StudyRepository {
   /**
    * Convierte una fila de DB a entidad Study
    */
-  private mapToStudy(row: StudyRow): Study {
+  private mapToStudy(row: StudyRow, fileRows: any[]): Study {
+    let files: StudyFile[] = fileRows
+      .filter((f) => f.id_estudio === row.id)
+      .map((f) => ({
+        id: f.id.toString(),
+        fileKey: f.file_key,
+        fileName: f.file_name,
+        mimeType: f.mime_type,
+        size: f.file_size,
+      }));
+    
+    if (files.length === 0 && row.file_key) {
+      files = [{ 
+        fileKey: row.file_key, 
+        fileName: row.file_name || "", 
+        mimeType: row.mime_type || "", 
+        size: row.file_size || 0 
+      }];
+    }
+    
+    files = files.filter(f => f && f.fileKey);
+
     return {
       id: row.id.toString(),
       uuid: row.uuid,
@@ -69,12 +97,27 @@ export class StudyRepository {
       medico: row.medico || "",
       conclusion: row.conclusion || undefined,
       description: row.descripcion || undefined,
-      fileKey: row.file_key,
-      fileName: row.file_name,
-      mimeType: row.mime_type,
-      size: row.file_size,
+      files,
       createdAt: row.created_at, // Mantener como string DD-MM-YYYY
     };
+  }
+
+  private async fetchStudiesWithFiles(query: string, params: any[]): Promise<Study[]> {
+    const [rows] = await pool.execute<StudyRow[]>(query, params);
+
+    if (rows.length === 0) return [];
+
+    const studyIds = rows.map((r) => r.id);
+    const placeholders = studyIds.map(() => '?').join(',');
+
+    const [fileRows] = await pool.execute<RowDataPacket[]>(
+      `SELECT id, id_estudio, file_key, file_name, mime_type, file_size 
+       FROM estudios_archivos 
+       WHERE id_estudio IN (${placeholders})`,
+      studyIds
+    );
+
+    return rows.map((r) => this.mapToStudy(r, fileRows));
   }
 
   /**
@@ -82,16 +125,10 @@ export class StudyRepository {
    */
   async findByUserId(userId: string): Promise<Study[]> {
     try {
-      const [rows] = await pool.execute<StudyRow[]>(
-        `SELECT id, uuid, id_usuario, email_usuario, id_familiar, titulo, fecha, 
-                institucion, medico, conclusion, descripcion, file_key, file_name, mime_type, file_size, created_at, updated_at 
-         FROM estudios 
-         WHERE id_usuario = ? 
-         ORDER BY fecha DESC, created_at DESC`,
+      return await this.fetchStudiesWithFiles(
+        `${BASE_QUERY} WHERE e.id_usuario = ? ORDER BY e.fecha DESC, e.created_at DESC`,
         [userId]
       );
-
-      return rows.map((row) => this.mapToStudy(row));
     } catch (error) {
       console.error("Error al obtener estudios por usuario:", error);
       throw error;
@@ -103,19 +140,12 @@ export class StudyRepository {
    */
   async findById(studyId: string, userId: string): Promise<Study | null> {
     try {
-      const [rows] = await pool.execute<StudyRow[]>(
-        `SELECT id, uuid, id_usuario, email_usuario, id_familiar, titulo, fecha, 
-                institucion, medico, conclusion, descripcion, file_key, file_name, mime_type, file_size, created_at, updated_at 
-         FROM estudios 
-         WHERE id = ? AND id_usuario = ?`,
+      const studies = await this.fetchStudiesWithFiles(
+        `${BASE_QUERY} WHERE e.id = ? AND e.id_usuario = ?`,
         [parseInt(studyId), userId]
       );
 
-      if (rows.length === 0) {
-        return null;
-      }
-
-      return this.mapToStudy(rows[0]);
+      return studies.length > 0 ? studies[0] : null;
     } catch (error) {
       console.error("Error al obtener estudio por ID:", error);
       throw error;
@@ -127,19 +157,12 @@ export class StudyRepository {
    */
   async findByUuid(uuid: string): Promise<Study | null> {
     try {
-      const [rows] = await pool.execute<StudyRow[]>(
-        `SELECT id, uuid, id_usuario, email_usuario, id_familiar, titulo, fecha, 
-                institucion, medico, conclusion, descripcion, file_key, file_name, mime_type, file_size, created_at, updated_at 
-         FROM estudios 
-         WHERE uuid = ?`,
+      const studies = await this.fetchStudiesWithFiles(
+        `${BASE_QUERY} WHERE e.uuid = ?`,
         [uuid]
       );
 
-      if (rows.length === 0) {
-        return null;
-      }
-
-      return this.mapToStudy(rows[0]);
+      return studies.length > 0 ? studies[0] : null;
     } catch (error) {
       console.error("Error al obtener estudio por UUID:", error);
       throw error;
@@ -151,16 +174,10 @@ export class StudyRepository {
    */
   async findByFamilyMember(userId: string, familyMemberId: string): Promise<Study[]> {
     try {
-      const [rows] = await pool.execute<StudyRow[]>(
-        `SELECT id, uuid, id_usuario, email_usuario, id_familiar, titulo, fecha, 
-                institucion, medico, conclusion, descripcion, file_key, file_name, mime_type, file_size, created_at, updated_at 
-         FROM estudios 
-         WHERE id_usuario = ? AND id_familiar = ? 
-         ORDER BY fecha DESC, created_at DESC`,
+      return await this.fetchStudiesWithFiles(
+        `${BASE_QUERY} WHERE e.id_usuario = ? AND e.id_familiar = ? ORDER BY e.fecha DESC, e.created_at DESC`,
         [userId, parseInt(familyMemberId)]
       );
-
-      return rows.map((row) => this.mapToStudy(row));
     } catch (error) {
       console.error("Error al obtener estudios del familiar:", error);
       throw error;
@@ -174,8 +191,8 @@ export class StudyRepository {
     try {
       const [rows] = await pool.execute<RowDataPacket[]>(
         `SELECT COUNT(*) as count 
-         FROM estudios 
-         WHERE id_usuario = ? AND id_familiar = ?`,
+         FROM estudios e
+         WHERE e.id_usuario = ? AND e.id_familiar = ?`,
         [userId, parseInt(familyMemberId)]
       );
 
@@ -193,9 +210,9 @@ export class StudyRepository {
     try {
       const [rows] = await pool.execute<RowDataPacket[]>(
         `SELECT fecha 
-         FROM estudios 
-         WHERE id_usuario = ? AND id_familiar = ? 
-         ORDER BY fecha DESC, created_at DESC 
+         FROM estudios e
+         WHERE e.id_usuario = ? AND e.id_familiar = ? 
+         ORDER BY e.fecha DESC, e.created_at DESC 
          LIMIT 1`,
         [userId, parseInt(familyMemberId)]
       );
@@ -212,7 +229,7 @@ export class StudyRepository {
   }
 
   /**
-   * Crea un nuevo estudio
+   * Crea un nuevo estudio (metadata only)
    */
   async create(data: CreateStudyData): Promise<number> {
     try {

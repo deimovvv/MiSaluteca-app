@@ -88,7 +88,6 @@ export default function DeleteAccountModal({
             type="text"
             value={confirmText}
             onChange={(e) => setConfirmText(e.target.value)}
-            placeholder="misaluteca"
             autoComplete="off"
             autoCorrect="off"
             autoCapitalize="off"

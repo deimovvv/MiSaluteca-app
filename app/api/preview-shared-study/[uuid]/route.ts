@@ -72,19 +72,41 @@ export async function GET(
       }
     }
 
-    // Obtener el estudio usando id_estudio
-    const [studyRows] = await pool.execute<StudyRow[]>(
-      `SELECT id, uuid, id_usuario, file_key, file_name, mime_type 
-       FROM estudios 
-       WHERE id = ?`,
-      [link.id_estudio],
-    );
+    // Obtener el estudio usando id_estudio (y opcionalmente fileId)
+    const searchParams = request.nextUrl.searchParams;
+    const fileId = searchParams.get("fileId");
+
+    let query = `SELECT id, uuid, id_usuario, file_key, file_name, mime_type 
+                 FROM estudios 
+                 WHERE id = ?`;
+    let queryParams: any[] = [link.id_estudio];
+
+    if (fileId) {
+      query = `SELECT e.id_usuario, ea.file_key, ea.file_name, ea.mime_type 
+               FROM estudios e 
+               JOIN estudios_archivos ea ON e.id = ea.id_estudio 
+               WHERE e.id = ? AND ea.id = ?`;
+      queryParams = [link.id_estudio, fileId];
+    }
+
+    const [studyRows] = await pool.execute<StudyRow[]>(query, queryParams);
 
     if (studyRows.length === 0) {
-      return NextResponse.json(
-        { error: "Estudio no encontrado.", errorType: "notFound" },
-        { status: 404 },
-      );
+      if (fileId) {
+        // Fallback backward compatibility
+        const [fallbackRows] = await pool.execute<StudyRow[]>(
+          `SELECT id, uuid, id_usuario, file_key, file_name, mime_type FROM estudios WHERE id = ? AND file_key IS NOT NULL`,
+          [link.id_estudio]
+        );
+        if (fallbackRows.length > 0) studyRows.push(fallbackRows[0]);
+      }
+      
+      if (studyRows.length === 0) {
+        return NextResponse.json(
+          { error: "Estudio o archivo no encontrado.", errorType: "notFound" },
+          { status: 404 },
+        );
+      }
     }
 
     const study = studyRows[0];
