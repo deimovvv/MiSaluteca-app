@@ -76,11 +76,11 @@ export default function Hero() {
                     <HiComputerDesktop className={styles.platformIcon} />
                     <span>Web</span>
                   </div>
-                  <span className={styles.platformAnd}>&</span>
-                  <div className={styles.platformBadge}>
+                  {/* <span className={styles.platformAnd}>&</span> */}
+                  {/* <div className={styles.platformBadge}>
                     <HiDevicePhoneMobile className={styles.platformIcon} />
                     <span>App</span>
-                  </div>
+                  </div> */}
                 </div>
               </Reveal>
 
